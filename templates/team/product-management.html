@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
+
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-start pb-0">
+                <div>
+                    <h2 class="text-bold-700 mb-0">سطح سوم</h2>
+                    <p class="mt-25">میانگین بلوغ محصولات شما</p>
+                </div>
+                <div class="avatar bg-rgba-success p-50 m-0">
+                    <div class="avatar-content">
+                        <i class="feather icon-users text-success font-medium-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-gradient-warning">
+            <div class="card-header d-flex align-items-start pb-0">
+                <div>
+                    <h2 class="text-bold-700 mb-0 text-dark">{% random_fund_amount as amount %} {{amount|intcomma}} واحد</h2>
+                    <p class="mt-25 text-dark">حجم جذب سرمایه محصولات</p>
+                </div>
+                <div class="avatar bg-rgba-dark p-50 m-0">
+                    <div class="avatar-content">
+                        <i class="feather icon-users text-dark font-medium-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-start pb-0">
+                <div>
+                    <h2 class="text-bold-700 mb-0 text-dark">6</h2>
+                    <p class="mt-25 text-dark">تعداد سهام دارها</p>
+                </div>
+                <div class="avatar bg-rgba-success p-50 m-0">
+                    <div class="avatar-content">
+                        <i class="feather icon-users text-success font-medium-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-2">
+        <div class="row">
+            <div class="col-12">
+				<div class="card h-100">
+					<div class="card-header d-flex justify-content-between align-items-start">
+						<div>
+							<h4 class="card-title">جذب سرمایه شما از کجا هست؟</h4>
+						</div>
+					</div>
+					<div class="card-content my-auto">
+						<div class="card-body p-0">
+							<div id="team_strength_chart"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <div class="col-12 mt-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">روند جذب سرمایه محصولات</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body pl-0">
+                            <div class="height-300"><div class="chartjs-size-monitor"><div
+                                        class="chartjs-size-monitor-expand"><div class></div></div><div
+                                        class="chartjs-size-monitor-shrink"><div class></div></div></div>
+                                <canvas id="line-chart-custom"
+                                    style="display: block; width: 480px; height: 300px;" width="480"
+                                    height="300" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 mb-2">
+        <div class="row">
+            <div class="col-12">
+                
+                <div class="card overflow-hidden">
+                    <div class="card-header">
+                        <h4 class="card-title">مدیریت محصولات</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+
+                            <table class="table table-responsive-md mb-0">
+                                <thead class="table-warning">
+                                    <tr>
+                                        {% comment %} <th scope="col">#</th>
+                                        <th scope="col">نام محصول</th>
+                                        <th scope="col">لایک</th>
+                                        <th scope="col">دسته بندی</th>
+                                        <th scope="col">وضعیت</th>
+                                        <th scope="col">حجم سرمایه</th>
+                                        <th scope="col">حجم اعتبار</th> {% endcomment %}
+                                        <th scope="col">نام محصول</th>
+                                        <th scope="col">تیم</th>
+                                        <th scope="col">توضیحات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in request.user.user_of_plan.all %}
+                                    <tr>
+                                        <td class="font-weight-bold col-2">{{item.name}}</td>
+                                        <td>{{item.team.name}}</td>
+                                        <td>{{item.description}}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                    {% comment %} <tr>
+                                        <th scope="row">01</th>
+                                        <td class="font-weight-bold col-2">محصول اول</td>
+                                        <td class="col-1">26 <i class="fa fa-gratipay text-danger"></i></td>
+                                        <td>هوش مصنوعی</td>
+                                        <td><span class="badge badge-success">درحال انجام</span></td>
+                                        <td>{% random_fund_amount as amount %} {{amount|intcomma}} واحد</td>
+                                        <td>{% random_fund_amount as amount %} {{amount|intcomma}} واحد</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">02</th>
+                                        <td class="font-weight-bold col-2">محصول دوم</td>
+                                        <td class="col-1">5 <i class="fa fa-gratipay text-danger"></i></td>
+                                        <td>هوش مصنوعی</td>
+                                        <td><span class="badge badge-danger">متوقف شده</span></td>
+                                        <td>{% random_fund_amount as amount %} {{amount|intcomma}} واحد</td>
+                                        <td>{% random_fund_amount as amount %} {{amount|intcomma}} واحد</td>
+                                    </tr> {% endcomment %}
+                                </tbody>
+                            </table>
+
+                            <div class="accordion mt-3" id="accordionExample" data-toggle-hover="true">
+                                <div class="collapse-margin">
+                                    <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <span class="lead collapse-title collapsed">
+                                            <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">فرم ثبت محصول جدید</span>
+                                        </span>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <form method="POST" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        {{ form.name|as_crispy_field }}
+                                                    </div>
+                                                    {% comment %} <div class="col-md-4">
+                                                        {{ form.industry|as_crispy_field }}
+                                                    </div> {% endcomment %}
+                                                    <div class="col-md-6">
+                                                        <div id="div_id_team" class="form-group">
+                                                            <label for="id_team" class=" requiredField">
+                                                                تیم<span class="asteriskField">*</span>
+                                                            </label>
+                                                            <div>
+                                                                <select name="team" class="select form-control" id="id_team">
+                                                                    {% for team in request.user.user_of_team_member.all %}
+                                                                    <option value="{{team.id}}" selected="">{{team.team.name}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        {{ form.description|as_crispy_field }}
+                                                    </div>
+                                                    {% comment %} <div class="col-md-4">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                {{ form.status|as_crispy_field }}
+                                                            </div>
+                                                            <div class="col-12">
+                                                                {{ form.has_mvp|as_crispy_field }}
+                                                            </div>
+                                                            <div class="col-12">
+                                                                {{ form.logo|as_crispy_field }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        {{ form.text|as_crispy_field }}
+                                                    </div> {% endcomment %}
+                                                </div>
+
+                                                <button class="btn btn-success btn-block waves-effect waves-light" type="submit">تایید و ثبت محصول</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/charts/chart.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
+
+<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/charts/chart-chartjs.js" %}></script>
+
+<script>
+    function generateRandomList(length) {
+      const randomList = [];
+      for (let i = 0; i < length; i++) {
+          const randomValue = Math.floor(Math.random() * 3); // Generates a random integer from 0 to 9
+          randomList.push(randomValue);
+      }
+      return randomList;
+    }
+  
+    var lineChartctx = $("#line-chart-custom");
+  
+    // Chart Options
+    var linechartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: {
+        position: 'top',
+      },
+      hover: {
+        mode: 'label'
+      },
+      scales: {
+        xAxes: [{
+          display: true,
+          gridLines: {
+            color: '#dae1e7',
+          },
+          scaleLabel: {
+            display: false,
+          }
+        }],
+        yAxes: [{
+          display: true,
+          gridLines: {
+            color: '#dae1e7',
+          },
+          scaleLabel: {
+            display: false,
+          }
+        }]
+      },
+      title: {
+        display: false,
+        text: 'World population per region (in millions)'
+      }
+    };
+  
+    // Chart Data
+    var linechartData = {
+      labels: ["1402-12-6", "1402-12-7", "1402-12-8", "1402-12-9", "1402-12-10", "1402-12-11", "1402-12-12", "1402-12-13", "1402-12-14", "1402-12-15"],
+      datasets: [
+        {
+            color: "#7367F0",
+            label: "محصول اول",
+            data: generateRandomList(10),
+            borderColor: "#7367F0",
+            fill: false
+        },
+        {
+            color: "#EA5455",
+            label: "محصول دوم",
+            data: generateRandomList(5),
+            borderColor: "#EA5455",
+            fill: false
+        },
+      ]
+    };
+  
+    var lineChartconfig = {
+      type: 'line',
+  
+      // Chart Options
+      options: linechartOptions,
+  
+      data: linechartData
+    };
+  
+    // Create the chart
+    var lineChart = new Chart(lineChartctx, lineChartconfig);
+</script>
+
+<script>
+    var $names = ["شتابدهنده", "اشخاص", "اعضای تیم", "شرکت ها"]
+
+	var options = {
+		series: [{
+		name: 'شما',
+		data: generateRandomList($names.length),
+	  }],
+		chart: {
+		height: 500,
+		type: 'radar',
+		dropShadow: {
+		  enabled: true,
+		  blur: 1,
+		  left: 1,
+		  top: 1
+		},
+		toolbar: {show:false}
+	  },
+	  stroke: {
+		width: 2
+	  },
+	  fill: {
+		opacity: 0.1
+	  },
+	  markers: {
+		size: 0
+	  },
+	  labels: $names,
+	  dataLabels: {
+	    style: {
+	    	colors: ["#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C"],
+	    	fontSize: "10px",
+	    }
+	  },
+	  yaxis: {show: false}
+	  };
+
+	  var chart = new ApexCharts(document.querySelector("#team_strength_chart"), options);
+	  chart.render();
+</script>
+{% endblock page_js %}

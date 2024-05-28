@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/tables/datatable/datatables.min.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    <div class="col-12">
+        <section id="basic-datatable">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">مربی کسب و کار خودتو پیدا کن</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body card-dashboard">
+                                <div class="table-responsive">
+                                    <table class="table zero-configuration">
+                                        <thead>
+                                            <tr>
+                                                <th>نام مربی</th>
+                                                <th>موضوعات مربوط</th>
+                                                <th>ارتباط</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in object_list %}
+                                            <tr>
+                                                <td>{{item.get_full_name}}</td>
+                                                <td>
+                                                    {% for cat in item.interests.all %}
+                                                    <span class="badge badge-primary">{{cat.name}}</span>
+                                                    {% endfor %}
+                                                </td>
+                                                <td><a href={% url "account:mentor-profile" item.username %} class="btn btn-success btn-icon ml-auto waves-effect waves-light"><i class="feather icon-user"></i></a></td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.buttons.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/datatables/datatable.js" %}></script>
+{% endblock page_js %}

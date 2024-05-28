@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+{% load crispy_forms_tags %}
+
+{% block page_css %}
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <section id="accordion-with-border">
+            <div class="row">
+                <div class="col-12">
+                    <div id="accordionWrapa50" role="tablist" aria-multiselectable="true">
+                        <div class="card collapse-icon accordion-icon-rotate">
+                            <div class="card-header">
+                                <h4 class="card-title">Border</h4>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-body">
+                                    <div class="accordion" id="accordionExample0">
+                                        <div class="collapse-border-item collapse-header card collapse-bordered">
+                                            <div class="card-header" id="heading200" data-toggle="collapse" role="button" data-target="#collapse200" aria-expanded="false" aria-controls="collapse200">
+                                                <span class="lead collapse-title">
+                                                    محتوای چالش
+                                                </span>
+                                            </div>
+    
+                                            <div id="collapse200" class="collapse" aria-labelledby="heading200" data-parent="#accordionExample0">
+                                                <div class="card-body">
+                                                    <div class="card-header">
+                                                        <h4 class="card-title">{{task.title}}</h4>
+                                                    </div>
+                                                    <div class="card-content">
+                                                        <div class="card-body">
+                                                            
+                                                            {{task.text.html|safe}}
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="collapse-border-item card collapse-header">
+                                            <div class="card-header" id="heading210" data-toggle="collapse" role="button" data-target="#collapse210" aria-expanded="false" aria-controls="collapse210">
+                                                <span class="lead collapse-title">
+                                                    فرم ثبت پاسخ
+                                                </span>
+                                            </div>
+                                            <div id="collapse210" class="collapse" aria-labelledby="heading210" data-parent="#accordionExample0">
+                                                <div class="card-body">
+                                                    <div class="card-header">
+                                                        <h4 class="card-title">پاسخ شما</h4>
+                                                    </div>
+                                                    <div class="card-content">
+                                                        <div class="card-body">
+                                                            
+                                                            <form method="POST" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <input name="user" value="{{request.user.id}}" hidden>
+                                                                <input name="accelerator" value="{{task.id}}" hidden>
+                                                                <input name="accelerator" value="{{road.id}}" hidden>
+                                                                <input name="status" value="w" hidden>
+                                                                <div class="row">
+                                                                    <div class="col-md-8">
+                                                                        {{ exam_form.title|as_crispy_field }}
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{ exam_form.file|as_crispy_field }}
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        {{ exam_form.text|as_crispy_field }}
+                                                                    </div>
+                                                                </div>
+                                        
+                                                                <button class="btn btn-success btn-block" type="submit">ثبت پاسخ</button>
+                                                            </form>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

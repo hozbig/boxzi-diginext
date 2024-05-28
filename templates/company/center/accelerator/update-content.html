@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">گام «{{object.title}}»</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="accelerator" value="{{acc_object.id}}" hidden>
+                        <div class="row">
+                            <div class="col-md-3">
+                                {{ form.title|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.video_link|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                <a href={% url "company:new-subject" %} class="small badge badge-primary" target="popup"  onclick="window.open('{% url "company:new-subject" %}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><i class="feather icon-plus"></i> موضوع جدید</a>
+                                {{ form.subjects|as_crispy_field }}
+                            </div>
+                            <div class="col-md-2">
+                                {{ form.medals|as_crispy_field }}
+                            </div>
+                            <div class="col-md-4">
+                                {{ form.description|as_crispy_field }}
+                            </div>
+                            <div class="col-md-8">
+                                {{ form.content|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success btn-block" type="submit">ویرایش گام</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+{% endblock page_js %}

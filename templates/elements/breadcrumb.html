@@ -1,0 +1,24 @@
+<div class="content-header row">
+    <div class="content-header-left col-md-9 col-12 mb-2">
+        <div class="row breadcrumbs-top">
+            <div class="col-12">
+                <h2 class="content-header-title float-left mb-0">
+                    {% if object and not "/reports/" in request.path %}
+                        {{title}}
+                    {% else %}
+                    {% endif %}
+                </h2>
+                <div class="breadcrumb-wrapper col-12">
+                    <ol class="breadcrumb">
+
+                    {% if object %}
+                        <li class="breadcrumb-item">{{object}}</li>
+                    {% else %}
+                        <li class="breadcrumb-item">{{title}}</li>
+                    {% endif %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    {% if request.user.members_of_team.first and request.user.is_team_member %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">مراحل پیش روی شما</h4>
+            </div>
+            <div class="row py-2">
+                {% for item in collections %}
+                {% is_collection_done request.user.id item.collection.uuid as collection_done %}
+                {% if not collection_done %}<span hidden>{% cycle 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 as is_first_not_done %}</span>{% endif %}
+                <div class="col mx-auto p-0">
+                    <div class="row text-center ml-0">
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="avatar bg-rgba-{% if collection_done %}success{% else %}{% if is_first_not_done %}primary{% else %}secondary{% endif %}{% endif %} p-50 m-0 mb-1">
+                                        <div class="avatar-content" id="status-icon-{{item.collection.uuid}}-collection">
+                                            {% if collection_done %}
+                                            <i class="feather icon-check text-success font-medium-5"></i>
+                                            {% else %}
+                                                {% if is_first_not_done %}
+                                                <i class="fa fa-arrow-down text-primary font-medium-5"></i>
+                                                {% else %}
+                                                <i class="feather icon-award text-secondary font-medium-5"></i>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12"><p class="mb-0 line-ellipsis">{{item.collection.name}}</p></div>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}
+                        <div class="col-2 p-0 my-auto"><i class="feather icon-chevrons-left text-secondary font-medium-5"></i></div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="avatar bg-rgba-success p-50 m-0 mb-1">
+                                <div class="avatar-content">
+                                    <i class="feather icon-check-circle text-success font-medium-5"></i>
+                                </div>
+                            </div>
+                            <h2 class="text-bold-700">{{watched_list.count}}</h2>
+                            <p class="mb-0 line-ellipsis">گذرانده شده</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="avatar bg-rgba-danger p-50 m-0 mb-1">
+                                <div class="avatar-content">
+                                    <i class="feather icon-crosshair text-danger font-medium-5"></i>
+                                </div>
+                            </div>
+                            <h2 class="text-bold-700">{{watched_list.count|remain_content_count:request.user}}</h2>
+                            <p class="mb-0 line-ellipsis">باقی مانده</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="avatar bg-rgba-warning p-50 m-0 mb-1">
+                                <div class="avatar-content">
+                                    <i class="feather icon-award text-warning font-medium-5"></i>
+                                </div>
+                            </div>
+                            <h2 class="text-bold-700">{{request.user.received_medals}}</h2>
+                            <p class="mb-0 line-ellipsis">مدال دریافتی</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">گام های شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <p>با هرگامی که پشت سر میزاری علاوه بر آموزشی که میبینی مدال هم دریافت میکنی</p>
+                    <div class="list-group">
+                        {% for item in collections %}
+                            {% is_collection_done request.user.id item.collection.uuid as collection_done %}
+                            {% if not collection_done %}<span hidden>{% cycle 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 as is_first_not_done %}</span>{% endif %}
+                            
+                            {% if not collection_done and is_first_not_done %}
+                                {% for content in item.collection.collection_of_content_order.all %}
+                                {% if not content.content.uuid in watched_list %}<span hidden>{% cycle 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 as is_first_not_done_content %}</span>{% endif %}
+                                    <a href={% url "content:detail" content.content.uuid %} class="{% if content.content.uuid in watched_list %}disabled{% endif %} list-group-item list-group-item-action rounded {% if is_first_not_done_content %}bg-success text-white{% else %}disabled{% endif %}">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1 {% if is_first_not_done_content %}text-white{% endif %}">{{content.content.title}}</h5>
+                                            <small class="{% if content.content.uuid in watched_list %}text-warning{% endif %} font-weight-bold">{{content.content.medals}} امتیاز <i class="feather icon-award"></i></small>
+                                        </div>
+                                        <p class="mb-1">{{content.content.description|truncatechars:255}}</p>
+                                        <small>دسته بندی ها: {% for sub in content.content.subjects.all %}<span class="badge badge-primary mr-25">{{sub.name}}</span>{% endfor %}</small>
+                                    </a>
+                                {% endfor %}
+                                
+                                {% if item.collection.exam %}
+                                {% is_exam_done request.user.id item.collection.uuid as exam_done %}
+                                <a href={% url "quiz:exam-detail" item.collection.exam.uuid item.collection.uuid %} class="list-group-item list-group-item-action rounded {% if not exam_done %}bg-success text-white{% else %}disabled{% endif %}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1 {% if not exam_done %}text-white{% endif %}">{{item.collection.exam.name}}</h5>
+                                        <small class="font-weight-bold">{{item.collection.exam.medals}} امتیاز <i class="feather icon-award"></i></small>
+                                    </div>
+                                    <span>تعداد سوال: {{item.collection.exam.questions.count}}</span>
+                                </a>
+                                {% endif %}
+
+                            {% endif %}
+                        {% endfor %}
+                        
+                        <!-- TODO: Disorganized display of the steps of the educational path (pended) -->
+                        {% comment %} <hr>
+                        {{steps}}
+                        {% for item in steps %}
+                        <hr>
+                        {{item}}
+                            {% if item.collection_type == 'content' %}
+                            <a class="{% if item.uuid in watched_list %}disabled{% endif %} list-group-item list-group-item-action rounded {% if is_first_not_done_content %}bg-success text-white{% else %}disabled{% endif %}">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1 {% if is_first_not_done_content %}text-white{% endif %}">{{item.content.title}}</h5>
+                                    <small class="{% if item.uuid in watched_list %}text-warning{% endif %} font-weight-bold">{{item.medals}} امتیاز <i class="feather icon-award"></i></small>
+                                </div>
+                                <p class="mb-1">{{item.description|truncatechars:255}}</p>
+                                <small>دسته بندی ها: {% for sub in item.subjects.all %}<span class="badge badge-primary mr-25">{{sub.name}}</span>{% endfor %}</small>
+                            </a>
+                            {% endif %}
+                        {% endfor %} {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+		<div class="card bg-gradient-danger">
+			<div class="card-header d-flex align-items-start pb-0">
+				<div class="mx-auto">
+					<h2 class="text-bold-700 mb-1 text-white">شما در هیچ تیم استارتاپی عضو نیستید!</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12">
+		<div class="card">
+			<div class="card-content">
+				<div class="card-body">
+					<p class="">
+						<h2 class="ml-1 mb-1 font-weight-bold">چه باید کرد؟</h2>
+						<ul class="list-group">
+							<li class="list-group-item">۱. پیگیری از مسئول تیم خود جهت اضافه کردن شما به لیست اعضای تیم.</li>
+							<li class="list-group-item">۲. ثبت تیکت برای پشتیبان وب سایت.</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

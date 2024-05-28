@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+    {% is_exam_done request.user.id collection.uuid as exam_done %}
+
+    {% if exam_done %}
+        <div class="col-12">
+            <div class="row justify-content-center">
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="avatar bg-rgba-primary p-50 m-0 mb-1">
+                                    <div class="avatar-content">
+                                        <i class="feather icon-list text-primary font-medium-5"></i>
+                                    </div>
+                                </div>
+                                <h2 class="text-bold-700">{{exam_history.count}}</h2>
+                                <p class="mb-0 line-ellipsis">کل سوال ها</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="avatar bg-rgba-success p-50 m-0 mb-1">
+                                    <div class="avatar-content">
+                                        <i class="feather icon-check-circle text-success font-medium-5"></i>
+                                    </div>
+                                </div>
+                                <h2 class="text-bold-700">{{count_of_valid_answer}}</h2>
+                                <p class="mb-0 line-ellipsis">جواب درست</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-2 col-md-4 col-sm-6">
+                    <div class="card text-center">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="avatar bg-rgba-warning p-50 m-0 mb-1">
+                                    <div class="avatar-content">
+                                        <i class="feather icon-award text-warning font-medium-5"></i>
+                                    </div>
+                                </div>
+                                <h2 class="text-bold-700">{{collection.exam.medals}}</h2>
+                                <p class="mb-0 line-ellipsis">مدال دریافتی</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if exam_done %}
+    <div class="col-12">
+        {% for item in object.questions.all %}
+            {% for user_answer in exam_history  %}
+                {% if item == user_answer.question %}
+                <div class="card">
+                    <div class="card-header mb-1">
+                        <h4 class="card-title">{{item.text}}</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <ul class="list-unstyled mb-0">
+                                {% for answer in item.answers.all %}
+                                <li class="d-inline-block mr-2">
+                                    {% if user_answer.answer == answer %}
+                                        {% if answer.is_valid %}
+                                        <span class="font-weight-bold underline text-success"><i class="fa fa-check"></i> {{answer.text}}</span>
+                                        {% else %}
+                                        <span class="font-weight-bold underline text-danger"><i class="fa fa-times"></i> {{answer.text}}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if answer.is_valid %}
+                                        <span class="text-success">{{answer.text}}</span>
+                                        {% else %}
+                                        <span class="text-secondary">{{answer.text}}</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        <a href={% url "content:roads" %} class="btn btn-info btn-block" type="submit">بازگشت به مسیر آموزش</a>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <form method="POST" onsubmit="return validateForm()">
+            {% csrf_token %}
+            {% for item in object.questions.all %}
+            <div class="card">
+                <div class="card-header mb-1">
+                    <h4 class="card-title">{{item.text}}</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            {% for answer in item.answers.all %}
+                            <li class="d-inline-block mr-2">
+                                <fieldset>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" value={{answer.id}} name="answer-name-{{object.uuid}}{{item.id}}" id="answer-id-{{object.uuid}}{{item.id}}{{answer.id}}">
+                                        <label class="custom-control-label" for="answer-id-{{object.uuid}}{{item.id}}{{answer.id}}">{{answer.text}}</label>
+                                    </div>
+                                </fieldset>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <button class="btn btn-success btn-block" type="submit">ثبت</button>
+        </form>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script>
+    function validateForm() {
+        // Get all radio button groups
+        var radioGroups = document.querySelectorAll('input[type="radio"]');
+        var allRadioButtonsChecked = true;
+    
+        // Loop through each radio button group
+        radioGroups.forEach(function(radioGroup) {
+            var radioButtons = document.getElementsByName(radioGroup.name);
+    
+            // Check if any radio button in the group is checked
+            var radioButtonChecked = false;
+            radioButtons.forEach(function(radioButton) {
+                if (radioButton.checked) {
+                    radioButtonChecked = true;
+                }
+            });
+    
+            // If no radio button is checked in any group, set allRadioButtonsChecked to false
+            if (!radioButtonChecked) {
+                allRadioButtonsChecked = false;
+            }
+        });
+    
+        // If all radio buttons are checked, return true to allow form submission
+        // Otherwise, display an alert and return false to prevent form submission
+        if (allRadioButtonsChecked) {
+            return true;
+        } else {
+            alert("لطفا تمام سوال هارو پاسخ دهید.");
+            return false;
+        }
+    }
+</script>
+{% endblock page_js %}

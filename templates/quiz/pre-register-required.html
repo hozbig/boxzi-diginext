@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+{% load crispy_forms_tags %}
+
+{% block page_css %}
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+    
+    <div class="col-12">
+        <h1 class="text-center">شروع ماجراجویی‌های جدید شما</h1>
+    </div>
+    <div class="col-12 mt-4">
+        <ul class="nav nav-tabs justify-content-start" role="tablist">
+            <li class="nav-item">
+                {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and challenge_response %}
+                <a class="nav-link text-success">
+                    <i class="fa fa-check"></i>
+                    قدم اول: اطلاعات اولیه
+                </a>
+                {% else %}
+                <a class="nav-link active" id="user-info-tab" data-toggle="tab" href="#user-info" aria-controls="user-info" role="tab" aria-selected="true">
+                    <img src={% static "icons/weblog.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    قدم اول: اطلاعات اولیه
+                </a>
+                {% endif %}
+            </li>
+            <li class="nav-item ml-3">
+                {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and challenge_response %}
+                <a class="nav-link active" id="road-register-tab" data-toggle="tab" href="#road-register" aria-controls="road-register" role="tab" aria-selected="false">
+                    <img src={% static "icons/register.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    قدم دوم: بزن بریم
+                </a>
+                {% else %}
+                <a class="nav-link" id="road-register-tab" data-toggle="tab" href="#road-register" aria-controls="road-register" role="tab" aria-selected="false">
+                    <img src={% static "icons/register.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    قدم دوم: بزن بریم
+                </a>
+                {% endif %}
+            </li>
+        </ul>
+        <div class="tab-content">
+            <!-- First step -->
+            <div class="tab-pane {% if not request.user.is_profile_complete or not request.user.user_of_personal_test.exists or not challenge_response %}active{% endif%}" id="user-info" aria-labelledby="user-info-tab" role="tabpanel">
+                <div class="row" style="height: 13em; max-height: 100%;">
+                    {% if request.user.is_profile_complete %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 h-100 mt-3 mt-sm-1">
+                        <div class="card text-white gradient-light-success text-center h-100">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 class="card-title font-weight-bold">تکمیل اطلاعات</h4>
+                                        </div>
+                                        <div class="col-12 py-1">
+                                            <p class="card-text text-dark">شما پروفایل خود را تکمیل کردید</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 h-100 mt-3 mt-sm-1">
+                        <div class="card text-white gradient-light-secondary text-center h-100">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 class="card-title font-weight-bold">تکمیل اطلاعات</h4>
+                                        </div>
+                                        <div class="col-12 py-1">
+                                            <p class="card-text text-dark">پروفایل خودرا تکمیل کنید</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">تکمیل پروفایل</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if request.user.user_of_personal_test.exists %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 h-100 mt-3 mt-sm-1">
+                        <div class="card text-white gradient-light-success text-center h-100">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3 class="card-title font-weight-bold">آزمون شخصیت</h3>
+                                        </div>
+                                        <div class="col-12 py-1">
+                                            <p class="card-text text-dark">آزمون را به صورت کامل انجام دادید.</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <a class="btn btn-success btn-darken-3 waves-success waves-light disabled">انجام شد <i class="fa fa-check"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 h-100 mt-3 mt-sm-1">
+                        <div class="card text-white gradient-light-secondary text-center h-100">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h3 class="card-title font-weight-bold">آزمون شخصیت</h3>
+                                        </div>
+                                        <div class="col-12 py-1">
+                                            <p class="card-text text-dark">بیشتر از ۲۰ دقیقه از شما وقت نمیگیرد</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="{% url "quiz:pre-register-personal-tests" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">انجام آزمون</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+    
+                    {% if challenge_response %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 h-100 mt-3 mt-sm-1">
+                        <div class="card text-white gradient-light-success text-center h-100">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <h4 class="card-title font-weight-bold">چالش ورودی</h4>
+                                    <div class="row">
+                                        <div class="col-12 py-1">
+                                            <p class="card-text text-dark">تبریک! پاسخ شما توسط شتابدهنده تایید شد</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <a class="btn btn-success btn-darken-3 waves-success waves-light disabled">انجام شد <i class="fa fa-check"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 h-100 mt-3 mt-sm-1">
+                        <div class="card text-white gradient-light-secondary text-center h-100">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 class="card-title font-weight-bold">چالش ورودی</h4>
+                                        </div>
+                                        <div class="col-12 py-1">
+                                            <p class="card-text text-dark">چالش تایین شده از طرف شتابدهنده. فنی یا تستی/تشریحی مناسب با نتایج آزمون شخصیت و اطلاعات پروفایل شما</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+    
+            <!-- Fourth step -->
+            {% if request.user.is_profile_complete and challenge_response %}
+            <div class="tab-pane {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and challenge_response %}active{% endif%}" id="road-register" aria-labelledby="road-register-tab" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-warning text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "team.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">برای تیم</h4>
+                                    <p class="card-text text-dark">میخواهم در این مسیر رشد همراه با تیمم شرکت کنم</p>
+                                    <a href="{% url "quiz:pre-register-required-team" task.uuid road.uuid %}" class="btn btn-warning btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-primary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "individual_man.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">شخصی</h4>
+                                    <p class="card-text text-dark">در این مسیر رشد به صورت انفرادی شرکت میکنم</p>
+                                    <a href="{% url "quiz:pre-register-required-individual" task.uuid road.uuid %}" class="btn btn-primary btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="tab-pane" id="road-register" aria-labelledby="road-register-tab" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "team.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">برای تیم</h4>
+                                    <p class="card-text text-dark">میخواهم در این مسیر رشد همراه با تیمم شرکت کنم</p>
+                                    <a class="btn btn-secondary btn-darken-3 waves-effect waves-dark mt-2 disabled">بزن بریم</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "individual_man.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">شخصی</h4>
+                                    <p class="card-text text-dark">در این مسیر رشد به صورت انفرادی شرکت میکنم</p>
+                                    <a class="btn btn-secondary btn-darken-3 waves-effect waves-dark mt-2 disabled">بزن بریم</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% comment %} <div class="col-12 mt-4">
+        <ul class="nav nav-tabs justify-content-start" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="user-info-tab" data-toggle="tab" href="#user-info" aria-controls="user-info" role="tab" aria-selected="true">
+                    <img src={% static "icons/weblog.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    قدم اول: اطلاعات اولیه
+                </a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link" id="team-tab" data-toggle="tab" href="#team" aria-controls="team" role="tab" aria-selected="false">
+                    <img src={% static "icons/users.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    قدم دوم: ساخت تیم
+                </a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link" id="idea-tab" data-toggle="tab" href="#idea" aria-controls="idea" role="tab" aria-selected="false">
+                    <img src={% static "icons/idea.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    قدم سوم: ثبت ایده
+                </a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link font-weight-bold" id="road-register-tab" data-toggle="tab" href="#road-register" aria-controls="road-register" role="tab" aria-selected="false">
+                    <img src={% static "icons/register.png" %} alt="وبلاگ" width="25" class="mr-25">
+                    ثبت نام در مسیر رشد
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <!-- First step -->
+            <div class="tab-pane active" id="user-info" aria-labelledby="user-info-tab" role="tabpanel">
+                <div class="row">
+                    {% if request.user.is_profile_complete %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-success text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "successfull_signup.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">تکمیل اطلاعات</h4>
+                                    <p class="card-text text-dark">شما پروفایل خود را تکمیل کردید</p>
+                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled mt-2">انجام شد <i class="fa fa-check"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "successfull_signup.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">تکمیل اطلاعات</h4>
+                                    <p class="card-text text-dark">پروفایل خودرا تکمیل کنید</p>
+                                    <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">تکمیل پروفایل</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+    
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <img src={% static "personal-test-vector.png" %} alt="element 02" class="img-fluid w-50 float-left px-1">
+                                    <h3 class="card-title font-weight-bold mt-3">آزمون شخصیت</h3>
+                                    <p class="card-text text-dark">با صبر و حوصله انجام بدید، بیشتر از ۲۰ دقیقه از شما وقت گرفته نمی‌شود</p>
+                                    <a href="{% url "quiz:pre-register-personal-tests" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">انجام آزمون</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    {% if challenge_response %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-{% if challenge_response.status == "w" %}info{% elif challenge_response.status == "r" %}danger{% elif challenge_response.status == "d" %}success{% endif %} text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "tasktech.png" %} alt="element 03" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-3">چالش ورودی</h4>
+                                    {% if challenge_response.status == "w" %}
+                                    <!-- Wait Status -->
+                                    <p class="card-text text-dark">پاسخ شما به دست شتابدهنده رسیده است، تا زمان بازخورد شتابدهنده منتظر بمانید و مراحل دیگر را انجام دهید</p>
+                                    <a href="{% url "quiz:pre-register-challenge-update" challenge_response.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-info waves-light mt-2">ویرایش <i class="fa fa-pencil"></i></a>
+                                    {% elif challenge_response.status == "r" %}
+                                    <!-- Reject Status -->
+                                    <p class="card-text text-dark">پاسخ شما از طرف شتابدهنده رد شد. اشکال نداره یک بار میتونی از شانس مجددت استفاده کنی</p>
+                                    <a class="btn btn-danger btn-darken-3 waves-danger waves-light mt-2">شانس مجدد <i class="fa fa-repeat"></i></a>
+                                    {% elif challenge_response.status == "d" %}
+                                    <!-- Done Status -->
+                                    <p class="card-text text-dark">تبریک! پاسخ شما توسط شتابدهنده تایید شد</p>
+                                    <a class="btn btn-success btn-darken-3 waves-success waves-light mt-2 disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "tasktech.png" %} alt="element 03" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-3">چالش ورودی</h4>
+                                    <p class="card-text text-dark">چالش تایین شده از طرف شتابدهنده. فنی یا تستی/تشریحی مناسب با نتایج آزمون شخصیت و اطلاعات پروفایل شما</p>
+                                    <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">شروع چالش</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+    
+            <!-- Seconde step -->
+            <div class="tab-pane" id="team" aria-labelledby="team-tab" role="tabpanel">
+                <div class="row">
+                    {% if request.user.user_of_team_member.first %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-success text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "team_making.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">ساخت تیم</h4>
+                                    <p class="card-text text-dark">شما هماهنگ کننده حداقل یک تیم هستید، با هم تیمی هاتون قوی ادامه بدید</p>
+                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled mt-2">انجام شد <i class="fa fa-check"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "team_making.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">ساخت تیم</h4>
+                                    <p class="card-text text-dark">یک تیم بسازید یا در یک تیم دسترسی هماهنگ کننده داشته باشید</p>
+                                    <a href="{% url "team:manage-teams" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">ساخت تیم</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+    
+                    {% if request.user.user_of_team_member.first.team.team_member_count > 1 %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-success text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <img src={% static "add-member.png" %} alt="element 02" class="img-fluid w-50 float-left px-1">
+                                    <h3 class="card-title font-weight-bold mt-3">ثبت اعضای تیم</h3>
+                                    <p class="card-text text-dark">تیم شما تشکیل و در حال پیشرفت می‌باشد</p>
+                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled mt-2">انجام شد <i class="fa fa-check"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "add-member.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">ثبت اعضای تیم</h4>
+                                    <p class="card-text text-dark">اعضای تیم خودرا در تیم ثبت کنید</p>
+                                    <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">ثبت عضو</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if request.user.user_of_team_member.first %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-success text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <img src={% static "join-team.png" %} alt="element 02" class="img-fluid w-50 float-left px-1">
+                                    <h3 class="card-title font-weight-bold mt-3">عضو یک تیم باشید</h3>
+                                    <p class="card-text text-dark">شما حداقل در یک تیم عضو هستید</p>
+                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success mt-2">انجام شد <i class="fa fa-check"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "join-team.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">عضو یک تیم باشید</h4>
+                                    <p class="card-text text-dark">از سرتیم خود خواسته که یک تیم ساخته و شماره به تیم اضافه کند</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="col-12">
+                        <div class="card border-warning">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <h4 class="text-dark"><i class="fa fa-slack"></i> نکته: </h4>
+                                    <p class="mb-0">میتوانید این مرحله را پشت سر بگزارید و مسیر رشد را بدون تیم ادامه دهید</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Third step -->
+            <div class="tab-pane" id="idea" aria-labelledby="idea-tab" role="tabpanel">
+                <div class="row">
+                    {% if request.user.user_of_team_member.first.team.team_of_plan.first or request.user.user_of_plan.first %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-success text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "idea.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">ثبت ایده</h4>
+                                    <p class="card-text text-dark">ایده/محصول شما ثبت شده است</p>
+                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled mt-2">انجام شد <i class="fa fa-check"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-secondary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "idea.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">ثبت ایده یا محصولات</h4>
+                                    <p class="card-text text-dark">ایده یا محصولی که درحال حاضر مشغول کارکردن رو آن هستید را داخل پروفایل خود ثبت کنید</p>
+                                    <a href="{% url "team:product-management" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">ثبت ایده/محصول</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+    
+            <!-- Fourth step -->
+            <div class="tab-pane" id="road-register" aria-labelledby="road-register-tab" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-warning text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "team.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">برای تیم</h4>
+                                    <p class="card-text text-dark">میخواهم در این مسیر رشد همراه با تیمم شرکت کنم</p>
+                                    <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-warning btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card text-white gradient-light-primary text-center">
+                            <div class="card-content d-flex">
+                                <div class="card-body">
+                                    <img src={% static "individual_man.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
+                                    <h4 class="card-title font-weight-bold mt-4">شخصی</h4>
+                                    <p class="card-text text-dark">در این مسیر رشد به صورت انفرادی شرکت میکنم</p>
+                                    <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-primary btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

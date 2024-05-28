@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+    
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header pt-2">
+                        <img class="img-fluid" src={% if object.logo %}{{object.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt="لوگو {{object.name}}">
+                        <h1 class="my-2 mx-auto">{{object.name}} <a href={{object.domain}} target="_blank" class="font-medium-3"><i class="feather icon-link"></i></a></h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex align-items-start pb-0">
+                        <div>
+                            <h2 class="text-bold-700 mb-0">{{object.product_of_company.all.count}}</h2>
+                            <p>تعداد محصولات / خدمات</p>
+                        </div>
+                        <div class="avatar bg-rgba-info p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="feather icon-tag text-info font-medium-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-9">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">لیست محصولات و خدمات این شرکت</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body card-dashboard">
+                    <div class="table-responsive">
+                        <table class="table zero-configuration">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">نام</th>
+                                    <th scope="col">توضیحات</th>
+                                    <th scope="col" class="font-medium-1"><i class="feather icon-award text-warning"></i></th>
+                                    <th scope="col" class="text-center">خرید</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in object.product_of_company.all %}
+                                <tr>
+                                    <th scope="row">{{forloop.counter|stringformat:"03d"}}</th>
+                                    <td class="font-weight-bold">{{item.name}}</td>
+                                    <td>{{item.description|truncatechars:255}}</td>
+                                    <td>{{item.price}}</td>
+                                    <td><span class="btn btn-success"><i class="feather icon-shopping-cart"></i></span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

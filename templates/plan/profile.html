@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+	
+	<div class="col-md-4">
+		<div class="row">
+			<div class="col-12">
+				<div class="card bg-gradient-info">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0 text-white">{{object.name}} </h2>
+							<p class="mt-25 text-dark">نام محصول</p>
+						</div>
+						<div class="avatar bg-rgba-white p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-users text-white font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="card">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0">{{object.industry}} </h2>
+							<p class="mt-25">حوزه صنعتی</p>
+						</div>
+						<div class="avatar bg-rgba-success p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-clipboard text-success font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-8">
+		<div class="card">
+            <div class="card-header">
+                <h4 class="card-title">جزئیات محصول</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <table class="table table-responsive-md mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">توضیحات</th>
+                                <th scope="col">دارای کمینه (MVP)</th>
+                                <th scope="col">وضعیت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+							<tr>
+								<td>{{object.description}}</td>
+								<td>{% if object.has_mvp %}<i class="feather icon-check text-success font-medium-5 font-weight-bold"></i>{% else %}<i class="feather icon-x text-danger font-medium-5 font-weight-bold"></i>{% endif %}</td>
+								<td>{{object.get_status_display}}</td>
+							</tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+	</div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

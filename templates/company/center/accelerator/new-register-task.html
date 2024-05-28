@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <section id="nav-filled">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card overflow-hidden">
+                        <div class="card-header">
+                            <h4 class="card-title">مدیریت آزمون های ورودی</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="accordion mb-3" id="accordionExample" data-toggle-hover="true">
+                                    <div class="collapse-margin">
+                                        <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <span class="lead collapse-title collapsed">
+                                                <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">فرم ساخت آزمون</span>
+                                            </span>
+                                        </div>
+
+                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                    <input name="accelerator" value="{{acc_object.id}}" hidden>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            {{ form.title|as_crispy_field }}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            {{ form.start_date|as_crispy_field }}
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            {{ form.expiration_date|as_crispy_field }}
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            {{ form.text|as_crispy_field }}
+                                                        </div>
+                                                    </div>
+                            
+                                                    <button class="btn btn-success btn-block" type="submit">ایجاد آزمون</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <table class="table table-responsive-md mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">نام آزمون</th>
+                                            <th scope="col">تاریخ شروع</th>
+                                            <th scope="col">تاریخ پایان</th>
+                                            <th scope="col">عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for task in acc_object.accelerator_of_pre_register_task.all %}
+                                            <tr>
+                                                <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                                <td class="font-weight-bold">{{task.title}}</td>
+                                                <td>{{task.start_date|to_jalali}}</td>
+                                                <td>{{task.expiration_date|to_jalali}}</td>
+                                                <td>
+                                                    <a href={% url "company:update-register-task" task.uuid %} class="badge badge-info">ویرایش</a>
+                                                    <a href={% url "company:delete-register-task" task.uuid %} class="badge badge-danger">حذف <i class="feather icon-trash-2"></i></a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "jalali-date-picker/persian-date.js" %}></script>
+<script src={% static "jalali-date-picker/persian-datepicker.js" %}></script>
+<script>
+    $("#id_start_date").persianDatepicker({
+        initialValue: false,
+        persianDigit: false,
+        format: 'YYYY-MM-DD',
+    }
+    ).attr("autocomplete", "off")
+
+    $("#id_expiration_date").persianDatepicker({
+        initialValue: false,
+        persianDigit: false,
+        format: 'YYYY-MM-DD',
+    }
+    ).attr("autocomplete", "off")
+</script>
+{% endblock page_js %}

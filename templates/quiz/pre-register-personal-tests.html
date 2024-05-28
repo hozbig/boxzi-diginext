@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+{% load crispy_forms_tags %}
+
+{% block page_css %}
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <h1 class="text-center">این مرحله در حال ساخت می‌باشد!</h1>
+    </div>
+
+    <div class="col-12">
+        <form method="post">
+            {% csrf_token %}
+            <section class="question-box mt-3">
+                <h2 class="question">من اصولاً آدم نگرانی نیستم.</h2>
+                <div class="description"></div>
+                <div class="answers form-control"><label onclick="clickOnAnswer(this);" class="answer mr-2 " for="answer-1"><i class="icon icon-checked"></i><input id="answer-1" type="radio" data-order="1" name="input-answer" value="4">کاملاً مخالفم</label><label onclick="clickOnAnswer(this);" class="answer mr-2 " for="answer-2"><i class="icon icon-checked"></i><input id="answer-2" type="radio" data-order="2" name="input-answer" value="3">مخالفم</label><label onclick="clickOnAnswer(this);" class="answer mr-2 " for="answer-3"><i class="icon icon-checked"></i><input id="answer-3" type="radio" data-order="3" name="input-answer" value="2">نظری ندارم</label><label onclick="clickOnAnswer(this);" class="answer mr-2 " for="answer-4"><i class="icon icon-checked"></i><input id="answer-4" type="radio" data-order="4" name="input-answer" value="1">موافقم</label><label onclick="clickOnAnswer(this);" class="answer " for="answer-5"><i class="icon icon-checked"></i><input id="answer-5" type="radio" data-order="5" name="input-answer" value="0">کاملاً موافقم</label></div>
+            </section>
+            <button type="submit" class="btn btn-success btn-block mt-3">ثبت</button>
+        </form>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

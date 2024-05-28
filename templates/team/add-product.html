@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
+
+{% include 'elements/django_quill/media.html' %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+    <div class="col-lg-12 mb-2">
+        <div class="row">
+            <div class="col-12">
+                
+                <div class="card overflow-hidden">
+                    <div class="card-header">
+                        <h4 class="card-title">پرسش‌نامه محصول</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+
+                          <form method="POST">
+                              {% csrf_token %}
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      {{ form.name|as_crispy_field }}
+                                  </div>
+                                  {% if request.user.user_of_team_member.exists %}
+                                  <div class="col-md-6">
+                                      <div id="div_id_team" class="form-group">
+                                          <label for="id_team" class=" requiredField">
+                                              تیم<span class="asteriskField">*</span>
+                                          </label>
+                                          <div>
+                                            <select name="team" class="select form-control" id="id_team">
+                                              {% for team in request.user.user_of_team_member.all %}
+                                              <option value="{{team.team.id}}" selected="">{{team.team.name}}</option>
+                                              {% endfor %}
+                                            </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  {% endif %}
+                                  <div class="col-md-12">
+                                      {{ form.description|as_crispy_field }}
+                                  </div>
+                              </div>
+
+                              <button class="btn btn-success btn-block waves-effect waves-light" type="submit">ثبت</button>
+                          </form>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/charts/chart.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
+
+<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/charts/chart-chartjs.js" %}></script>
+
+<script>
+    function generateRandomList(length) {
+      const randomList = [];
+      for (let i = 0; i < length; i++) {
+          const randomValue = Math.floor(Math.random() * 3); // Generates a random integer from 0 to 9
+          randomList.push(randomValue);
+      }
+      return randomList;
+    }
+  
+    var lineChartctx = $("#line-chart-custom");
+  
+    // Chart Options
+    var linechartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: {
+        position: 'top',
+      },
+      hover: {
+        mode: 'label'
+      },
+      scales: {
+        xAxes: [{
+          display: true,
+          gridLines: {
+            color: '#dae1e7',
+          },
+          scaleLabel: {
+            display: false,
+          }
+        }],
+        yAxes: [{
+          display: true,
+          gridLines: {
+            color: '#dae1e7',
+          },
+          scaleLabel: {
+            display: false,
+          }
+        }]
+      },
+      title: {
+        display: false,
+        text: 'World population per region (in millions)'
+      }
+    };
+  
+    // Chart Data
+    var linechartData = {
+      labels: ["1402-12-6", "1402-12-7", "1402-12-8", "1402-12-9", "1402-12-10", "1402-12-11", "1402-12-12", "1402-12-13", "1402-12-14", "1402-12-15"],
+      datasets: [
+        {
+            color: "#7367F0",
+            label: "محصول اول",
+            data: generateRandomList(10),
+            borderColor: "#7367F0",
+            fill: false
+        },
+        {
+            color: "#EA5455",
+            label: "محصول دوم",
+            data: generateRandomList(5),
+            borderColor: "#EA5455",
+            fill: false
+        },
+      ]
+    };
+  
+    var lineChartconfig = {
+      type: 'line',
+  
+      // Chart Options
+      options: linechartOptions,
+  
+      data: linechartData
+    };
+  
+    // Create the chart
+    var lineChart = new Chart(lineChartctx, lineChartconfig);
+</script>
+
+<script>
+    var $names = ["شتابدهنده", "اشخاص", "اعضای تیم", "شرکت ها"]
+
+	var options = {
+		series: [{
+		name: 'شما',
+		data: generateRandomList($names.length),
+	  }],
+		chart: {
+		height: 500,
+		type: 'radar',
+		dropShadow: {
+		  enabled: true,
+		  blur: 1,
+		  left: 1,
+		  top: 1
+		},
+		toolbar: {show:false}
+	  },
+	  stroke: {
+		width: 2
+	  },
+	  fill: {
+		opacity: 0.1
+	  },
+	  markers: {
+		size: 0
+	  },
+	  labels: $names,
+	  dataLabels: {
+	    style: {
+	    	colors: ["#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C"],
+	    	fontSize: "10px",
+	    }
+	  },
+	  yaxis: {show: false}
+	  };
+
+	  var chart = new ApexCharts(document.querySelector("#team_strength_chart"), options);
+	  chart.render();
+</script>
+{% endblock page_js %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/faq.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">اطلاعات کلی درخواست</h4>
+            </div>
+            <div class="card-body">
+                <div class="card-content">
+                    <table class="table table-responsive-md mb-0 text-dark">
+                        <thead>
+                            <tr class="">
+                                <th scope="col">نوع ثبت نام</th>
+                                <th scope="col">تیم</th>
+                                <th scope="col">کاربر</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% if not object.team and object.status_user_state == "f" %}
+                                <td class="table-info">شخصی</td>
+                                {% elif object.team %}
+                                <td class="table-warning">تیمی</td>
+                                {% endif %}
+                                <td class="">{{object.team|default:"***"}}</td>
+                                <td class="">{{object.user.get_full_name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">اطلاعات ایده</h4>
+            </div>
+            <div class="card-body">
+                <div class="card-content">
+                    <table class="table table-responsive-md mb-0 text-dark">
+                        <thead>
+                            <tr class="table-light">
+                                <th scope="col">نام ایده</th>
+                                <th scope="col">توضیحات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for idea in object.team.team_of_plan.all %}
+                            <tr>
+                                <td class="">{{idea.name}}</td>
+                                <td class="">{{idea.description}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if object.team %}
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">اطلاعات اعضای تیم</h4>
+            </div>
+            <div class="card-body">
+                <div class="card-content">
+                    <table class="table table-responsive-md mb-0 text-dark">
+                        <thead>
+                            <tr class="table-light">
+                                <th scope="col">نام و نام‌خانوادگی</th>
+                                <th scope="col">علاقه‌مندی ها</th>
+                                <th scope="col">توانایی ها</th>
+                                <th scope="col">هماهنگ کننده؟</th>
+                                <th scope="col">مشاهده نتیجه پاسخ به</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for member in object.team.team_of_team_member.all %}
+                                {% if member.user %}
+                                <tr>
+                                    <td class="">{{member.user.get_full_name}}</td>
+                                    <td>{% for item in member.user.interests.all %}{{item.name}} <span class="text-black-50">|</span> {% endfor %}</td>
+                                    <td>{% for item in member.user.abilities.all %}{{item.name}} <span class="text-black-50">|</span> {% endfor %}</td>
+                                    <td>
+                                        {% if member.is_coordinator %}<span class="badge badge-success"><i class="feather icon-check"></i></span>{% else %}***{% endif %}
+                                    </td>
+                                    <td>
+                                        <a href={% url "quiz:task-response-detail" object.road.uuid member.user.username %} class="badge badge-primary">چالش</i></a>
+                                        <a href="" class="badge badge-primary">تست شخصیت</i></a>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="">{{member.temporary_name}} <span class="badge badge-danger small">ثبت نام نشده</span></td>
+                                    <td>***</td>
+                                    <td>***</td>
+                                    <td>
+                                        {% if member.is_coordinator %}<span class="badge badge-success"><i class="feather icon-check"></i></span>{% else %}***{% endif %}
+                                    </td>
+                                    <td>***</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/pages/faq-kb.js" %}></script>
+{% endblock page_js %}

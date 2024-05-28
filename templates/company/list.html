@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<style>
+    .__cp_img_div {
+    display: block;
+    padding-top: 100%;
+    position: relative;
+    }
+    
+    .__cp_img_div>img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    }
+</style>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+    {% for item in object_list %}
+    <div class="col-3">
+        <a href={% url "company:profile" item.uuid %} class="row card">
+            <div class="col-12">
+                <div class="__cp_img_div">
+                    <img class="img-fluid rounded" src={{item.logo.url}} alt={{item.name}}>
+                </div>
+            </div>
+            <div class="col-12 py-2 text-center">
+                <h4 class="card-title">{{item.name}}</h4>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="avatar bg-rgba-primary p-50 m-0 mb-1">
+                                <div class="avatar-content">
+                                    <i class="feather icon-clock text-primary font-medium-5"></i>
+                                </div>
+                            </div>
+                            <h2 class="text-bold-700">{{object.get_read_time}} دقیقه</h2>
+                            <p class="mb-0 line-ellipsis">مدال ها</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="avatar bg-rgba-success p-50 m-0 mb-1">
+                                <div class="avatar-content">
+                                    <i class="feather icon-bar-chart text-success font-medium-5"></i>
+                                </div>
+                            </div>
+                            <h2 class="text-bold-700">مقدماتی</h2>
+                            <p class="mb-0 line-ellipsis">درجه سختی</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-2 col-md-4 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="avatar bg-rgba-warning p-50 m-0 mb-1">
+                                <div class="avatar-content">
+                                    <i class="feather icon-award text-warning font-medium-5"></i>
+                                </div>
+                            </div>
+                            <h2 class="text-bold-700">{{object.medals}}</h2>
+                            <p class="mb-0 line-ellipsis">ارزش مدالی مرحله</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-7">
+        <div class="card">
+            <div class="card-content p-3">
+                <h1 class="">اولین ویدیو آموزشی</h1>
+                <p class="font-medium-1 mt-2" style="line-height: 1.6; text-align: justify;">{{object.description}}</p>
+
+                <div class="list-inline">
+                    <span class="list-inline-item my-auto">مدرس دوره: </span>
+                    <div class="list-inline-item">
+                        <img class="img-fluid rounded-circle" style="width: 50px; height: 50px;" src={% static "no-banner.jpg" %} alt="">
+                    </div>
+                    <span class="font-medium-1">اشکان هژبری</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-5">
+        <div class="card">
+            <div class="card-content">
+                <div class="embed-responsive embed-responsive-item embed-responsive-16by9">
+                    <iframe src="https://www.aparat.com/video/video/embed/videohash/{{object.get_aparat_code}}/vt/frame" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-content p-4">
+                {{object.content.html|safe}}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 text-center">
+        <a href={% url "content:watched-content" object.uuid %} class="btn btn-block btn-success">این آموزش را تمام کردم</a>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

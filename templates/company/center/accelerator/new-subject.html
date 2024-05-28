@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ساخت یک موضوع جدید</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12 mb-1">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="toggleCheckbox">
+                                    <label class="custom-control-label" for="toggleCheckbox">مایل به ساخت یه موضوع جدید هستم</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6" id="topic_div" >
+                                {{ form.topic|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6" id="topic_name_div" style="display: none;">
+                                {{ form.topic_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.subject_name|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <button class="btn btn-success btn-block" type="submit">ایجاد موضوع</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script>
+    var checkbox = document.getElementById('toggleCheckbox');
+    var topicNameDiv = document.getElementById('topic_name_div');
+    var topicDiv = document.getElementById('topic_div');
+
+    checkbox.addEventListener('change', function() {
+        if (checkbox.checked) {
+            topicDiv.style.display = 'none';
+            topicNameDiv.style.display = 'block';
+        } else {
+            topicNameDiv.style.display = 'none';
+            topicDiv.style.display = 'block';
+        }
+    });
+</script>
+{% endblock page_js %}

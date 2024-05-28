@@ -1,0 +1,9 @@
+{% extends "registration/register/base.html" %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-success text-center" style="direction: rtl; text-align: right;">«ثبت نام شما با موفقیت انجام شد»</h2>
+<p class="mb-0" style="direction: rtl; text-align: right;"><b>{{user.first_name}} {{user.last_name}}</b> عزیز نتیجه ثبت نام شما از طریق پیامک به شما اطلاع داده خواهد شد.</p>
+<li class="" style="direction: rtl; text-align: right;">کد ثبت نام شما: <span class="text-primary">{{user.uuid}}</span></li>
+<div class="text-center"><a href="https://boxzi.ir/" class="btn btn-success mt-3">بازگشت به صفحه اصلی</a></div>
+{% endblock content %}

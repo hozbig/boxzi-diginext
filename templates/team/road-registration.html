@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/faq.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12 card">
+        <div class="row">
+            <div class="col-lg-8 p-0">
+                <img src="{% if object.poster %}{{object.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}" alt="{{object.name}}" class="img-fluid">
+            </div>
+            <div class="col-lg-4">
+                <div class="h-100 p-2">
+                    <h2 class="mt-3 mr-3 font-weight-bold">{{object.name}}</h2>
+                    <li class="list-group mt-2">
+                        <i class="text-black-50 mt-50"><i class="feather icon-tag"></i> هزینه: <span class="{% if object.price <= 0 %}text-warning{% endif %}">{{object.price|not_zero}}</span></i>
+                        <i class="text-black-50 mt-50"><i class="feather icon-map-pin"></i> محل برگزاری: {{object.location}}</i>
+                        <i class="text-black-50 mt-50">برگزار کننده: <img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></i>
+                    </li>
+
+                    {% if is_register and is_register.status_user_state in "fm" %}
+                        {% if is_register.status == "w" %}
+                        <span class="btn btn-block btn-gradient-bg bg-gradient-info mt-3">وضعیت: <b>{{is_register.get_status_display}}</b></span>
+                        {% elif is_register.status == "p" %}
+                        <span class="btn btn-block btn-gradient-bg bg-gradient-warning mt-3">وضعیت: <b>{{is_register.get_status_display}}</b></span>
+                        {% elif is_register.status == "d" %}
+                        <span class="btn btn-block btn-gradient-bg bg-gradient-success mt-3">وضعیت: <b>{{is_register.get_status_display}}</b></span>
+                        {% elif is_register.status == "r" %}
+                        <span class="btn btn-block btn-gradient-bg bg-gradient-danger mt-3">وضعیت: <b>{{is_register.get_status_display}}</b></span>
+                        {% endif %}
+                    {% else %}
+                    <a href="{% url "quiz:pre-register-required" object.pre_register_task.uuid object.uuid %}" class="btn btn-block btn-gradient-bg bg-gradient-success mt-3">ثبت درخواست</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Detail and registration button -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">ثبت درخواست شرکت در این برنامه</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <table class="table table-responsive-md mb-0 text-dark">
+                                <thead>
+                                    <tr class="table-light">
+                                        <th scope="col">توضیحات</th>
+                                        <th scope="col">تعداد فصل ها</th>
+                                        <th scope="col">تعداد گام ها</th>
+                                        <th scope="col">تعداد مربی ها</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="col-6 text-justify">{{object.description}}</td>
+                                        <td class="">{{object.accelerator.accelerator_of_collection.count}} <span class="text-black-50">فصل</span></td>
+                                        <td class="">{{object.accelerator.accelerator_of_content.count}} <span class="text-black-50">گام</span></td>
+                                        <td class="">{{object.accelerator.mentors.count}} <span class="text-black-50">مربی</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            {% comment %}
+                            <form method="post" class="mt-2" action={% url "team:road-registration" object.uuid %}>
+                                {% csrf_token %}
+                                <fieldset class="form-group">
+                                    <select class="form-control" name="register_type">
+                                        <option value="0">شخصی (درخواست فعال شدن برنامه فقط برای خود شما)</option>
+                                        {% for team in request.user.members_of_team.all %}
+                                        <option value="{{team.uuid}}">{{team.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </fieldset>
+                                <button type="submit" class="btn btn-block btn-gradient-bg bg-gradient-success">ثبت درخواست</button>
+                            </form>
+                            {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"><i class="fa fa-question-circle"></i> سوالات متداول</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="accordion search-content-info" id="accordionExample">
+                                <div class="collapse-margin search-content mt-0">
+                                    <div class="card-header" id="headingOne" role="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <span class="lead collapse-title">میشه گام ها و مراحل برنامه به صورت آنلاین هم طی کرد؟</span>
+                                    </div>
+                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="collapse-margin">
+                                    <div class="card-header" id="headingTwo" role="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <span class="lead collapse-title collapsed">
+                                            گام ها و آزمون های دیجی نکست دارای مدال هستند؟
+                                        </span>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="collapse-margin search-content">
+                                    <div class="card-header" id="headingThree" role="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        <span class="lead collapse-title collapsed">
+                                            چجوری به دریافت سرمایه برسم؟
+                                        </span>
+                                    </div>
+                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- About accelerator -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"><i class="fa fa-question-circle"></i> برگزار کننده این برنامه:</h4>
+                    </div>
+                    <div class="card-body pb-1">
+                        <div class="card-content text-dark">
+                            <ul class="list-inline row justify-content-center">
+                                <li><img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></li>
+                                <li class="ml-2">{{object.accelerator.name}}</li>
+                                <li class="ml-2"><span class="badge badge-danger">{{object.accelerator.get_type_display}}</span></li>
+                            </ul>
+
+                            <p class="mt-3">{{object.accelerator.short_description}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-content">
+                            <li class="list-group">
+                                <i class=""><i class="fa fa-circle-o"></i> شروع: {{object.start_date|to_jalali}}</i>
+                                <i class="mt-25"><i class="fa fa-circle-o"></i> پایان: {{object.start_date|to_jalali}}</i>
+                                <i class="mt-25"><i class="fa fa-circle-o"></i> مهلت ثبت نام تا: {{object.start_date|to_jalali}}</i>
+                                <i class="mt-25"><i class="fa fa-circle-o"></i> شروع برنامه: {{object.start_date|to_jalali}}</i>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/pages/faq-kb.js" %}></script>
+{% endblock page_js %}

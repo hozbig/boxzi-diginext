@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+{% load crispy_forms_tags %}
+
+{% block page_css %}
+{% include 'elements/django_quill/media.html' %}
+<style>
+    img {
+        max-width: 100%;
+    }
+</style>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-content">
+                    <div class="card-body">
+                        
+                        <h3 class="">{{object.title}}</h3>
+                        <hr>
+
+                        {{object.text.html|safe}}
+                        
+                        {% if object.file %}
+                        <hr>
+                        <a class="btn btn-primary" href="{{object.file.url}}">مشاهده فایل</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">در یک نگاه</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">ارسال کننده: <span class="font-weight-bold">{{object.user.get_full_name}}</span></li>
+                        <li class="list-group-item">تاریخ ارسال: <span class="font-weight-bold">{{object.created_time|to_jalali}}</span></li>
+                        <li class="list-group-item">فایل ارسالی: {% if object.file %}<a href="{{object.file.url}}" class="badge badge-success text-white">برای مشاهده کلیک کنید</a>{% else %}<span class="badge badge-danger">دارد</span>{% endif %} </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

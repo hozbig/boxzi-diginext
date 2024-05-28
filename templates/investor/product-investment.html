@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/faq.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12 card">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="my-3 font-weight-bold font-large-2 text-center">{{object.name}}</h1>
+            </div>
+            <div class="col-12 text-center">
+                <img src="{% if object.poster %}{{object.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}" alt="{{object.name}}" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Detail and registration button -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">اختصاص دهی اعتبار به این محصول</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <table class="table table-responsive-md mb-0 text-dark">
+                                <thead>
+                                    <tr class="table-light">
+                                        <th scope="col">توضیحات</th>
+                                        <th scope="col">میانگین بلوغ محصول</th>
+                                        <th scope="col">اعتبار اختصاص داده شما</th>
+                                        <th scope="col">میزان سهام شما</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold col-6">{{object.description}}</td>
+                                        <td class="">سطح سوم</td>
+                                        <td class="">0</td>
+                                        <td class="">0 درصد</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <form method="post" class="mt-2" action={% url "team:road-registration" object.uuid %}>
+                                {% csrf_token %}
+                                <fieldset class="form-group">
+                                    <label for="id_amount" class="requiredField">حجم اعتبار<span class="asteriskField">*</span></label>
+                                    <input type="number" name="amount" value="0" min="0" max="100" class="numberinput form-control" required="" id="id_amount">
+                                </fieldset>
+                                <button type="submit" class="btn btn-block btn-gradient-bg bg-gradient-success">ثبت اعتبار</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ -->
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"><i class="fa fa-question-circle"></i> سوالات متداول</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="accordion search-content-info" id="accordionExample">
+                                <div class="collapse-margin search-content mt-0">
+                                    <div class="card-header" id="headingOne" role="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                        <span class="lead collapse-title">تفاوت اختصاص اعتبار و سرمایه گذاری در جیست؟</span>
+                                    </div>
+                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="collapse-margin">
+                                    <div class="card-header" id="headingTwo" role="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <span class="lead collapse-title collapsed">
+                                            گزارش های پیشرفت و وضعیت سرمایه من به شکل به من نمایش داده میشود؟
+                                        </span>
+                                    </div>
+                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/pages/faq-kb.js" %}></script>
+{% endblock page_js %}

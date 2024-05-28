@@ -1,0 +1,97 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<!-- saved from url=(0046)https://atiyehahmadi.ir/xmee/ltr/login-34.html -->
+<html class="no-js" lang="fa">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>BOXZI platform</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="https://atiyehahmadi.ir/xmee/ltr/img/favicon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href={% static "register-template/register_files/bootstrap.min.css" %}>
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href={% static "register-template/register_files/fontawesome-all.min.css" %}>
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href={% static "register-template/register_files/flaticon.css" %}>
+    <!-- Google Web Fonts -->
+    <link href={% static "register-template/register_files/css" %} rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href={% static "register-template/register_files/style.css" %}>
+
+    {% block extra_style %}{% endblock extra_style %}
+</head>
+
+<body>
+    <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    
+    <section class="fxt-template-animation fxt-template-layout34 loaded" data-bg-image={% static "" %} style="background-image: url(&quot;img/elements/bg1.png&quot;);">
+        <div class="fxt-shape">
+            <div class="fxt-transformX-L-50 fxt-transition-delay-1">
+                <img src={% static "register-template/register_files/shape1.png" %} alt="Shape">
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="fxt-column-wrap justify-content-between">
+                        <div class="fxt-animated-img">
+                            <div class="fxt-transformX-L-50 fxt-transition-delay-10">
+                                <img src={% static "register-template/register_files/bg34-1.png" %} alt="Animated Image">
+                            </div>
+                        </div>
+                        <div class="fxt-transformX-L-50 fxt-transition-delay-3">
+                            <a href="https://boxzi.ir/" class="fxt-logo"><img src={% static "register-template/images/boxzi-logo.png" %} alt="Logo"></a>
+                        </div>
+                        <div class="fxt-transformX-L-50 fxt-transition-delay-5">
+                            <div class="fxt-middle-content">
+                                <h1 class="fxt-main-title"> باکس‌زی پلتفرم مدیریت نوآوری </h1>
+                                <div style=text-align:right class="fxt-switcher-description1"> باکس‌زی یک ابزار آنلاین است که به شما برای مدیریت نوآوری و ایده ها کمک می کند <a href="https://boxzi.ir" class="fxt-switcher-text ms-2">درباره باکس‌زی بیشتر بدانید</a></div>
+                            </div>
+                        </div>
+                        <div class="fxt-transformX-L-50 fxt-transition-delay-7">
+                            <div class="fxt-qr-code">
+                                <img src={% static "register-template/register_files/qr-login-34.png" %} alt="QR">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="fxt-column-wrap justify-content-center">
+                        <div class="fxt-form" style="text-align:right; direction: rtl;">
+                            {% if messages %}
+                            <div class="col-12">
+                                {% for message in messages %}
+                                <div class="alert alert-{{message.tags}}">
+                                        {{message|safe}}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            {% block content %}{% endblock content %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Bootstrap js -->
+    <script src={% static "register-template/register_files/bootstrap.min.js" %}></script>
+    <!-- Imagesloaded js -->
+    <script src={% static "register-template/register_files/imagesloaded.pkgd.min.js" %}></script>
+    <!-- Validator js -->
+    <script src={% static "register-template/register_files/validator.min.js" %}></script>
+    <!-- Custom Js -->
+    <script src={% static "register-template/register_files/main.js" %}></script>
+
+    {% block extra_js %}{% endblock extra_js %}
+
+</body></html>

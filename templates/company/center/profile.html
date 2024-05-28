@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+    
+    <div class="col-12 mb-3">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card h-100 d-flex">
+                    <div class="card-header m-auto p-2">
+                        <img class="img-fluid" width="150px" src={% if object.logo %}{{object.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt="لوگو {{object.name}}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card h-100 bg-gradient-dark">
+					<div class="card-header d-flex align-items-start pb-0 h-100">
+						<div class="text-center m-auto">
+							<h2 class="text-bold-700 mb-0 text-white font-large-1">{{object.name}} </h2>
+						</div>
+						<div class="avatar bg-rgba-white p-50 my-auto">
+							<div class="avatar-content">
+								<i class="feather icon-zap text-white font-large-1"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="row">
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header d-flex align-items-start pb-0">
+                        <div>
+                            <h2 class="text-bold-700 mb-0">{{object.get_type_display}}</h2>
+                            <p>نوع مرکز</p>
+                        </div>
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="feather icon-tag text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header d-flex align-items-start pb-0">
+                        <div>
+                            <h2 class="text-bold-700 mb-0">{{object.state}}</h2>
+                            <p>استان</p>
+                        </div>
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="feather icon-map-pin text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header d-flex align-items-start pb-0">
+                        <div>
+                            <h2 class="text-bold-700 mb-0">{{object.activity}}</h2>
+                            <p>حوزه فعالیت</p>
+                        </div>
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="feather icon-box text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <section id="nav-filled">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card overflow-hidden">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                                    {% if object.description.html|length > 15 %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab" aria-controls="about" aria-selected="true">درباره {{object.get_type_display}}</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="road-tab" data-toggle="tab" href="#road" role="tab" aria-controls="road" aria-selected="false">مسیرها</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="mentors-tab" data-toggle="tab" href="#mentors" role="tab" aria-controls="mentors" aria-selected="false">مربی ها</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="statistic-tab" data-toggle="tab" href="#statistic" role="tab" aria-controls="statistic" aria-selected="true">آمار</a>
+                                    </li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content pt-1">
+                                    {% if object.description.html|length > 15 %}
+                                    <div class="tab-pane" id="about" role="tabpanel" aria-labelledby="about-tab">
+                                        {{object.description.html|safe}}
+                                    </div>
+                                    {% endif %}
+                                    <div class="tab-pane" id="road" role="tabpanel" aria-labelledby="road-tab">
+                                        <div class="accordion" id="accordionExample" data-toggle-hover="true">
+                                            {% for item in object.accelerator_of_road.all %}
+                                            <div class="collapse-margin">
+                                                <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                                    <span class="lead collapse-title collapsed">
+                                                        <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">{{item.name}}</span>
+                                                    </span>
+                                                </div>
+    
+                                                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample" style="">
+                                                    <div class="card-body">
+                                                        <ul class="list-group list-group-flush">
+                                                            {% for collection in item.road_of_collection_order.all %}
+                                                            <li class="list-group-item">
+                                                                <span class="badge badge-pill bg-warning float-right">{{collection.collection.collection_of_content_order.count}}</span>
+                                                                {{collection.collection.name}}
+                                                            </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="mentors" role="tabpanel" aria-labelledby="mentors-tab">
+                                        <table class="table zero-configuration">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>نام مربی</th>
+                                                    <th>موضوعات مربوط</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in object.mentors.all %}
+                                                <tr>
+                                                    <td>{{forloop.counter|stringformat:"02d"}}</td>
+                                                    <td><a href={% url "account:mentor-profile" item.username %} class="">{{item.get_full_name}}</a></td>
+                                                    <td>
+                                                        {% for cat in item.interests.all %}
+                                                        <span class="badge badge-primary">{{cat.name}}</span>
+                                                        {% endfor %}
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane active" id="statistic" role="tabpanel" aria-labelledby="statistic-tab">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-2">
+                                                <div class="card h-100">
+                                                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                                                        <div class="avatar bg-rgba-primary p-50 m-0">
+                                                            <div class="avatar-content">
+                                                                <i class="feather icon-users text-primary font-medium-5"></i>
+                                                            </div>
+                                                        </div>
+                                                        <h2 class="text-bold-700 mt-1 mb-25"><span id="random_hour"></span>
+                                                            ساعت</h2>
+                                                        <p class="mb-0">تعامل افراد با مسیرهای آموزشی شما</p>
+                                                    </div>
+                                                    <div class="card-content">
+                                                        <div id="subscribe-gain-chart"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="card">
+                                                    <div class="card-header d-flex align-items-start pb-0">
+                                                        <div>
+                                                            <h2 class="text-bold-700 mb-0">{{object.teams.count}}</h2>
+                                                            <p>تیم های زیرمجموعه</p>
+                                                        </div>
+                                                        <div class="avatar bg-rgba-info p-50 m-0">
+                                                            <div class="avatar-content">
+                                                                <i class="feather icon-users text-info font-medium-5"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        
+                                                <div class="card">
+                                                    <div class="card-header d-flex align-items-start pb-0">
+                                                        <div>
+                                                            <h2
+                                                                class="text-bold-700 mb-0">{{object.count_team_members}}</h2>
+                                                            <p>افراد تحت شتابدهی شما</p>
+                                                        </div>
+                                                        <div class="avatar bg-rgba-info p-50 m-0">
+                                                            <div class="avatar-content">
+                                                                <i class="feather icon-user text-info font-medium-5"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        
+                                                <div class="card">
+                                                    <div class="card-header d-flex align-items-start pb-0">
+                                                        <div>
+                                                            <h2 class="text-bold-700 mb-0">{{object.count_team_plans}}</h2>
+                                                            <p>محصول های زیرنظر</p>
+                                                        </div>
+                                                        <div class="avatar bg-rgba-info p-50 m-0">
+                                                            <div class="avatar-content">
+                                                                <i class="feather icon-box text-info font-medium-5"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
+
+<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
+{% endblock page_js %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/tables/datatable/datatables.min.css" %}>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+    <div class="col-12">
+        <section id="basic-datatable">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">لیست محصولات تیم ها</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body card-dashboard">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <th>عنوان</th>
+                                                <th>توضیحات</th>
+                                                <th>سطح بلوغ</th>
+                                                <th>تیم</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for object in object_list %}
+                                            <tr>
+                                                <td class="font-weight-bold text-primary"><img class="img-fluid img-thumbnail" width="50" src="{% if item.logo %}{{item.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}" alt="لوگو {{object.name}}"><a href={% url "investor:product-investment" object.uuid %} class="ml-1">{{object.name}}</a></td>
+                                                <td>{{object.description|truncatechars:255}}</td>
+                                                <td>سطح {{forloop.counter|add:1}}</td>
+                                                <td>{{object.team.name}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--/ Zero configuration table -->
+    </div>
+</div>
+{% endblock main %}
+
+{% block page_js %}
+    <script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.min.js" %}></script>
+    <script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js" %}></script>
+    <script src={% static "admin-theme/app-assets/js/scripts/datatables/datatable.js" %}></script>
+{% endblock page_js %}

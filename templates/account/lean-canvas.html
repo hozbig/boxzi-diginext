@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<style>
+    table {
+        min-width: 100%; /* Adjust as needed */
+        max-width: 100%; /* Adjust as needed */
+        min-height: 200px; /* Adjust as needed */
+        border-collapse: collapse;
+    }
+
+    table li {
+        direction: rtl !important;
+    }
+</style>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+	<div class="col-12" id="lean_canvas_div">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2 class="text-center">بوم کسب و کار شما</h2>
+            </div>
+            <div class="card-content">
+                <div class="card-body pt-1">
+                    <table id="bizcanvas" cellspacing="0" border="1" dir="ltr">
+                      <!-- Upper part -->
+                      <tr>
+                        <td class="p-1" colspan="2" rowspan="2">
+                          <h4>مساله</h4>
+                          <div id="c1r1d1"></div>
+                          <h4 class="mt-3">جایگزین‌های موجود</h4>
+                          <div id="c1r1d2"></div>
+                        </td>
+
+                        <td class="p-1" colspan="2">
+                            <h4>راهکار</h4>
+                            <div id="c2r1d1"></div>
+                        </td>
+
+                        <td class="p-1" colspan="2" rowspan="2">
+                          <h4>ارزش پیشنهادی یکتا</h4>
+                          <div id="c3r1d1"></div>
+                          <h4 class="mt-3">مفهوم سطح بالا</h4>
+                          <div id="c3r1d2"></div>
+                        </td>
+
+                        <td class="p-1" colspan="2">
+                          <h4>برتری مطلق</h4>
+                          <div id="c4r1d1"></div>
+                        </td>
+
+                        <td class="p-1" colspan="2" rowspan="2">
+                          <h4>بخش‌های مشتریان</h4>
+                          <div id="c5r1d1"></div>
+                          <h4 class="mt-3">پذیرندگان آغازین</h4>
+                          <div id="c5r1d2"></div>
+                        </td>
+                      </tr>
+              
+                      <!-- Lower part -->
+                      <tr>
+                        <td class="p-1" colspan="2">
+                          <h4>‌سنجه‌های کلیدی</h4>
+                          <div id="c2r2d1"></div>
+                        </td>
+
+                        <td class="p-1" colspan="2">
+                          <h4>کانال‌ها</h4>
+                          <div id="c4r2d1"></div>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td class="p-1" colspan="5">
+                          <h4>ساختار هزینه</h4>
+                          <div id="down_c1r1d1"></div>
+                        </td>
+
+                        <td class="p-1" colspan="5">
+                          <h4>جریان‌های درآمدی</h4>
+                          <div id="down_c2r1d1"></div>
+                        </td>
+                      </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+	</div>
+
+    <div class="col-12" id="lean_canvas_form">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="">ساخت فرم شما</h2>
+            </div>
+            <div class="card-content">
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <!-- مسئله ها -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c1r1d1_input" placeholder="مساله شما">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c1r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- جایگزین های موجود برای راهکار شما -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c1r1d2_input" placeholder="جایگزین های موجود برای راهکار شما">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c1r1d2_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- راهکار -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c2r1d1_input" placeholder="راهکار">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c2r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ارزش پیشنهادی یکتا -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c3r1d1_input" placeholder="ارزش پیشنهادی یکتا">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c3r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- مفهوم سطح بالا -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c3r1d2_input" placeholder="مفهوم سطح بالا">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c3r1d2_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- برتری مطلق -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c4r1d1_input" placeholder="برتری مطلق">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c4r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- بخش‌های مشتریان -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c5r1d1_input" placeholder="بخش‌های مشتریان">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c5r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- پذیرندگان آغازین -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c5r1d2_input" placeholder="پذیرندگان آغازین">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c5r1d2_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ‌سنجه‌های کلیدی -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c2r2d1_input" placeholder="‌سنجه‌های کلیدی">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c2r2d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- کانال‌ها -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="c4r2d1_input" placeholder="کانال‌ها">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="c4r2d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ساختار هزینه -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="down_c1r1d1_input" placeholder="ساختار هزینه">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="down_c1r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- جریان‌های درآمدی -->
+                        <div class="col-md-6 mt-2">
+                            <div class="row pr-1">
+                                <div class="col">
+                                    <input type="text" maxlength="255" class="textinput form-control" id="down_c2r1d1_input" placeholder="جریان‌های درآمدی">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-primary" id="down_c2r1d1_button"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <button class="btn btn-success btn-block" id="submit_lean_canvas_btn">ساخت بوم</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script>
+let resultData = {}; // Initialize an empty object to store the results
+$(document).ready(function() {
+
+  // Define an array of input elements and corresponding divs
+  const inputs = [
+    $('#c1r1d1_input'), $('#c1r1d2_input'), $('#c2r1d1_input'),
+    $('#c3r1d1_input'), $('#c3r1d2_input'), $('#c4r1d1_input'),
+    $('#c5r1d1_input'), $('#c5r1d2_input'), $('#c2r2d1_input'),
+    $('#c4r2d1_input'), $('#down_c1r1d1_input'), $('#down_c2r1d1_input')
+  ];
+
+  const divs = [
+    $('#c1r1d1'), $('#c1r1d2'), $('#c2r1d1'),
+    $('#c3r1d1'), $('#c3r1d2'), $('#c4r1d1'),
+    $('#c5r1d1'), $('#c5r1d2'), $('#c2r2d1'),
+    $('#c4r2d1'), $('#down_c1r1d1'), $('#down_c2r1d1')
+  ];
+
+  // Function to handle button click
+  function addButtonClickHandler(input, div) {
+    return function() {
+      const value = input.val().trim();
+      if (value !== '') {
+        const listItem = $('<li>').text(value);
+        div.append(listItem);
+        input.val(''); // Clear the input field after inserting the value
+
+        // Save the value in the data object using the div ID as the key
+        const divId = div.attr('id');
+
+        // Check if the key already exists in the object
+        if (resultData.hasOwnProperty(divId)) {
+            // If the key exists and the existing value is not an array, convert it to an array
+            if (!Array.isArray(resultData[divId])) {
+                resultData[divId] = [resultData[divId]];
+            }
+            // Append the new value as a list item to the existing array
+            resultData[divId].push(value);
+        } else {
+            // If the key doesn't exist, set the new value as a single-item array
+            resultData[divId] = [value];
+        }
+      }
+    };
+  }
+
+  // Add click event listeners to the buttons
+  for (let i = 0; i < inputs.length; i++) {
+    const button = $(`#${divs[i].attr('id')}_button`);
+    button.click(addButtonClickHandler(inputs[i], divs[i]));
+  }
+
+});
+
+$("#submit_lean_canvas_btn").click(function(){
+    var jsonDataString = JSON.stringify(resultData);
+    
+    $.ajax({
+        url: '/accounts/lean-canvas/create/',  // URL to your Django view
+        type: 'POST',
+        data: {
+            'json_data': jsonDataString  // Sending the JSON data as 'data' parameter
+        },
+        dataType: 'json',
+        success: function(response) {
+            // Handle success response
+            btn = $("#submit_lean_canvas_btn")
+            btn.html("اطلاعات بوم کسب و کار شما با موفقیت ذخیره شد")
+            btn.addClass("btn-warning")
+            console.log(response);
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error(xhr.responseText);
+        }
+    });
+})
+
+</script>
+{% endblock page_js %}

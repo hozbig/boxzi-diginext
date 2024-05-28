@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <ul class="nav nav-tabs justify-content-start" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="user-info-tab" data-toggle="tab" href="#user-info" aria-controls="user-info" role="tab" aria-selected="false">
+                    <i class="fa fa-plus-circle"></i>
+                    مسیرهای فعال
+                </a>
+            </li>
+            <li class="nav-item ml-3">
+                <a class="nav-link" id="road-register-tab" data-toggle="tab" href="#road-register" aria-controls="road-register" role="tab" aria-selected="false">
+                    <i class="fa fa-pause-circle"></i>
+                    درخواست های شما
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <!-- First step -->
+            <div class="tab-pane active" id="user-info" aria-labelledby="user-info-tab" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="mb-0">مسیر های فعال برای شما</h4>
+                            </div>
+                            <div class="card-content">
+                                {% if active_roads %}
+                                <div class="table-responsive mt-1">
+                                    <table class="table table-hover-animation mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>نام مسیر</th>
+                                                <th>وضعیت</th>
+                                                <th>برگزار کننده</th>
+                                                <th>تعداد فصل ها</th>
+                                                <th>تاریخ شروع</th>
+                                                <th>تاریخ پایان</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for road in active_roads %}
+                                            <tr>
+                                                <td class="p-1 font-weight-bold"><a href={% url "content:road-detail" road.road.uuid %}>{{road.road.name}} <span class="badge badge-{{road.team.name|yesno:"success,danger"}}">{{road.team.name|default:"شخصی"}}</span></td>
+                                                <td>{% if road.road.days_until_expiration %}<i class="fa fa-circle font-small-3 text-success mr-50"></i>فعال ({{road.road.days_until_expiration}} روز باقی مانده){% else %}<i class="fa fa-circle font-small-3 text-danger mr-50"></i>تمام شده{% endif %}</td>
+                                                <td><a href={% url "company:center-profile" road.road.accelerator.uuid %}>{{road.road.accelerator.name}}</a></td>
+                                                <td>
+                                                    <span>{{road.road.road_of_collection_order.count}} <span class="text-black-50">فصل</span></span>
+                                                </td>
+                                                <td>{{road.road.start_date|to_jalali}}</td>
+                                                <td>{{road.road.expiration_date|to_jalali}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <div class="text-center p-1">
+                                    <h3 class="text-danger">در هیچ مسیری ثبت نام نکرده اید!</h3>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Fourth step -->
+            <div class="tab-pane" id="road-register" aria-labelledby="road-register-tab" role="tabpanel">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="mb-0">درخواست های شما</h4>
+                            </div>
+                            <div class="card-content">
+                                {% if requested_roads %}
+                                <div class="table-responsive mt-1">
+                                    <table class="table table-hover-animation mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>وضعیت درخواست</th>
+                                                <th>نام مسیر</th>
+                                                <th>مجری</th>
+                                                <th>درخواست برای</th>
+                                                <th>تاریخ ثبت درخواست</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for road in requested_roads %}
+                                            <tr>
+                                                <th class="col-1 {% if road.status == "p" %}table-info{% elif road.status == "r" %}table-danger{% elif road.status == "a" %}table-success{% endif %}">{{road.get_status_display}}</th>
+                                                <td class="p-1 font-weight-bold">{{road.road.name}}</td>
+                                                <td><a href={% url "company:center-profile" road.road.accelerator.uuid %}>{{road.road.accelerator.name}}</a></td>
+                                                <td>توسط {{road.user.get_full_name}} {% if road.team %}برای تیم {{road.team.name}}{% else %}{% endif %}</td>
+                                                <th>{{road.client_last_response_date|to_jalali}}</th>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <div class="text-center p-1">
+                                    <h3 class="text-danger">هیچ درخواست فعالی ندارید!</h3>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-2">
+        <h4 class="mb-1">مسیرهای در دسترس</h4>
+        <div class="row">
+            {% for item in roads %}
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <img class="card-img-top img-fluid" src="{% if item.poster %}{{item.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}" alt="{{item.name}}" />
+                        <div class="card-body pb-0">
+                            <h4 class="card-title"><a href={% url "team:road-registration" item.uuid %} class="font-weight-bold">{{item.name}}</a></h4>
+                            <p class="card-text text-justify">{{item.description|default:"بدون توضیحات*"|truncatechars:150}}</p>
+                            <li class="list-group mb-1">
+                                <i class="text-black-50">
+                                <i class="feather icon-map-pin"></i>
+                                وضعیت:
+                                {% if item.days_until_registration_deadline %}
+                                    درحال ثبت نام ({{item.days_until_registration_deadline}} باقی مانده)
+                                    {% elif item.days_until_publish %}در انظار شروع ({{item.days_until_publish}} روز تا شروع)
+                                    {% elif item.days_until_start %}درحال اجرا
+                                    {% elif item.days_until_expiration %}تمام شده
+                                {% endif %}
+                                </i>
+                                <i class="text-black-50"><i class="feather icon-tag"></i> هزینه: <span class="{% if item.price <= 0 %}text-warning{% endif %}">{{item.price|intcomma}}</span></i>
+                                <i class="text-black-50"><i class="feather icon-map-pin"></i> محل برگزاری: {{item.location}}</i>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

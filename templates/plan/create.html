@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ثبت محصول جهت درخواست جذب سرمایه </h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form class="form" enctype="multipart/form-data" method="POST">
+                        {% csrf_token %}
+                        <div class="form-body">
+                            <div class="row">
+                                <!-- usename and password -->
+                                <div class="col-12 divider divider-primary">
+                                    <div class="divider-text">احراز هویت</div>
+                                </div>
+
+                                <input type="text" name="user" value="{{request.user.id}}" maxlength="255" hidden>
+                                {% for field in form %}
+                                {% if not field.name == "user" %}
+                                <div class="col-md-3 col-12">{{field|as_crispy_field}}</div>
+                                {% endif %}
+                                {% endfor %}
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success mr-1 mb-1">ثبت</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+	{% if request.user.is_center_staff %}
+	<div class="col-12">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card bg-gradient-dark">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0 text-white">{{object.name}} </h2>
+							<p class="mt-25 text-secondary">شتابدهنده شما</p>
+						</div>
+						<div class="avatar bg-rgba-white p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-zap text-white font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0">{{object.accelerator_of_content.count}} </h2>
+							<p class="mt-25">گام ساخته شده</p>
+						</div>
+						<div class="avatar bg-rgba-info p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-check text-info font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0">{{object.accelerator_of_road.count}} </h2>
+							<p class="mt-25">مسیر های ساخته شده</p>
+						</div>
+						<div class="avatar bg-rgba-info p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-map-pin text-info font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12 mb-3">
+		<div class="row">
+
+			<div class="col-lg-4 mb-3 mb-lg-0">
+				<div class="row">
+					<div class="col-12 mb-2">
+						<div class="card">
+							<div class="card-header d-flex flex-column align-items-start pb-0">
+								<div class="avatar bg-rgba-primary p-50 m-0">
+									<div class="avatar-content">
+										<i class="feather icon-users text-primary font-medium-5"></i>
+									</div>
+								</div>
+								<h2 class="text-bold-700 mt-1 mb-25"><span id="random_hour"></span>
+									ساعت</h2>
+								<p class="mb-0">تعامل افراد با مسیرهای آموزشی شما</p>
+							</div>
+							<div class="card-content">
+								<div id="subscribe-gain-chart"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header d-flex align-items-start pb-0">
+								<div>
+									<h2 class="text-bold-700 mb-0">{{object.teams.count}}</h2>
+									<p>تیم های زیرمجموعه</p>
+								</div>
+								<div class="avatar bg-rgba-info p-50 m-0">
+									<div class="avatar-content">
+										<i class="feather icon-users text-info font-medium-5"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header d-flex align-items-start pb-0">
+								<div>
+									<h2
+										class="text-bold-700 mb-0">{{object.count_team_members}}</h2>
+									<p>افراد تحت شتابدهی شما</p>
+								</div>
+								<div class="avatar bg-rgba-info p-50 m-0">
+									<div class="avatar-content">
+										<i class="feather icon-user text-info font-medium-5"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header d-flex align-items-start pb-0">
+								<div>
+									<h2 class="text-bold-700 mb-0">{{object.count_team_plans}}</h2>
+									<p>محصول های زیرنظر</p>
+								</div>
+								<div class="avatar bg-rgba-info p-50 m-0">
+									<div class="avatar-content">
+										<i class="feather icon-box text-info font-medium-5"></i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4 mb-3 mb-lg-0 px-0">
+				<div class="card h-100">
+					<div class="card-header d-flex justify-content-between align-items-start">
+						<div>
+							<h4 class="card-title">فعالیت در زمینه های مختلف</h4>
+						</div>
+					</div>
+					<div class="card-content my-auto">
+						<div class="card-body px-0">
+							<div id="sales-chart-custom"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-4 mb-3 mb-lg-0">
+				<div class="card h-100">
+					<div class="card-header">
+						<h4 class="card-title">برنامه های فعال شما</h4>
+					</div>
+					<div class="card-content">
+						<div class="card-body">
+							<ul class="activity-timeline timeline-left list-unstyled">
+								{% for road in request.user.access_to_center.accelerator_of_road.all %}
+								<li>
+									<div class="timeline-icon bg-primary">
+										<i class="fa fa-check-circle font-medium-2 align-middle"></i>
+									</div>
+									<div class="timeline-info">
+										<p class="font-weight-bold mb-0">{{road.name}}</p>
+									</div>
+									<small class="font-weight-bold text-success">
+										{{road.days_until_expiration}} روز باقی مانده تا پایان ({{road.expiration_date|to_jalali}})
+									</small>
+								</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="col-12">
+		<div class="card">
+			<div class="card-header">
+				<h4 class="card-title">نمودار فعالیت تیم های زیرنظر شما</h4>
+			</div>
+			<div class="card-content">
+				<div class="card-body pl-0">
+					<div class="height-300"><div class="chartjs-size-monitor"><div
+								class="chartjs-size-monitor-expand"><div class></div></div><div
+								class="chartjs-size-monitor-shrink"><div class></div></div></div>
+						<canvas id="line-chart-custom"
+							style="display: block; width: 480px; height: 300px;" width="480"
+							height="300" class="chartjs-render-monitor"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="col-12">
+		<div class="card bg-gradient-danger">
+			<div class="card-header d-flex align-items-start pb-0">
+				<div class="mx-auto">
+					<h2 class="text-bold-700 mb-1 text-white">شما به هیچ مرکزی دسترسی ندارید!</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12">
+		<div class="card">
+			<div class="card-content">
+				<div class="card-body">
+					<p class="">
+						<h2 class="ml-1 mb-1 font-weight-bold">چه باید کرد؟</h2>
+						<ul class="list-group">
+							<li class="list-group-item">۱. ثبت تیکت برای پشتیبان وب سایت.</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/charts/chart.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
+
+<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/charts/chart-chartjs.js" %}></script>
+
+<script>
+  window.onload = function() {
+    var x = Math.floor(Math.random() * 20) + 2;
+    document.getElementById("random_hour").innerHTML = x;
+  };
+
+
+  function generateRandomList(length) {
+    const randomList = [];
+    for (let i = 0; i < length; i++) {
+        const randomValue = Math.floor(Math.random() * 10); // Generates a random integer from 0 to 9
+        randomList.push(randomValue);
+    }
+    return randomList;
+  }
+
+  var lineChartctx = $("#line-chart-custom");
+
+  // Chart Options
+  var linechartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    legend: {
+      position: 'top',
+    },
+    hover: {
+      mode: 'label'
+    },
+    scales: {
+      xAxes: [{
+        display: true,
+        gridLines: {
+          color: '#dae1e7',
+        },
+        scaleLabel: {
+          display: false,
+        }
+      }],
+      yAxes: [{
+        display: true,
+        gridLines: {
+          color: '#dae1e7',
+        },
+        scaleLabel: {
+          display: false,
+        }
+      }]
+    },
+    title: {
+      display: false,
+      text: 'World population per region (in millions)'
+    }
+  };
+
+  // Chart Data
+  var linechartData = {
+    labels: ["1402-12-6", "1402-12-7", "1402-12-8", "1402-12-9", "1402-12-10", "1402-12-11", "1402-12-12", "1402-12-13", "1402-12-14", "1402-12-15"],
+    datasets: [
+    {% for item in object.teams.all %}
+    {
+        color: "{% cycle '#7367F0' '#28C76F' '#EA5455' '#FF9F43' as color %}",
+        label: "{% if item.name %}{{item.name}}{% else %}بدون نام{% endif %}",
+        data: generateRandomList(10),
+        borderColor: "{{color}}",
+        fill: false
+    },
+    {% endfor %}
+    ]
+  };
+
+  var lineChartconfig = {
+    type: 'line',
+
+    // Chart Options
+    options: linechartOptions,
+
+    data: linechartData
+  };
+
+  // Create the chart
+  var lineChart = new Chart(lineChartctx, lineChartconfig);
+</script>
+
+<script>
+        // Sales Chart
+    // -----------------------------
+    var $primary = '#7367F0';
+    var $info = '#00cfe8';
+    var $strok_color = '#b9c3cd';
+    var $info_light = '#1edec5';
+    var salesChartoptions = {
+        chart: {
+            height: 500,
+            type: 'radar',
+            dropShadow: {
+                enabled: true,
+                blur: 8,
+                left: 1,
+                top: 1,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        toolbar: { show: false },
+        series: [{
+            name: 'زمینه های مسیرهای آموزشی',
+            data: [90, 50, 86, 40, 100],
+        }, {
+            name: 'مربی ها',
+            data: [70, 75, 70, 76, 85],
+        }],
+        stroke: {
+            width: 0
+        },
+        colors: [$primary, $info],
+        plotOptions: {
+            radar: {
+                polygons: {
+                    strokeColors: [$strok_color, $strok_color, $strok_color, $strok_color, $strok_color, $strok_color],
+                    connectorColors: $strok_color
+                }
+            }
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shade: 'dark',
+                gradientToColors: ['#9f8ed7', $info_light],
+                shadeIntensity: 1,
+                type: 'horizontal',
+                opacityFrom: 1,
+                opacityTo: 1,
+                stops: [0, 100, 100, 100]
+            },
+        },
+        markers: {
+            size: 0,
+        },
+        legend: {
+            show: true,
+        },
+        labels: ['برنامه نویسی', 'شبکه', 'مدیریت', 'مالی', 'نیروانسانی'],
+        dataLabels: {
+            style: {
+                colors: [$strok_color, $strok_color, $strok_color, $strok_color, $strok_color, $strok_color]
+            }
+        },
+        yaxis: {
+            show: false,
+        },
+        grid: {
+            show: false,
+        },
+
+    }
+
+    var salesChart = new ApexCharts(
+        document.querySelector("#sales-chart-custom"),
+        salesChartoptions
+    );
+
+    salesChart.render();
+</script>
+{% endblock page_js %}

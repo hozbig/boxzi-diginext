@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/tables/datatable/datatables.min.css" %}>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+    <div class="col-12">
+        <section id="basic-datatable">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">لیست مراکز رشد/ مراکز شتابدهی/ کارخانه های نوآوری</h4>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-body card-dashboard">
+                                <div class="table-responsive">
+                                    <table class="table zero-configuration">
+                                        <thead>
+                                            <tr class="table-primary">
+                                                <th>عنوان</th>
+                                                <th>توضیحات</th>
+                                                <th>استان</th>
+                                                <th>نوع</th>
+                                                <th>حوزه فعالیت</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for object in object_list %}
+                                            <tr>
+                                                <td class="font-weight-bold text-primary">{% if object.logo %}<img class="img-fluid img-thumbnail" width="50" src="{{object.logo.url}}" alt="لوگو {{object.name}}">{% endif %}<a href={% url "company:center-profile" object.uuid %} class="ml-1">{{object.name}}</a></td>
+                                                <td>{{object.short_description|truncatechars:255}}</td>
+                                                <td>{{object.state}}</td>
+                                                <td>
+                                                    {% if object.type == "g" %}
+                                                        <span class="badge badge-success">{{object.get_type_display}}</span>
+                                                    {% elif object.type == "a" %}
+                                                        <span class="badge badge-danger">{{object.get_type_display}}</span>
+                                                    {% elif object.type == "i" %}
+                                                        <span class="badge badge-primary">{{object.get_type_display}}</span>
+                                                    {% else %}
+                                                        <span>{{object.get_type_display}}</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>{{object.activity}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--/ Zero configuration table -->
+    </div>
+</div>
+{% endblock main %}
+
+{% block page_js %}
+    <script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.min.js" %}></script>
+    <script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js" %}></script>
+    <script src={% static "admin-theme/app-assets/js/scripts/datatables/datatable.js" %}></script>
+{% endblock page_js %}

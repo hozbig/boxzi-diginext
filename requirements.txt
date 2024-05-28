@@ -1,0 +1,16 @@
+asgiref==3.7.2
+beautifulsoup4==4.12.3
+crispy-bootstrap4==2024.1
+cssselect==1.2.0
+Django==4.2
+django-crispy-forms==2.1
+django-quill-editor==0.1.40
+lxml==5.1.0
+markdown2==2.4.12
+pillow==10.2.0
+pyquery==2.0.0
+readtime==3.0.0
+soupsieve==2.5
+sqlparse==0.4.4
+typing_extensions==4.9.0
+psycopg2==2.9.5

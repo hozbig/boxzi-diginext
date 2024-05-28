@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-start pb-0">
+                <div>
+                    <h2 class="text-bold-700 mb-0">2</h2>
+                    <p class="mt-25">تعداد ایده ها</p>
+                </div>
+                <div class="avatar bg-rgba-success p-50 m-0">
+                    <div class="avatar-content">
+                        <i class="feather icon-users text-success font-medium-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-gradient-success">
+            <div class="card-header d-flex align-items-start pb-0">
+                <div>
+                    <h2 class="text-bold-700 mb-0 text-white">57٪</h2>
+                    <p class="mt-25 text-dark">میانگین ترند بودن ایده</p>
+                </div>
+                <div class="avatar bg-rgba-white p-50 m-0">
+                    <div class="avatar-content">
+                        <i class="feather icon-users text-white font-medium-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-start pb-0">
+                <div>
+                    <h2 class="text-bold-700 mb-0 text-dark">14</h2>
+                    <p class="mt-25 text-dark">افراد علاقه مند به همکاری</p>
+                </div>
+                <div class="avatar bg-rgba-success p-50 m-0">
+                    <div class="avatar-content">
+                        <i class="feather icon-users text-success font-medium-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-2">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex flex-column align-items-start pb-0">
+                        <div class="avatar bg-rgba-primary p-50 m-0">
+                            <div class="avatar-content">
+                                <i class="feather icon-users text-primary font-medium-5"></i>
+                            </div>
+                        </div>
+                        <h2 class="text-bold-700 mt-1 mb-25"><span id="random_hour"></span>رو به رشد <i class="feather icon-chevrons-up text-success"></i></h2>
+                        <p class="mb-0">نمودار ترند بودن موضوع ایده</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="subscribe-gain-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+				<div class="card h-100">
+					<div class="card-header d-flex justify-content-between align-items-start">
+						<div>
+							<h4 class="card-title">قدرت بخش های تیم شما</h4>
+						</div>
+					</div>
+					<div class="card-content my-auto">
+						<div class="card-body p-0">
+							<div id="team_strength_chart"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 mb-2">
+        <div class="row">
+            <div class="col-12">
+                
+                <div class="card overflow-hidden">
+                    <div class="card-header">
+                        <h4 class="card-title">مدیریت ایده ها</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+
+                            <table class="table table-responsive-md mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">نام ایده</th>
+                                        <th scope="col">لایک</th>
+                                        <th scope="col">دسته بندی</th>
+                                        <th scope="col">وضعیت</th>
+                                        <th scope="col">توضیحات</th>
+                                        <th scope="col">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">01</th>
+                                        <td class="font-weight-bold col-2">ایده اول</td>
+                                        <td class="text-warning col-1">4 <i class="fa fa-gratipay"></i></td>
+                                        <td>هوش مصنوعی</td>
+                                        <td><span class="badge badge-primary">طرح اولیه</span></td>
+                                        <td>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون ...</td>
+                                        <td class="col-2">
+                                            <a href="" class="badge badge-info">ویرایش</a>
+                                            <a href="" class="badge badge-danger">حذف <i class="feather icon-trash-2"></i></a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">02</th>
+                                        <td class="font-weight-bold col-2">ایده دوم</td>
+                                        <td class="text-warning col-1">10 <i class="fa fa-gratipay"></i></td>
+                                        <td>هوش مصنوعی</td>
+                                        <td><span class="badge badge-success">دارای کمینه</span></td>
+                                        <td>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون ...</td>
+                                        <td class="col-2">
+                                            <a href="" class="badge badge-info">ویرایش</a>
+                                            <a href="" class="badge badge-danger">حذف <i class="feather icon-trash-2"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="accordion mt-3" id="accordionExample" data-toggle-hover="true">
+                                <div class="collapse-margin">
+                                    <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <span class="lead collapse-title collapsed">
+                                            <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">فرم ثبت ایده جدید</span>
+                                        </span>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <form method="POST">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div id="div_id_name" class="form-group">
+                                                            <label for="id_name" class=" requiredField">
+                                                                نام ایده<span class="asteriskField">*</span>
+                                                            </label>
+                                                            <div>
+                                                                <input type="text" name="name" maxlength="255" class="textinput form-control" required=""id="id_name">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div id="div_id_category" class="form-group">
+                                                            <label for="id_category" class=" requiredField">
+                                                                دسته بندی ایده<span class="asteriskField">*</span>
+                                                            </label>
+                                                            <div>
+                                                                <select name="category" class="select form-control" required="" id="id_category">
+                                                                    <option value="" selected="">---------</option>
+                                                                    <option value="1">بلاک چین</option>
+                                                                    <option value="2">هوش مصنوعی</option>
+                                                                    <option value="2">رباتیک</option>
+                                                                    <option value="2">یادگیری ماشین</option>
+                                                                    <option value="2">دیگر دسته ها</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div id="div_id_status" class="form-group">
+                                                            <label for="id_status" class=" requiredField">وضعیت<span class="asteriskField">*</span>
+                                                            </label>
+                                                            <div>
+                                                                <select name="status" class="select form-control" id="id_status">
+                                                                    <option value="a" selected="">طرح اولیه</option>
+                                                                    <option value="i">درحال توسعه</option>
+                                                                    <option value="e">دارای کمینه</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div id="div_id_description" class="form-group">
+                                                            <label for="id_description" class=" requiredField">
+                                                                توضیحات کوتاه<span class="asteriskField">*</span>
+                                                            </label>
+                                                            <div>
+                                                                <textarea name="description" cols="40" rows="10" class="textarea form-control" required=""id="id_description"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <button class="btn btn-success btn-block waves-effect waves-light" type="submit">تایید و ثبت ایده</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/charts/chart.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
+
+<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/charts/chart-chartjs.js" %}></script>
+
+<script>
+    var $names = ["Blockchain", "Artificial-intelligence", "Robotic", "Machine-learning", "Others"]
+
+	var options = {
+		series: [{
+		name: 'شما',
+		data: generateRandomList($names.length),
+	  }],
+		chart: {
+		height: 500,
+		type: 'radar',
+		dropShadow: {
+		  enabled: true,
+		  blur: 1,
+		  left: 1,
+		  top: 1
+		},
+		toolbar: {show:false}
+	  },
+	  stroke: {
+		width: 2
+	  },
+	  fill: {
+		opacity: 0.1
+	  },
+	  markers: {
+		size: 0
+	  },
+	  labels: $names,
+	  dataLabels: {
+	    style: {
+	    	colors: ["#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C", "#2C2C2C"],
+	    	fontSize: "10px",
+	    }
+	  },
+	  yaxis: {show: false}
+	  };
+
+	  var chart = new ApexCharts(document.querySelector("#team_strength_chart"), options);
+	  chart.render();
+</script>
+{% endblock page_js %}

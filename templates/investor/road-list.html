@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <div class="row">
+            {% for item in object_list %}
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-content">
+                        <img class="card-img-top img-fluid" src="{% if item.poster %}{{item.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}" alt="{{item.name}}" />
+                        <div class="card-body">
+                            <h4 class="card-title"><a href={% url "investor:road-investment" item.uuid %} class="font-weight-bold">{{item.name}}</a></h4>
+                            <p class="card-text">{{item.description|default:"بدون توضیحات*"}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

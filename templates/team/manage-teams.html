@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ساخت تیم</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                {{ form.name|as_crispy_field }}
+                            </div>
+                            <div class="col-lg-6">
+                                {{ form.category|as_crispy_field }}
+                            </div>
+                            <div class="col-lg-6">
+                                {{ form.status|as_crispy_field }}
+                            </div>
+                            <div class="col-lg-12">
+                                {{ form.description|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card bg-gradient-warning m-2">
+                                <h2 class="p-2 text-center mb-0 font-weight-bold">نکات قابل توجه</h2>
+                            </div>
+                            
+                            <li class="list-group mx-2 font-weight-bold">
+                                <i class="list-group-item">1) اعضای تیم شما باید در پنل ثبت نام انجام داده و پروفایل خود را کامل کنند.</i>
+                                <i class="list-group-item">2) امکان جذب سرمایه فقط برای تیم های دارای ایده یا محصول وجود خواهد داشت.</i>
+                            </li>
+                        </div>
+
+                        <button class="btn btn-success btn-block" type="submit">تائید و ایجاد تیم</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">تیم های شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body card-dashboard">
+                    <p class="">تیم هایی که خودتان ساخته اید یا دسترسی هماهنگ کننده برای آنها دارید</p>
+                    <div class="table-responsive">
+                        <table class="table zero-configuration">
+                            <thead>
+                                <tr class="table-warning">
+                                    <th>#</th>
+                                    <th>نام تیم</th>
+                                    <th>تعداد اعضا</th>
+                                    <th>وضعیت</th>
+                                    <th>دسترسی شما</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in teams %}
+                                    <tr>
+                                        <th scope="row">{{forloop.counter|default:"0"|stringformat:"02d"}}</th>
+                                        <td>{{item.team.name}}</td>
+                                        <td>{{item.team.team_of_team_member.count}}</td>
+                                        <td><span class="badge badge-{% if item.team.status == "a" %}success{% else %}danger{% endif %}">{{item.team.get_status_display}}</span></td>
+                                        <td>
+                                            {% if item.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
+                                            {% if item.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
+                                        </td>
+
+                                        {% if item.is_owner %}
+                                        <td><a href={% url "team:update-team" item.team.uuid %} class="badge badge-info">ویرایش</a></td>
+                                        {% else %}
+                                        <td><a class="badge badge-light text-white">ویرایش</a></td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+{% endblock page_js %}

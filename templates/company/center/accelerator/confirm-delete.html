@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+            
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-md-12">
+        <div class="row" id="table-responsive">
+
+            <div class="card col-12">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form method="post" class="form form-vertical">
+                            {% csrf_token %}
+                            <div class="form-body">
+                                <div class="row">
+                                    <div class="col-12 text-center py-2">
+                                        <h2 class="">آیا از حذف «{{object}}» مطمئن هستید؟</h2>
+                                        <p class="">{{object}}</p>
+                                        <p class="text-left m-0">با حذف این آیتم تمام زیر مجموعه های آن هم حذف میشوند و دیگر قابل بازگشت نمی‌باشند!</p>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-danger btn-block btn-primary mr-1 mb-1 waves-effect waves-light">تایید میکنم... حذفش کن</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+{% endblock page_js %}

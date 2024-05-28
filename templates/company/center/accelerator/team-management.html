@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/tables/datatable/datatables.min.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+	{% if request.user.is_center_staff %}
+	<div class="col-12">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0">24 </h2>
+							<p class="mt-25">درخواست های ارسال شده</p>
+						</div>
+						<div class="avatar bg-rgba-primary p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-package text-primary font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0">4 </h2>
+							<p class="mt-25">درخواست های تایید شده</p>
+						</div>
+						<div class="avatar bg-rgba-success p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-check-square text-success font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+            <div class="col-md-4">
+				<div class="card">
+					<div class="card-header d-flex align-items-start pb-0">
+						<div>
+							<h2 class="text-bold-700 mb-0">9 </h2>
+							<p class="mt-25">درخواست های رد شده</p>
+						</div>
+						<div class="avatar bg-rgba-danger p-50 m-0">
+							<div class="avatar-content">
+								<i class="feather icon-x-square text-danger font-medium-5"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">مدیریت درخواست ها برای شرکت در برنامه آموزشی</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body card-dashboard">
+                    <div class="table-responsive">
+                        <table class="table zero-configuration">
+                            <thead>
+                                <tr class="table-warning">
+									<th>نام تیم/شخص</th>
+                                    <th>حوضه فعالیت تیم</th>
+                                    <th>تاریخ ثبت درخواست</th>
+                                    <th>وضعیت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+								{% for road in acc_object.accelerator_of_road.all %}
+									{% for item in road.road_of_road_registration.all %}
+										{% if item.status_user_state == "f" %}
+										<tr>
+											<th>{% if item.team %}{{item.team.name}} / {% else %}*** / {% endif %}{{item.user.get_full_name}}</th>
+											<th>{{item.team.category.name|default:"***"}}</th>
+											<th>{{item.created_time|to_jalali}}</th>
+											<th scope="row" class="{% if item.status == "p" %}table-info{% elif item.status == "r" %}table-danger{% elif item.status == "a" %}table-success{% endif %}">{{item.get_status_display}}</th>
+											
+											<td>
+												<a href={% url "team:registration-detail" item.uuid %} class="badge badge-info">مشاهده <i class="feather icon-eye"></i></a>
+												{% if not item.status in "a" %}<a href={% url "team:approve_registration" item.uuid %} class="badge badge-success">تایید <i class="feather icon-check"></i></a>{% endif %}
+												{% if not item.status in "r" %}<a href={% url "team:reject_registration" item.uuid %} class="badge badge-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
+											</td>
+										</tr>
+										{% endif %}
+									{% endfor %}
+								{% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	{% else %}
+	<div class="col-12">
+		<div class="card bg-gradient-danger">
+			<div class="card-header d-flex align-items-start pb-0">
+				<div class="mx-auto">
+					<h2 class="text-bold-700 mb-1 text-white">شما به هیچ مرکزی دسترسی ندارید!</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12">
+		<div class="card">
+			<div class="card-content">
+				<div class="card-body">
+					<p class="">
+						<h2 class="ml-1 mb-1 font-weight-bold">چه باید کرد؟</h2>
+						<ul class="list-group">
+							<li class="list-group-item">۱. ثبت تیکت برای پشتیبان وب سایت.</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/datatables/datatable.js" %}></script>
+{% endblock page_js %}

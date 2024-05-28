@@ -1,0 +1,583 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
+
+<link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+    {% comment %} <div class="col-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card overflow-hidden">
+                    <div class="card-content">
+                        <div class="card-body pb-0">
+
+                            <div class="accordion" id="accordionExample" data-toggle-hover="true">
+                                <div class="collapse-margin">
+                                    <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        <span class="lead collapse-title collapsed">
+                                            <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">فرم های سرمایه گذاری اینجاست</span>
+                                        </span>
+                                    </div>
+
+                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                        <div class="card-body">
+
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    <form>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h4 class="">فرم ایجاد صندوق</h4>
+                                                            </div>
+
+                                                            <div class="col-12">
+                                                                <div id="div_id_amount" class="form-group">
+                                                                    <label for="id_amount" class=" requiredField">
+                                                                        حجم<span class="asteriskField">*</span>
+                                                                    </label>
+                                                                    <div>
+                                                                        <input type="number" name="amount" value="0" min="0" class="numberinput form-control" required=""
+                                                                            id="id_amount">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+        
+                                                            <div class="col-12">
+                                                                <div id="div_id_name_seed" class="form-group">
+                                                                    <label for="id_name_seed" class=" requiredField">
+                                                                        نام صندوق<span class="asteriskField">*</span>
+                                                                    </label>
+                                                                    <div>
+                                                                        <input type="text" name="name_seed" maxlength="64" class="textinput form-control" required="" id="id_name">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-12">
+                                                                <div id="div_id_seed_expiration_date" class="form-group">
+                                                                    <label for="id_seed_expiration_date" class=" requiredField">
+                                                                        زمان اعتبار<span class="asteriskField">*</span>
+                                                                    </label>
+                                                                    <div>
+                                                                        <input type="text" name="seed_expiration_date" class="dateinput form-control pwt-datepicker-input-element"
+                                                                            required="" id="id_seed_expiration_date" autocomplete="off">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-6">
+                                                                <button class="btn btn-success btn-block" type="submit">ثبت</button>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <button class="btn btn-info btn-block" type="submit">صندوق ها</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                
+                                                <div class="col-lg-8 mt-3 mt-lg-0">
+                                                    <form>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h4 class="">فرم مشارکت در سکوهای سرمایه گذاری و برنامه های شتابدهی</h4>
+                                                            </div>
+
+                                                            <div class="col-md-8">
+                                                                <div id="div_id_holding_method" class="form-group">
+                                                                    <label for="id_holding_method" class=" requiredField">
+                                                                        سکو یا برنامه شتابدهی موردنظر<span class="asteriskField">*</span>
+                                                                    </label>
+                                                                    <div>
+                                                                        <select name="holding_method" class="select form-control" id="id_holding_method">
+                                                                            <option value="s">برنامه شتابدهی - کمپ تابستانی دیجی نکست</option>
+                                                                            <option value="o">سکو - سکوی سرمایه گذاری حوضه فین تک</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+        
+                                                            <div class="col-md-4">
+                                                                <div id="div_id_amount" class="form-group">
+                                                                    <label for="id_amount" class=" requiredField">
+                                                                        مقدار سرمایه گذاری<span class="asteriskField">*</span>
+                                                                    </label>
+                                                                    <div>
+                                                                        <input type="number" name="amount" value="0" min="0" class="numberinput form-control" required=""
+                                                                            id="id_amount">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                        <button class="btn btn-success btn-block" type="submit">انجام سرمایه گذاری</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-3 border">
+                                <div class="col-12 p-3">
+                                    <h4 class="">لیست سرمایه گذاری های شما</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">نام سکوی سرمایه گذاری یا برنامه شتابدهی</th>
+                                                    <th scope="col">حجم امتیاز</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">01</th>
+                                                    <td>برنامه شتابدهی - کمپ تابستانی دیجی نکست</td>
+                                                    <td><span class="badge badge-primary">50%</span> </td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                    <th scope="row">02</th>
+                                                    <td>سکو - سکوی سرمایه گذاری حوضه فین تک</td>
+                                                    <td><span class="badge badge-primary">75%</span> </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="col-lg-6">
+        <div class="card overflow-hidden">
+            <div class="card-header">
+                <h4 class="card-title">گزارش اختصاص دهی امتیاز توسط شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card-body py-0">
+                                <div id="ekhtesas-chart-a"></div>
+                            </div>
+                            <ul class="list-group list-group-flush customer-info">
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    <div class="series-info">
+                                        <i class="fa fa-circle font-small-3 text-primary"></i>
+                                        <span class="text-bold-600">لجستیک</span>
+                                    </div>
+                                    <div class="product-result">
+                                        <span>50٪</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    <div class="series-info">
+                                        <i class="fa fa-circle font-small-3 text-warning"></i>
+                                        <span class="text-bold-600">هوش مصنوعی</span>
+                                    </div>
+                                    <div class="product-result">
+                                        <span>20٪</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between ">
+                                    <div class="series-info">
+                                        <i class="fa fa-circle font-small-3 text-danger"></i>
+                                        <span class="text-bold-600">بلاکچین</span>
+                                    </div>
+                                    <div class="product-result">
+                                        <span>15٪</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card overflow-hidden">
+            <div class="card-header">
+                <h4 class="card-title">گزارش وضعیت سرمایه گزاری های شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <div class="card-body py-0">
+                        <div id="ekhtesas-chart-b"></div>
+                    </div>
+                    <ul class="list-group list-group-flush customer-info">
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-primary"></i>
+                                <span class="text-bold-600">لجستیک</span>
+                            </div>
+                            <div class="product-result">
+                                <span>30٪</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-warning"></i>
+                                <span class="text-bold-600">هوش مصنوعی</span>
+                            </div>
+                            <div class="product-result">
+                                <span>10٪</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-danger"></i>
+                                <span class="text-bold-600">بلاکچین</span>
+                            </div>
+                            <div class="product-result">
+                                <span>60٪</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card overflow-hidden">
+            <div class="card-header">
+                <h4 class="card-title">نحوه تقسیم اعتبار سرمایه شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <div class="card-body py-0">
+                        <div id="ekhtesas-chart-c"></div>
+                    </div>
+                    <ul class="list-group list-group-flush customer-info">
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-primary"></i>
+                                <span class="text-bold-600">تیم های سری A</span>
+                            </div>
+                            <div class="product-result">
+                                <span>5٪</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-danger"></i>
+                                <span class="text-bold-600">تیم های سری B</span>
+                            </div>
+                            <div class="product-result">
+                                <span>25٪</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-primary"></i>
+                                <span class="text-bold-600">تیم های سری C</span>
+                            </div>
+                            <div class="product-result">
+                                <span>10٪</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-primary"></i>
+                                <span class="text-bold-600">تیم های سری D</span>
+                            </div>
+                            <div class="product-result">
+                                <span>40٪</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between ">
+                            <div class="series-info">
+                                <i class="fa fa-circle font-small-3 text-primary"></i>
+                                <span class="text-bold-600">تیم های سری E</span>
+                            </div>
+                            <div class="product-result">
+                                <span>20٪</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card overflow-hidden">
+            <div class="card-header">
+                <h4 class="card-title">آمار ریسک پذیری شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body px-0">
+                    <div id="sales-chart-a"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "jalali-date-picker/persian-date.js" %}></script>
+<script src={% static "jalali-date-picker/persian-datepicker.js" %}></script>
+
+<script>
+    $("#id_seed_expiration_date").persianDatepicker({
+        initialValue: false,
+        persianDigit: false,
+        format: 'YYYY-MM-DD',
+    }
+    ).attr("autocomplete", "off")
+</script>
+
+<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
+<script src={% static "admin-theme/app-assets/js/scripts/cards/card-analytics.js" %}></script>
+
+<script>
+    var $primary = '#7367F0';
+    var $danger = '#EA5455';
+    var $warning = '#FF9F43';
+    var $info = '#00cfe8';
+    var $success = '#00db89';
+    var $primary_light = '#9c8cfc';
+    var $warning_light = '#FFC085';
+    var $danger_light = '#f29292';
+    var $info_light = '#1edec5';
+    var $strok_color = '#b9c3cd';
+    var $label_color = '#e7eef7';
+    var $purple = '#df87f2';
+    var $white = '#fff'; 
+</script>
+
+<script>
+    var customerChartoptions = {
+        chart: {
+            type: 'pie',
+            height: 325,
+            dropShadow: {
+                enabled: false,
+                blur: 5,
+                left: 1,
+                top: 1,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        labels: ['لجستیک', 'هوش مصنوعی', 'بلاکچین'],
+        series: [50, 20, 15],
+        dataLabels: {
+            enabled: false
+        },
+        legend: { show: false },
+        stroke: {
+            width: 5
+        },
+        colors: [$primary, $warning, $danger],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                gradientToColors: [$primary_light, $warning_light, $danger_light]
+            }
+        }
+    }
+
+    var customerChart = new ApexCharts(
+        document.querySelector("#ekhtesas-chart-a"),
+        customerChartoptions
+    );
+
+    customerChart.render();
+
+</script>
+
+<script>
+    var customerChartoptions = {
+        chart: {
+            type: 'pie',
+            height: 325,
+            dropShadow: {
+                enabled: false,
+                blur: 5,
+                left: 1,
+                top: 1,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        labels: ['لجستیک', 'هوش مصنوعی', 'بلاکچین'],
+        series: [30, 10, 60],
+        dataLabels: {
+            enabled: false
+        },
+        legend: { show: false },
+        stroke: {
+            width: 5
+        },
+        colors: [$primary, $warning, $danger],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                gradientToColors: [$primary_light, $warning_light, $danger_light]
+            }
+        }
+    }
+
+    var customerChart = new ApexCharts(
+        document.querySelector("#ekhtesas-chart-b"),
+        customerChartoptions
+    );
+
+    customerChart.render();
+
+</script>
+
+<script>
+    var customerChartoptions = {
+        chart: {
+            type: 'pie',
+            height: 325,
+            dropShadow: {
+                enabled: false,
+                blur: 5,
+                left: 1,
+                top: 1,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        labels: [
+        'تیم های سری A',
+        'تیم های سری B',
+        'تیم های سری C',
+        'تیم های سری D',
+        'تیم های سری E',
+        ],
+        series: [5,25,10,40,20],
+        dataLabels: {
+            enabled: false
+        },
+        legend: { show: false },
+        stroke: {
+            width: 5
+        },
+        colors: [$primary, $danger, $warning, $info, $success],
+        fill: {
+            type: 'gradient',
+            gradient: {
+                gradientToColors: [$danger_light, $warning_light, $primary_light, $info_light, $warning_light]
+            }
+        }
+    }
+
+    var customerChart = new ApexCharts(
+        document.querySelector("#ekhtesas-chart-c"),
+        customerChartoptions
+    );
+
+    customerChart.render();
+
+</script>
+
+<script>
+    var salesChartoptions = {
+        chart: {
+            height: 400,
+            type: 'radar',
+            dropShadow: {
+                enabled: true,
+                blur: 8,
+                left: 1,
+                top: 1,
+                opacity: 0.2
+            },
+            toolbar: {
+                show: false
+            }
+        },
+        toolbar: { show: false },
+        series: [{
+            name: 'Sales',
+            data: [90, 50, 86, 40, 60, 30],
+        }],
+        stroke: {
+            width: 0
+        },
+        colors: [$primary, $info],
+        plotOptions: {
+            radar: {
+                polygons: {
+                    strokeColors: [$strok_color, 'transparent', 'transparent', 'transparent', 'transparent', 'transparent'],
+                    connectorColors: 'transparent'
+                }
+            }
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shade: 'dark',
+                gradientToColors: [$primary_light, $info_light],
+                shadeIntensity: 1,
+                type: 'horizontal',
+                opacityFrom: 1,
+                opacityTo: 1,
+                stops: [0, 100, 100, 100]
+            },
+        },
+        markers: {
+            size: 0,
+        },
+        legend: {
+            show: false,
+        },
+        labels: ['بلوغ', 'ریسک پذیر', 'امن', 'رو به رشد', 'فرسایشی', 'پیشنهادی'],
+        dataLabels: {
+            style: {
+                colors: ["#1E1E1E", "#1E1E1E", "#1E1E1E", "#1E1E1E", "#1E1E1E", "#1E1E1E"]
+            }
+        },
+        yaxis: {
+            show: false,
+        },
+        grid: {
+            show: false,
+        },
+
+    }
+
+    var salesChart = new ApexCharts(
+        document.querySelector("#sales-chart-a"),
+        salesChartoptions
+    );
+
+    salesChart.render();
+</script>
+{% endblock page_js %}
