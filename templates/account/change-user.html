@@ -46,18 +46,46 @@
                                 <input type="text" value="{{object.get_full_name}}" class="form-control" disabled>
                             </div>
                         </div>
-
-                        <div class="col-xl-2 col-md-6 col-12">
-                            <div id="div_id_birthday" class="form-group">
-                                <label>کدملی</label>
-                                <input type="text" value="{{object.number_id}}" class="form-control" disabled>
-                            </div>
-                        </div>
                         
                         <div class="col-xl-2 col-md-6 col-12">
                             <div id="div_id_birthday" class="form-group">
                                 <label>شماره همراه</label>
                                 <input type="text" value="{{object.phone_number}}" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-md-6 col-12">
+                            <div id="div_id_birthday" class="form-group">
+                                <label>تاریخ تولد</label>
+                                <input type="text" value="{{object.birthday|to_jalali}}" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div id="div_id_birthday" class="form-group">
+                                <label>تجربه شرکت در برنامه شتابدهی</label>
+                                <input type="text" value="{{object.get_is_accelerator_experience_display}}" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div id="div_id_birthday" class="form-group">
+                                <label>تجربه استارتاپی شما</label>
+                                <input type="text" value="{{object.get_is_startup_experience_display}}" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-2 col-md-6 col-12">
+                            <div id="div_id_birthday" class="form-group">
+                                <label>نقش شما</label>
+                                <input type="text" value="{{object.get_type_display}}" class="form-control" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 col-12">
+                            <div id="div_id_birthday" class="form-group">
+                                <label>ضمینه تخصصی شما</label>
+                                <input type="text" value="{{object.specialty}}" class="form-control" disabled>
                             </div>
                         </div>
                     </div>
@@ -71,125 +99,41 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="row">
-                                        {% if request.user.is_mentor or request.user.is_team_member %}
-                                        <div class="col-xl-2 col-md-6 col-12">
-                                            <div id="div_id_birthday" class="form-group">
-                                                <label for="id_birthday" class="requiredField">
-                                                    تاریخ تولد<span class="asteriskField">*</span> 
-                                                    <span class="text-danger">({{object.birthday|to_jalali}})</span> 
-                                                </label>
-                                                <div>
-                                                    <input type="text" name="birthday" value="{{object.birthday|date:"Y-m-d"}}" class="dateinput form-control pwt-datepicker-input-element" required id="id_birthday" autocomplete="off">
-                                                </div>
-                                                {% if form.birthday.errors %}
-                                                <div class="text-danger">
-                                                    <ul>
-                                                        {% for error in form.birthday.errors %}
-                                                        <li>{{ error }}</li>
-                                                        {% endfor %}
-                                                    </ul>
-                                                </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-3 col-md-6 col-12">
-                                            {{ form.email|as_crispy_field }}
-                                            {% if form.email.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.email.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-xl-3 col-12">
-                                            {{ form.major|as_crispy_field }}
-                                            {% if form.major.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.major.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-12">
-                                            {{ form.interests|as_crispy_field }}
-                                            {% if form.interests.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.interests.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        {% else %}
-                                        <div class="col-xl-2 col-md-6 col-12">
-                                            {{ form.birthday|as_crispy_field }}
-                                            {% if form.birthday.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.birthday.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
-                                        </div>
+                                        {% if request.user.is_team_member %}
                                         <div class="col-xl-4 col-md-6 col-12">
                                             {{ form.email|as_crispy_field }}
-                                            {% if form.email.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.email.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
+                                        </div>
+                                        <div class="col-xl-4 col-12">
+                                            {{ form.degree|as_crispy_field }}
+                                        </div>
+                                        <div class="col-xl-4 col-12">
+                                            {{ form.college_name|as_crispy_field }}
+                                        </div>
+                                        <div class="col-6">
+                                            {{ form.interests|as_crispy_field }}
+                                        </div>
+                                        <div class="col-6">
+                                            {{ form.abilities|as_crispy_field }}
+                                        </div>
+                                        <div class="col-4">
+                                            {{ form.province|as_crispy_field }}
+                                        </div>
+                                        <div class="col-4">
+                                            {{ form.city|as_crispy_field }}
+                                        </div>
+                                        <div class="col-4">
+                                            {{ form.number_id|as_crispy_field }}
                                         </div>
                                         {% endif %}
                                     </div>
                                 </div>
-                    
-                                {% if request.user.is_mentor or request.user.is_team_member %}
-                                <div class="col-12 divider divider-info">
-                                    <div class="divider-text">اطلاعات حرفه ای</div>
-                                </div>
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-12">
-                                            {{ form.abilities|as_crispy_field }}
-                                            {% if form.abilities.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.abilities.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="col-12">
                                             {{ form.bio|as_crispy_field }}
-                                            {% if form.bio.errors %}
-                                            <div class="text-danger">
-                                                <ul>
-                                                    {% for error in form.bio.errors %}
-                                                    <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            </div>
-                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
-                                {% endif %}
                                 <input type="hidden" name="next" value="{{ request.META.HTTP_REFERER }}">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-block btn-info mr-1 mb-1">بروزرسانی</button>
@@ -202,87 +146,10 @@
         </div>
     </div>
 
-    {% comment %} {% if request.user.is_mentor or request.user.is_team_member %}
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">افزودن سابقه شغلی</h4>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <form class="form" action={% url "account:new-work-experience" %} enctype="multipart/form-data" method="POST">
-                        {% csrf_token %}
-                        <div class="form-body">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    {{ experience_form.topic|as_crispy_field }}
-                                </div>
-                                <div class="col-md-3">
-                                    {{ experience_form.from_date|as_crispy_field }}
-                                </div>
-                                <div class="col-md-3">
-                                    {{ experience_form.to_date|as_crispy_field }}
-                                </div>
-                                <div class="col-md-3">
-                                    {{ experience_form.type|as_crispy_field }}
-                                </div>
-                                <div class="col-md-12">
-                                    {{ experience_form.description|as_crispy_field }}
-                                </div>
-                                
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-success mr-1 mb-1">ثبت</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <h4 class="mt-3">مسیر های ایجاد شده</h4>
-                    <table class="table table-responsive-md mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">نام مسیر</th>
-                                <th scope="col">تعداد فصل ها</th>
-                                <th scope="col">حجم صندوق</th>
-                                <th scope="col">عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for experience in object.user_of_work_experience.all %}
-                                <tr>
-                                    <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
-                                    <td class="font-weight-bold">{{experience.topic}}</td>
-                                    <td class="font-weight-bold">{{experience.from_date|to_jalali}}</td>
-                                    <td class="font-weight-bold">{{experience.to_date|to_jalali}}</td>
-                                    <td class="font-weight-bold">{{experience.description}}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %} {% endcomment %}
-
 </div>
 {% endblock main %}
 
 {% block page_js %}
 <script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
 <script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
-
-<script src={% static "jalali-date-picker/jquery-2.2.4.min.js" %}></script>
-<script src={% static "jalali-date-picker/persian-date.js" %}></script>
-<script src={% static "jalali-date-picker/persian-datepicker.js" %}></script>
-
-<script>
-    $(".dateinput").persianDatepicker({
-        initialValue: false,
-        persianDigit: false,
-        format: 'YYYY-MM-DD',
-    }
-    ).attr("autocomplete", "off")
-</script>
 {% endblock page_js %}

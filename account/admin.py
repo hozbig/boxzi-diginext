@@ -8,24 +8,23 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     model = User
     list_display = [
-        "username",
+        "phone_number",
         "first_name",
         "last_name",
         "is_team_member",
         "is_investor",
-        "is_company_staff",
+        "is_company",
         "is_center_staff",
         "is_mentor",
         "is_staff",
         "is_superuser",
-        "type",
     ]
     add_fieldsets = (
         (
             "اطلاعات احراز هویت",
             {
                 "fields": (
-                    "username",
+                    "phone_number",
                     "password1",
                     "password2",
                 )
@@ -38,7 +37,7 @@ class CustomUserAdmin(UserAdmin):
                     "is_mentor",
                     "is_team_member",
                     "is_investor",
-                    "access_to_company",
+                    "is_company",
                     "access_to_center",
                 )
             },
@@ -49,11 +48,9 @@ class CustomUserAdmin(UserAdmin):
             "مشخصات اضافی کاربر هدف",
             {
                 "fields": (
-                    "type",
                     "birthday",
-                    "major",
+                    "degree",
                     "number_id",
-                    "phone_number",
                     "interests",
                     "abilities",
                     "bio",
@@ -61,6 +58,7 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+    fieldsets[0][1]["fields"] = ("phone_number", "password"),
     fieldsets[2][1]["fields"] = (
         "is_active",
         "is_team_member",
@@ -70,20 +68,18 @@ class CustomUserAdmin(UserAdmin):
         "is_superuser",
         # "groups",
         # "user_permissions",
-        "access_to_company",
+        "is_company",
         "access_to_center",
-        "received_medals",
     ),
     filter_horizontal = (
         "groups",
         "user_permissions",
         "interests",
         "abilities",
-        "access_to_company",
     )
     autocomplete_fields = ("access_to_center",)
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups", "is_mentor", "is_team_member", "is_investor", "interests", "abilities", "type")
-    # readonly_fields = ("received_medals",)
+    list_filter = ("is_staff", "is_superuser", "is_active", "groups", "is_mentor", "is_team_member", "is_investor", "interests", "abilities",)
+    ordering = ("phone_number",)
 
 admin.site.register(User, CustomUserAdmin)
 
@@ -131,13 +127,11 @@ class WorkExperienceAdmin(admin.ModelAdmin):
         "topic",
         "from_date",
         "to_date",
-        "type",
         "description",
         "uuid",
     ]
     list_filter = [
         "user",
-        "type",
         "created_time",
         "last_update_time",
     ]

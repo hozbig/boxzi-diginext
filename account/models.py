@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 from content.models import WatchedContent
@@ -16,41 +16,89 @@ def validate_numeric(value):
             params={'value': value},
         )
 
+class CustomUserManager(BaseUserManager):
+    def create_user(self, phone_number, password=None, **extra_fields):
+        if not phone_number:
+            raise ValueError(_('The Phone Number must be set'))
+        user = self.model(phone_number=phone_number, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, phone_number, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+
+        return self.create_user(phone_number, password, **extra_fields)
+
 
 class User(AbstractUser):
+    uuid = models.CharField(
+        unique=True,
+        max_length=5,
+        blank=True,
+        default=random_uuid,
+        editable=False,
+    )
+    username = None
+    phone_number = models.CharField(verbose_name="شماره تماس", unique=True, max_length=11, primary_key=True)
     number_id = models.CharField(unique=True, null=True, blank=True, max_length=10, validators=[validate_numeric], verbose_name="کدملی")
-    phone_number = models.CharField(verbose_name="شماره تماس", unique=True, max_length=11)
     birthday = models.DateField(verbose_name="تاریخ تولد", auto_now=False, auto_now_add=False, null=True, blank=True)
 
-    
     is_mentor = models.BooleanField(verbose_name="مربی", default=False)
     is_team_member = models.BooleanField(verbose_name="عضو تیم", default=False)
     is_investor = models.BooleanField(verbose_name="سرمایه گذار", default=False)
-    access_to_company = models.ManyToManyField("company.Company", verbose_name="دسترسی به شرکت", blank=True)
+    is_company = models.BooleanField(verbose_name="شرکت", default=False)
     
     access_to_center = models.ForeignKey("company.Center", verbose_name="دسترسی به مرکز", blank=True, null=True, on_delete=models.CASCADE)
-    TYPES = (
-        ("c", "کنجکاو"), # Curious
-        ("e", "کارآفرین"), # Entrepreneur
-    )
-    type = models.CharField(choices=TYPES, max_length=1, verbose_name="نوع کاربر", null=True, blank=True)
 
-
-    major = models.CharField(verbose_name="رشته تحصیلی", max_length=50, null=True, blank=True)
+    degree = models.CharField(verbose_name="مدرک تحصیلی", max_length=50, null=True, blank=True)
+    college_name = models.CharField(verbose_name="نام دانشگاه", max_length=50, null=True, blank=True)
+    province = models.CharField(verbose_name="استان", max_length=50, null=True, blank=True)
+    city = models.CharField(verbose_name="شهر", max_length=50, null=True, blank=True)
     interests = models.ManyToManyField("subject.Subject", verbose_name="علاقه مندی ها", related_name="interests_of_user", blank=True)
     abilities = models.ManyToManyField("subject.Subject", verbose_name="توانایی ها", related_name="abilities_of_user", blank=True)
-    received_medals = models.PositiveIntegerField(default=0)
+    
+    TYPES = (
+        ("t", "فنی"), # Tech side
+        ("b", "بیزنسی"), # Business side
+    )
+    type = models.CharField(choices=TYPES, max_length=1, verbose_name="نقش شما", default="t")
+    YESNO = (
+        ("y", "داشته ام"), # Yes
+        ("n", "نداشته ام"), # No
+    )
+    STARTUP_EXPERIENCE = (
+        ("m", "عضو یک استارت‌آپ بود ام"), # Member
+        ("c", "یک استارت‌آپ داشته ام"), # Coordinator
+        ("n", "هیچ تجربه ای ندارم"), # No experience
+    )
+    is_accelerator_experience = models.CharField(choices=YESNO, max_length=1, verbose_name="تجربه شرکت در برنامه شتابدهی داشته اید؟", default="n")
+    is_startup_experience = models.CharField(choices=STARTUP_EXPERIENCE, max_length=1, verbose_name="عضو استارت آپی بوده اید؟ یا استارت آپی داشته اید؟", default="n")
+
+    specialty = models.CharField(verbose_name="ضمینه تخصصی شما", max_length=255, null=True, blank=True)
+    why_us = models.TextField(default="", verbose_name="علت درخواست شما برای برنامه شتابدهی", blank=True, null=True)
+
     bio = models.TextField(default="", verbose_name="بیوگرافی", blank=True, null=True)
-    personal_website = models.URLField(verbose_name="وبسایت شخصی", max_length=200, null=True, blank=True)
 
     USERNAME_FIELD = 'phone_number'  # Set phone_number as the unique identifier
     REQUIRED_FIELDS = []  # Remove the required username field
+    
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.phone_number
 
     def is_profile_complete(self):
         if self.is_team_member or self.is_mentor:
-            if self.first_name and self.last_name and self.email and self.birthday and self.major and self.bio:
-                return self.interests.exists() and self.abilities.exists()
-                return self.user_of_work_experience.exists() and self.interests.exists() and self.abilities.exists()
+            if self.first_name and self.last_name and self.email and self.birthday and self.degree and self.college_name and self.province and self.city and self.type and self.is_accelerator_experience and self.is_startup_experience and self.specialty and self.why_us:
+                return True
+                # return self.user_of_work_experience.exists() and self.interests.exists() and self.abilities.exists()
             else:
                 return False
         elif self.is_company_staff() or self.is_center_staff() or self.is_staff or self.is_superuser:
@@ -58,9 +106,8 @@ class User(AbstractUser):
         return False
     
     def is_profile_complete_level2(self):
-        if self.first_name and self.last_name and self.email and self.phone_number and self.number_id and self.birthday:
-            return True
-            # return self.skills.exists()
+        if self.is_profile_complete() and self.number_id and self.bio:
+            return self.interests.exists() and self.abilities.exists()
         return False
 
     def get_active_collection(self):
@@ -74,11 +121,6 @@ class User(AbstractUser):
                 if count_of_content > 0:
                     return collection
 
-    def is_company_staff(self):
-        return self.access_to_company.exists()
-    is_company_staff.boolean = True
-    is_company_staff.short_description = "دسترسی به شرکت"
-
     def is_center_staff(self):
         if self.access_to_center is not None:
             return True
@@ -86,12 +128,6 @@ class User(AbstractUser):
             return False
     is_center_staff.boolean = True
     is_center_staff.short_description = "دسترسی به مرکز"
-
-    def add_medals(self, value):
-        if not isinstance(value, int) or value <= 0:
-            raise ValueError("Invalid medal value. Please provide a positive integer.")
-        self.received_medals = (self.received_medals or 0) + value
-        self.save()
 
     def get_total_team_member_count_for_mentor(mentor):
         # Get all teams related to the mentor

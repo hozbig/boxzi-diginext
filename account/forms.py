@@ -10,7 +10,7 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = User
         fields = (
-            "username",
+            "phone_number",
             "first_name",
             "last_name",
             "email",
@@ -23,10 +23,16 @@ class CustomUserChangeForm(ModelForm):
         fields = (
             "email",
             "birthday",
-            "major",
+            "degree",
             "interests",
             "abilities",
             "bio",
+            "college_name",
+            "type",
+            "specialty",
+            "province",
+            "city",
+            "number_id",
         )
         exclude = ["password"]
 
@@ -111,29 +117,18 @@ class UserRegisterFormLevel1(UserCreationForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Change placeholders
+        self.fields['email'].widget.attrs['placeholder'] = "* " + self.fields["email"].label
+        # self.fields['phone_number'].widget.attrs['placeholder'] = "* " + self.fields["phone_number"].label
+        self.fields['password1'].widget.attrs['placeholder'] = "* " + self.fields["password1"].label
+        self.fields['password2'].widget.attrs['placeholder'] = "* " + self.fields["password2"].label
+        self.fields['first_name'].widget.attrs['placeholder'] = "* " + self.fields["first_name"].label
+        self.fields['last_name'].widget.attrs['placeholder'] = "* " + self.fields["last_name"].label
         for field in self.fields:
             self.fields[field].required = True
-        # Remove labels and add placeholders
-        self.fields['email'].widget.attrs['placeholder'] = 'ایمیل *'
-        self.fields['email'].widget.attrs['style'] = 'text-align:right'
-        self.fields['phone_number'].widget.attrs['placeholder'] = 'شماره تماس *'
-        self.fields['phone_number'].widget.attrs['style'] = 'text-align:right'
-        self.fields['password1'].widget.attrs['placeholder'] = 'گذرواژه *'
-        self.fields['password1'].widget.attrs['style'] = 'text-align:right'
-        self.fields['password2'].widget.attrs['placeholder'] = 'تائید گذرواژه *'
-        self.fields['password2'].widget.attrs['style'] = 'text-align:right'
-        self.fields['first_name'].widget.attrs['placeholder'] = 'نام *'
-        self.fields['first_name'].widget.attrs['style'] = 'text-align:right'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی *'
-        self.fields['last_name'].widget.attrs['style'] = 'text-align:right'
-        # Remove labels
-        self.fields['email'].label = ''
-        self.fields['phone_number'].label = ''
-        self.fields['password1'].label = ''
-        self.fields['password2'].label = ''
-        self.fields['first_name'].label = ''
-        self.fields['last_name'].label = ''
-        # Remove help_text
+            self.fields[field].label = ""
+            self.fields[field].widget.attrs['style'] = 'text-align:right'
+        # Remove/Change help_text
         self.fields['password1'].help_text = 'گذرواژه شما باید حداقل ۸ حرف داشته باشد، نباید مشابه اطلاعات شخصی، یک رمز عبور معمول یا فقط عدد باشد'
         self.fields['password2'].help_text = ''
 
@@ -144,8 +139,38 @@ class UserRegisterFormLevel2(forms.ModelForm):
         fields = (
             "first_name",
             "last_name",
-            "number_id",
             "birthday",
+            "degree",
+            "college_name",
+            "province",
+            "city",
+        )
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        # Change placeholders to fields
+        self.fields['first_name'].widget.attrs['placeholder'] = "* " + self.fields["first_name"].label
+        self.fields['last_name'].widget.attrs['placeholder'] = "* " + self.fields["last_name"].label
+        self.fields['birthday'].widget.attrs['placeholder'] = "* " + self.fields["birthday"].label
+        # TODO: مدرک تحصیلی و نام دانشگاه دریافت شود
+        self.fields['degree'].widget.attrs['placeholder'] = "* " + self.fields["degree"].label
+        self.fields['college_name'].widget.attrs['placeholder'] = "* " + self.fields["college_name"].label
+        self.fields['province'].widget.attrs['placeholder'] = "* " + self.fields["province"].label
+        self.fields['city'].widget.attrs['placeholder'] = "* " + self.fields["city"].label
+        for field in self.fields:
+            self.fields[field].required = True
+            self.fields[field].label = ""
+            self.fields[field].widget.attrs['style'] = 'text-align:right'
+
+
+class UserRegisterFormLevel3(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            "type",
+            "is_accelerator_experience",
+            "is_startup_experience",
         )
     
     def __init__(self, *args, **kwargs):
@@ -153,18 +178,20 @@ class UserRegisterFormLevel2(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields:
             self.fields[field].required = True
-        # Remove labels and add placeholders
-        self.fields['first_name'].widget.attrs['placeholder'] = 'نام *'
-        self.fields['first_name'].widget.attrs['style'] = 'text-align:right'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'نام خانوادگی *'
-        self.fields['last_name'].widget.attrs['style'] = 'text-align:right'
-        self.fields['number_id'].widget.attrs['placeholder'] = 'کدملی *'
-        self.fields['number_id'].widget.attrs['style'] = 'text-align:right'
-        self.fields['birthday'].widget.attrs['placeholder'] = 'تاریخ تولد *'
-        self.fields['birthday'].widget.attrs['style'] = 'text-align:right'
-        # Remove labels
-        self.fields['first_name'].label = ''
-        self.fields['last_name'].label = ''
-        self.fields['number_id'].label = ''
-        self.fields['birthday'].label = ''
+            self.fields[field].widget.attrs['style'] = 'text-align:right'
 
+
+class UserRegisterFormLevel4(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            "specialty",
+            "why_us",
+        )
+    
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].required = True
+            self.fields[field].widget.attrs['style'] = 'text-align:right'

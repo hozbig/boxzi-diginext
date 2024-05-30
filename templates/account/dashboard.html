@@ -280,28 +280,6 @@
 							</div>
 						</li>
 
-						{% if not request.user.is_profile_complete %}
-						<li>
-							<div class="timeline-icon bg-primary">
-								<i class="feather icon-target font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
-								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات <a href={% url "account:update" request.user.username %} class="font-weight-bold">پروفایل خود را کامل کنید</a></span>
-							</div>
-						</li>
-						{% else %}
-						<li>
-							<div class="timeline-icon bg-success">
-								<i class="feather icon-check font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
-								<span class="font-small-3">شما پروفایل خودرا کامل کردید</span>
-							</div>
-						</li>
-						{% endif %}
-
 						{% if not request.user.user_of_road_registration.exists %}
 						<li>
 							<div class="timeline-icon bg-secondary">
@@ -324,7 +302,29 @@
 						</li>
 						{% endif %}
 
-						{% if request.user.is_profile_complete and request.user.user_of_road_registration.exists %}
+						{% if not request.user.is_profile_complete_level2 and request.user.user_of_road_registration.exists %}
+						<li>
+							<div class="timeline-icon bg-primary">
+								<i class="feather icon-target font-medium-2 align-middle"></i>
+							</div>
+							<div class="timeline-info">
+								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
+								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات <a href={% url "account:update" request.user.phone_number %} class="font-weight-bold">پروفایل خود را کامل کنید</a></span>
+							</div>
+						</li>
+						{% else %}
+						<li>
+							<div class="timeline-icon bg-success">
+								<i class="feather icon-check font-medium-2 align-middle"></i>
+							</div>
+							<div class="timeline-info">
+								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
+								<span class="font-small-3">شما پروفایل خودرا کامل کردید</span>
+							</div>
+						</li>
+						{% endif %}
+
+						{% if request.user.is_profile_complete_level2 and request.user.user_of_road_registration.exists %}
 						<li>
 							<div class="timeline-icon bg-primary">
 								<i class="feather icon-more-horizontal font-medium-2 align-middle"></i>

@@ -82,7 +82,7 @@
                                             <p class="card-text text-dark">پروفایل خودرا تکمیل کنید</p>
                                         </div>
                                         <div class="col-12">
-                                            <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">تکمیل پروفایل</a>
+                                            <a href="{% url "account:update" request.user.phone_number %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">تکمیل پروفایل</a>
                                         </div>
                                     </div>
                                 </div>
@@ -292,7 +292,7 @@
                                     <img src={% static "successfull_signup.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
                                     <h4 class="card-title font-weight-bold mt-4">تکمیل اطلاعات</h4>
                                     <p class="card-text text-dark">پروفایل خودرا تکمیل کنید</p>
-                                    <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">تکمیل پروفایل</a>
+                                    <a href="{% url "account:update" request.user.phone_number %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light mt-2">تکمیل پروفایل</a>
                                 </div>
                             </div>
                         </div>
@@ -495,7 +495,7 @@
                                     <img src={% static "team.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
                                     <h4 class="card-title font-weight-bold mt-4">برای تیم</h4>
                                     <p class="card-text text-dark">میخواهم در این مسیر رشد همراه با تیمم شرکت کنم</p>
-                                    <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-warning btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
+                                    <a href="{% url "account:update" request.user.phone_number %}?next={{request.path}}" class="btn btn-warning btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
                                 </div>
                             </div>
                         </div>
@@ -508,7 +508,7 @@
                                     <img src={% static "individual_man.png" %} alt="element 01" class="img-fluid w-50 float-left px-1">
                                     <h4 class="card-title font-weight-bold mt-4">شخصی</h4>
                                     <p class="card-text text-dark">در این مسیر رشد به صورت انفرادی شرکت میکنم</p>
-                                    <a href="{% url "account:update" request.user.username %}?next={{request.path}}" class="btn btn-primary btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
+                                    <a href="{% url "account:update" request.user.phone_number %}?next={{request.path}}" class="btn btn-primary btn-darken-3 waves-effect waves-dark mt-2">ثبت درخواست</a>
                                 </div>
                             </div>
                         </div>

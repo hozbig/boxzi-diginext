@@ -9,6 +9,7 @@
 
     <form method="POST">
         {% csrf_token %}
+        <input type="text" name="phone_number" maxlength="11" required="" id="id_phone_number" hidden>
 
         {% if form.non_field_errors %}
             <div class="alert alert-danger">
@@ -19,10 +20,12 @@
                 </ul>
             </div>
         {% endif %}
-
+        
         {% for field in form %}
             <div class="form-group">
+                {% if not field.name == "phone_number" %}
                 {{ field|as_crispy_field }}
+                {% endif %}
             </div>
         {% endfor %}
         
