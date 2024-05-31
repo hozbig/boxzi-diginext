@@ -4,8 +4,11 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+
+    {% if not is_road %}
+    <h1 class="text-danger">بازه ثبت نامی شروع نشده است!</h1>
+    {% else %}
     <h1>شروع ثبت نام</h1>
-    <h1>{{user_obj}}</h1>
 
     <form method="POST">
         {% csrf_token %}
@@ -30,9 +33,12 @@
         {% endfor %}
         
         <div class="form-group">
+            <p class="text-center text-success">ثبت نام برای: <b>{{is_road.name}}</b></p>
             <button type="submit" class="fxt-btn-fill">بزن بریم</button>
         </div>
     </form>
+    {% endif %}
+
 {% endblock content %}
 
 {% block extra_js %}

@@ -5,10 +5,10 @@ from account.models import User
 
 
 class ChangeUserAccessMixin:
-    def dispatch(self, request, phone_number, *args, **kwargs):
-        user = get_object_or_404(User, phone_number=phone_number)
+    def dispatch(self, request, uuid, *args, **kwargs):
+        user = get_object_or_404(User, uuid=uuid)
         if user == request.user or request.user.is_superuser:
-            return super().dispatch(request, phone_number, *args, **kwargs)
+            return super().dispatch(request, uuid, *args, **kwargs)
         else:
             raise Http404("Access Denied!")
 

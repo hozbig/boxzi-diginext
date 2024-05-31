@@ -68,27 +68,18 @@ class PreRegisterRequired(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-required.html"
     context = {}
     
-    def get(self, request, task_uuid, road_uuid):
-        task = PreRegisterTask.objects.get(uuid=task_uuid)
+    def get(self, request, road_uuid):
+        user = request.user
         road = Road.objects.get(uuid=road_uuid)
+        re_obj = user.user_of_road_registration.first()
 
-        try:
-            re_obj = RoadRegistration.objects.get(road=road, user=request.user)        
-            if re_obj.status_user_state in "fm":
-                return redirect(reverse('team:road-registration', args=[road_uuid]))
-            elif re_obj.status_user_state in "tc":
-                return redirect(reverse('quiz:pre-register-required-team', args=[task_uuid, road_uuid]))
-        except:
-            re_obj = False
+        if not re_obj.status_user_state == "1":
+            if re_obj.status_user_state == "2t":
+                return redirect(reverse('quiz:pre-register-required-team', args=[road_uuid]))
+            elif re_obj.status_user_state == "2i":
+                return redirect(reverse('quiz:pre-register-required-individual', args=[road_uuid]))
 
-        try:
-            challenge_response = PreRegisterTaskResponse.objects.get(user=request.user, task=task, road=road)
-            self.context["challenge_response"] = challenge_response
-        except:
-            self.context["challenge_response"] = False
-
-        self.context["title"] = "نیازمندی های این مسیر"
-        self.context["task"] = task
+        self.context["title"] = "تیم یا فرد؟"
         self.context["road"] = road
         return render(request, self.template_name, self.context)
     
@@ -97,37 +88,17 @@ class PreRegisterRequiredTeam(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-required-team.html"
     context = {}
     
-    def get(self, request, task_uuid, road_uuid):
-        task = PreRegisterTask.objects.get(uuid=task_uuid)
+    def get(self, request, road_uuid):
+        user = request.user
         road = Road.objects.get(uuid=road_uuid)
+        task = road.pre_register_task
         
-        try:
-            re_obj = RoadRegistration.objects.get(road=road, user=request.user)        
-            if re_obj.status_user_state in "fm":
-                return redirect(reverse('team:road-registration', args=[road_uuid]))
-        except:
-            re_obj = False
+        re_obj = user.user_of_road_registration.first()
+        re_obj.status_user_state = "2t"
+        re_obj.save()
         
-        if not re_obj:
-            re_obj = RoadRegistration(
-                user=request.user,
-                road=road,
-                status="w",
-                status_user_state="t",
-            )
-            re_obj.save()
-            return redirect(reverse('quiz:pre-register-required-team', args=[task_uuid, road_uuid]))
-        else:
-            self.context["registration"] = re_obj
-
-        try:
-            self.context["challenge_response"] = PreRegisterTaskResponse.objects.get(user=request.user, task=task, road=road)
-        except:
-            self.context["challenge_response"] = False
-            return redirect(reverse('quiz:pre-register-required', args=[task_uuid, road_uuid]))
-
-        
-        self.context["title"] = "نیازمندی های این مسیر"
+        self.context["title"] = "به عنوان تیم"
+        self.context["registration"] = re_obj
         self.context["task"] = task
         self.context["road"] = road
         return render(request, self.template_name, self.context)

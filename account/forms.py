@@ -22,14 +22,11 @@ class CustomUserChangeForm(ModelForm):
         model = User
         fields = (
             "email",
-            "birthday",
             "degree",
             "interests",
             "abilities",
             "bio",
             "college_name",
-            "type",
-            "specialty",
             "province",
             "city",
             "number_id",
@@ -137,8 +134,6 @@ class UserRegisterFormLevel2(forms.ModelForm):
     class Meta:
         model = User
         fields = (
-            "first_name",
-            "last_name",
             "birthday",
             "degree",
             "college_name",
@@ -150,8 +145,6 @@ class UserRegisterFormLevel2(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         # Change placeholders to fields
-        self.fields['first_name'].widget.attrs['placeholder'] = "* " + self.fields["first_name"].label
-        self.fields['last_name'].widget.attrs['placeholder'] = "* " + self.fields["last_name"].label
         self.fields['birthday'].widget.attrs['placeholder'] = "* " + self.fields["birthday"].label
         # TODO: مدرک تحصیلی و نام دانشگاه دریافت شود
         self.fields['degree'].widget.attrs['placeholder'] = "* " + self.fields["degree"].label

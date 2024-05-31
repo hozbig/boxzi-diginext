@@ -6,6 +6,8 @@ from django.contrib.auth import login
 from content.models import WatchedContent
 from utils import date_db_convertor
 from django.contrib import messages
+from content.models import Road
+from team.models import RoadRegistration
 
 from .models import User
 from .forms import (
@@ -55,18 +57,35 @@ class RegisterLevel1(View):
     context = {}
 
     def get(self, request):
-        if request.user.is_authenticated and request.user.is_profile_complete_level2():
-            return redirect("account:register2")
+        try:
+            self.context["is_road"] = Road.objects.first()
+        except:
+            self.context["is_road"] = False
 
         self.context["form"] = UserRegisterFormLevel1
         return render(request, self.template_name, self.context)
 
     def post(self, request):
+        try:
+            road = Road.objects.first()
+        except:
+            messages.error(request, "مسیری برای ثبت نام پیدا نشد")
+            return render(request, self.template_name, self.context) 
+        
         form = UserRegisterFormLevel1(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_team_member = True
             user.save()
+            
+            re_obj = RoadRegistration(
+                user=user,
+                road=road,
+                status="1",
+                status_user_state="t",
+            )
+            re_obj.save()
+            
             login(request, user)
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
             return redirect("account:register2")
@@ -146,35 +165,29 @@ class ChangeUser(LoginRequiredMixin, ChangeUserAccessMixin, View):
     success_message = "پروفایل شما با موفقیت ویرایش شد."
     context = {"title": "ویرایش کاربر"}
 
-    def get(self, request, phone_number):
-        user = User.objects.get(phone_number=phone_number)
+    def get(self, request, uuid):
+        user = User.objects.get(uuid=uuid)
         self.context["object"] = user
         self.context["form"] = self.form_class(instance=user)
         # self.context["experience_form"] = WorkExperienceCreateForm
 
         return render(request, self.template_name, self.context)
 
-    def post(self, request, phone_number):
-        user = User.objects.get(phone_number=phone_number)
+    def post(self, request, uuid):
+        user = User.objects.get(uuid=uuid)
 
-        form_copy = request.POST.copy()
-        form_copy.update(
-            {
-                "birthday": date_db_convertor.jdate_edge_convertor(form_copy["birthday"]),
-            }
-        )
-
-        form = self.form_class(form_copy, instance=user)
+        form = self.form_class(request.POST, instance=user)
+        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, self.success_message)
             next_url = request.POST.get('next')
-            return redirect(next_url if next_url else reverse())
+            return redirect(next_url if next_url else reverse("router"))
         else:
             messages.error(request, "مشکلی در فرم وجود دارد!")
-        
+            
+        self.context["object"] = user
         self.context["form"] = form
-
         return render(request, self.template_name, self.context)
 
 
@@ -183,5 +196,5 @@ class UserDashboard(LoginRequiredMixin, View):
     context = {"title":"داشبورد کاربر"}
 
     def get(self, request):
-        self.context["watched_count"] = WatchedContent.objects.filter(user=request.user).count()
+        self.context["re_obj"] = RoadRegistration.objects.get(user=request.user)
         return render(request, self.template_name, self.context)

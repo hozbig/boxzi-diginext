@@ -15,7 +15,6 @@ class StartUpTeamAdmin(admin.ModelAdmin):
     list_display = ["name", "status", "team_member_count", "description", "category"]
     list_filter = ["status", "category", "created_time", "last_update_time"]
     search_fields = ["name"]
-    autocomplete_fields = ['category',]
     filter_horizontal = ["team_members", "team_mentors"]
     inlines = (PlanInline,)
 
@@ -32,6 +31,6 @@ class RoadRegistrationAdmin(admin.ModelAdmin):
 
 @admin.register(TeamMember)
 class TeamMemberAdmin(admin.ModelAdmin):
-    list_display = ["team", "user", "user_number_id", "is_coordinator", "is_owner"]
+    list_display = ["team", "user", "is_coordinator", "is_owner"]
     list_filter = ["team", "is_coordinator", "is_owner"]
     search_fields = ["user", "team"]

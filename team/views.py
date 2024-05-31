@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.views.generic import View, DetailView, UpdateView
 from subject.models import Topic
 from account.templatetags.tag_library import get_topics_and_counts
+from account.models import User
 from content.models import Road
 from plan.models import Plan
 from plan.forms import PlanCreateForm
@@ -69,7 +70,6 @@ class CreateTeam(LoginRequiredMixin, View):
             team_member = TeamMember(
                 team=obj,
                 user=user,
-                user_number_id=0,  # user_number_id must be 0. Zero for team owners.
                 is_coordinator=True,
                 is_owner=True,
             )
@@ -80,6 +80,9 @@ class CreateTeam(LoginRequiredMixin, View):
                 return redirect(next_url)
         else:
             messages.error(request, "مشکلی در فرم وجود دارد!")
+            self.context["form"] = form
+            self.context["teams"] = request.user.user_of_team_member.filter(is_coordinator=True)
+            return render(request, self.template_name, self.context)
         
         return redirect(reverse('team:manage-teams'))
 
@@ -122,11 +125,30 @@ def save_team_member(request):
     if request.method == 'POST':
         form = TeamMemberForm(request.POST)
         if form.is_valid():
-            form.save()
+            phone_number = form.cleaned_data["phone_number"]
+            email = form.cleaned_data["email"]
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            team_member = User.objects.filter(phone_number=phone_number)
+            if not team_member.exists():
+                team_member = User(
+                    phone_number = phone_number,
+                    email = email,
+                    first_name = first_name,
+                    last_name = last_name,
+                )
+                team_member.save()
+            else:
+                team_member = team_member.first()
+            TeamMember.objects.create(
+                team = request.user.user_of_team_member.first().team,
+                user = team_member,
+            )
             messages.success(request, "عملیات با موفقیت انجام شد")
             next_url = request.GET.get('next')
-            if next_url:
+            if next_url and not next_url == "None":
                 return redirect(next_url)
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             # Store form errors and data in session
             request.session['form_errors'] = form.errors

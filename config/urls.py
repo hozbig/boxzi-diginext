@@ -20,7 +20,7 @@ def router(request):
         return redirect("account:mentor-dashboard")
     elif user.is_investor:
         return redirect("investor:dashboard")
-    elif user.is_company_staff():
+    elif user.is_company:
         return redirect("company:dashboard")
     elif user.is_center_staff():
         return redirect("company:acc-dashboard")

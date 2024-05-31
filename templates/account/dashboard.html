@@ -280,14 +280,14 @@
 							</div>
 						</li>
 
-						{% if not request.user.user_of_road_registration.exists %}
+						{% if not request.user.user_of_road_registration.first.status_user_state == "f" %}
 						<li>
 							<div class="timeline-icon bg-secondary">
 								<i class="feather icon-x font-medium-2 align-middle"></i>
 							</div>
 							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">ثبت نام در یک مسیرآموزشی</p>
-								<span class="font-small-3">برای شروع ماجراجویی خود در باکس زی از طریق منو مسیر رشد <a href={% url "content:roads" %} class="font-weight-bold">در یک مسیررشد ثبت نام کنید</a></span></span>
+								<p class="font-weight-bold mb-0">تکمیل اطلاعات برای مسیررشد: <span class="text-dark">{{request.user.user_of_road_registration.first.road.name}}</span></p>
+								<span class="font-small-3">تکمیل اطلاعات لازم برای {{request.user.user_of_road_registration.first.road.name}} <a href={% url "quiz:pre-register-required" re_obj.road.uuid %} class="font-weight-bold">را انجام دهید</a></span></span>
 							</div>
 						</li>
 						{% else %}
@@ -302,14 +302,14 @@
 						</li>
 						{% endif %}
 
-						{% if not request.user.is_profile_complete_level2 and request.user.user_of_road_registration.exists %}
+						{% if not request.user.is_profile_complete_level2 and request.user.user_of_road_registration.first.status_user_state == "f" %}
 						<li>
 							<div class="timeline-icon bg-primary">
 								<i class="feather icon-target font-medium-2 align-middle"></i>
 							</div>
 							<div class="timeline-info">
 								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
-								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات <a href={% url "account:update" request.user.phone_number %} class="font-weight-bold">پروفایل خود را کامل کنید</a></span>
+								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات <a href={% url "account:update" request.user.uuid %} class="font-weight-bold">پروفایل خود را کامل کنید</a></span>
 							</div>
 						</li>
 						{% else %}
@@ -319,7 +319,7 @@
 							</div>
 							<div class="timeline-info">
 								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
-								<span class="font-small-3">شما پروفایل خودرا کامل کردید</span>
+								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات پروفایل خود را کامل کنید</span>
 							</div>
 						</li>
 						{% endif %}

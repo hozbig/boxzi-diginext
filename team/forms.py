@@ -1,21 +1,31 @@
-from django.forms import ModelForm
+from django import forms
+from django.core.validators import RegexValidator
 
 from .models import RoadRegistration, StartUpTeam, TeamMember
 
 
-class RoadRegistrationForm(ModelForm):
+class RoadRegistrationForm(forms.ModelForm):
     class Meta:
         model = RoadRegistration
         exclude = ("created_time", "last_update_time", "uuid")
 
 
-class StartUpTeamForm(ModelForm):
+class StartUpTeamForm(forms.ModelForm):
     class Meta:
         model = StartUpTeam
         exclude = ("created_time", "last_update_time", "uuid", "team_members", "team_mentors")
 
 
-class TeamMemberForm(ModelForm):
-    class Meta:
-        model = TeamMember
-        exclude = ("created_time", "last_update_time", "uuid", "is_owner", "user", "user_validation_code")
+class TeamMemberForm(forms.Form):
+    phone_number = forms.CharField(
+        max_length=11,
+        validators=[
+            RegexValidator(
+                r'^09\d{9}$',
+                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد.'
+            )
+        ], required=True, label="شماره همراه"
+    )
+    email = forms.EmailField(required=True, label="ایمیل")
+    first_name = forms.CharField(max_length=30, required=True, label="نام")
+    last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")

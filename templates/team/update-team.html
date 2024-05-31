@@ -46,7 +46,7 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">نام و نام خانوادگی</th>
-                                <th scope="col">کدملی</th>
+                                <th scope="col">شماره تماس</th>
                                 <th scope="col">دسترسی هماهنگ کننده؟</th>
                                 <th scope="col">عملیات</th>
                             </tr>
@@ -57,7 +57,7 @@
                                 <tr>
                                     <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
                                     <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
-                                    <td>{{person.user.number_id|default:"0"}}</td>
+                                    <td>{{person.user.phone_number}}</td>
                                     <td>
                                         {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
                                         {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
@@ -101,7 +101,7 @@
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">تیم «{{object.name}}»</h4>
+                <h4 class="card-title">ویرایش تیم «{{object.name}}»</h4>
             </div>
             <div class="card-content">
                 <div class="card-body">
@@ -111,18 +111,15 @@
                             <div class="col-lg-12">
                                 {{ form.name|as_crispy_field }}
                             </div>
-                            <div class="col-lg-6">
-                                {{ form.status|as_crispy_field }}
-                            </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 {{ form.category|as_crispy_field }}
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 {{ form.description|as_crispy_field }}
                             </div>
                         </div>
                     
-                        <button class="btn btn-success btn-block" type="submit"> ویرایش تیم</button>
+                        <button class="btn btn-success btn-block" type="submit">ویرایش</button>
                     </form>
                 </div>
             </div>

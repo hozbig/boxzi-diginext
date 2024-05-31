@@ -22,33 +22,18 @@
                 
                 <div class="card overflow-hidden">
                     <div class="card-header">
-                        <h4 class="card-title">پرسش‌نامه محصول</h4>
+                        <h4 class="card-title">پرسش‌نامه ایده</h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
 
                           <form method="POST">
                               {% csrf_token %}
+                              <input name="team" value="{{request.user.user_of_team_member.first.id}}" hidden></input>
                               <div class="row">
-                                  <div class="col-md-6">
+                                  <div class="col-md-12">
                                       {{ form.name|as_crispy_field }}
                                   </div>
-                                  {% if request.user.user_of_team_member.exists %}
-                                  <div class="col-md-6">
-                                      <div id="div_id_team" class="form-group">
-                                          <label for="id_team" class=" requiredField">
-                                              تیم<span class="asteriskField">*</span>
-                                          </label>
-                                          <div>
-                                            <select name="team" class="select form-control" id="id_team">
-                                              {% for team in request.user.user_of_team_member.all %}
-                                              <option value="{{team.team.id}}" selected="">{{team.team.name}}</option>
-                                              {% endfor %}
-                                            </select>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  {% endif %}
                                   <div class="col-md-12">
                                       {{ form.description|as_crispy_field }}
                                   </div>

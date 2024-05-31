@@ -22,7 +22,7 @@ class Plan(models.Model):
     user = models.ForeignKey("account.User", verbose_name="کاربر", related_name="user_of_plan", null=True, on_delete=models.CASCADE)
     team = models.ForeignKey(StartUpTeam, verbose_name="تیم", related_name="team_of_plan", null=True, blank=True, on_delete=models.CASCADE)
     logo = models.ImageField(verbose_name="لوگو", upload_to="plan/logo/", null=True, blank=True)
-    name = models.CharField(verbose_name="نام محصول", max_length=255)
+    name = models.CharField(verbose_name="نام ایده", max_length=255)
     industry = models.CharField(verbose_name="صنعت", max_length=255, null=True, blank=True)
     description = models.TextField(verbose_name="توصیف کوتاه")
     text = QuillField(verbose_name="توضیحات کامل", default="", null=True, blank=True)

@@ -69,7 +69,7 @@
                                 </li>
                                 {% if not request.user.is_profile_complete %}
                                 <li class="scrollable-container media-list">
-                                    <a class="d-flex justify-content-between" href={% url "account:update" request.user.phone_number %}>
+                                    <a class="d-flex justify-content-between" href={% url "account:update" request.user.uuid %}>
                                         <div class="media d-flex align-items-start">
                                             <div class="media-left"><i class="feather icon-check-circle font-medium-5 info"></i></div>
                                             <div class="media-body">
@@ -83,10 +83,10 @@
                         </li>
 
                         <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                                <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{request.user.get_full_name}}</span><span class="user-status mt-50">{% if request.user.is_superuser or request.user.is_staff %}تیم SOC{% elif request.user.is_active %}{{request.user.user_of_company.last.name}}{% endif %}</span></div><span><img class="round" src={% static "admin-theme/app-assets/images/nopic.png" %} alt="avatar" height="40" width="40"></span>
+                                <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{request.user.get_full_name}}</span><span class="user-status mt-50">{% if request.user.is_superuser or request.user.is_staff %}ادمین سایت{% elif request.user.is_team_member %}عضوتیم{% endif %}</span></div><span><img class="round" src={% static "admin-theme/app-assets/images/nopic.png" %} alt="avatar" height="40" width="40"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href={% url 'account:update' request.user.phone_number %}><i class="feather icon-user"></i> ویرایش پروفایل</a>
+                                <a class="dropdown-item" href={% url 'account:update' request.user.uuid %}><i class="feather icon-user"></i> ویرایش پروفایل</a>
                                 {% comment %} <a class="dropdown-item disabled" href="app-email.html"><i class="feather icon-mail"></i> پیام های من</a> {% endcomment %}
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item text-danger" href={% url 'account:logout' %}><i class="feather icon-power"></i> خروج</a>
@@ -119,7 +119,11 @@
                 {% comment %} ================== wich DASHBOARD ================== {% endcomment %}
                 {% if request.user.is_team_member %}
                 <li class="nav-item {% if request.path == "/accounts/" %}active{% endif %}">
-                    <a href={% url "account:user-dashboard" %}><i class="feather icon-home"></i><span class="menu-title">شخصی</span></a>
+                    <a href={% url "account:user-dashboard" %}><i class="feather icon-home"></i><span class="menu-title">داشبورد</span></a>
+                </li>
+                {% elif request.user.is_center_staff %}
+                <li class="nav-item {% if request.path == "/accounts/" %}active{% endif %}">
+                    <a href={% url "company:acc-dashboard" %}><i class="feather icon-home"></i><span class="menu-title">داشبورد</span></a>
                 </li>
                 {% endif %}
 
@@ -145,10 +149,6 @@
 
                 {% comment %} ================== ACCELERATOR access ================== {% endcomment %}
                 {% if request.user.is_center_staff %}
-                <li class="nav-item {% if request.path == "/company/team-management/" %}active{% endif %}">
-                    <a href="{% url "company:team-management" %}" class="text-warning"><i class="fa fa-rocket"></i><span class="menu-title font-weight-bold">مدیریت درخواست ها</span></a>
-                </li>
-
                 <li class="nav-item has-sub"><a href="#"><i class="fa fa-graduation-cap"></i><span class="menu-title">مدیریت مسیرآموزشی</span></a>
                     <ul class="menu-content" style="">
                         <li class="nav-item {% if request.path == "/company/accelerator/new-road/" %}active{% endif %}">
@@ -169,29 +169,8 @@
                     </ul>
                 </li>
 
-                <li class="nav-item has-sub"><a href="#"><i class="feather icon-users"></i><span class="menu-title">مدیریت تیم ها</span></a>
-                    <ul class="menu-content" style="">
-                        {% comment %} <li class="nav-item {% if request.path == "/company/team-management/" %}active{% endif %}">
-                            <a href="{% url "company:team-management" %}"><i class="feather icon-circle"></i><span class="menu-title font-weight-bold">تیم ها و درخواست ها</span></a>
-                        </li> {% endcomment %}
-                        <li class="nav-item">
-                            <a href="{% url "under-maintenance" %}"><i class="feather icon-circle"></i><span class="menu-title font-weight-bold">محصول ها</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url "under-maintenance" %}"><i class="feather icon-circle"></i><span class="menu-title font-weight-bold">عملکرد تیم ها</span></a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="nav-item has-sub"><a href="#"><i class="fa fa-usd"></i><span class="menu-title text-warning">مدیریت سرمایه گذاری</span></a>
-                    <ul class="menu-content" style="">
-                        <li class="nav-item {% if request.path == "/content/funds/management/" %}active{% endif %}">
-                            <a href="{% url "content:funds-management" %}"><i class="feather icon-circle"></i><span class="menu-title font-weight-bold">صندوق ها</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url "under-maintenance" %}"><i class="feather icon-circle"></i><span class="menu-title font-weight-bold">جذب سرمایه گذار</span></a>
-                        </li>
-                    </ul>
+                <li class="nav-item {% if request.path == "/company/team-management/" %}active{% endif %}">
+                    <a href="{% url "company:team-management" %}" class="text-warning"><i class="fa fa-rocket"></i><span class="menu-title font-weight-bold">مدیریت درخواست ها</span></a>
                 </li>
                 {% endif %}
 

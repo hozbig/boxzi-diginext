@@ -50,9 +50,9 @@ class StartUpTeam(models.Model):
         ("a", "فعال"), # Active
         ("i", "غیر فعال"), # Inactive
     )
-    status = models.CharField(choices=STATUS, max_length=1, default="a", verbose_name="وضعیت")
+    status = models.CharField(choices=STATUS, max_length=1, default="a", verbose_name="وضعیت", null=True, blank=True)
     description = models.TextField(verbose_name="بیوگرافی تیم")
-    category = models.ForeignKey(Category, verbose_name="دسته بندی زمینه فعالیت", on_delete=models.CASCADE)
+    category = models.CharField(verbose_name="دسته بندی زمینه فعالیت", max_length=255)
     # TODO: team_members and team_mentors need to delete. our solutions for specify the members and mentors are changed.
     team_members = models.ManyToManyField("account.User", verbose_name="اعضای تیم", related_name="members_of_team", blank=True)
     team_mentors = models.ManyToManyField("account.User", verbose_name="مربی های تیم", related_name="mentors_of_team", blank=True)
@@ -114,19 +114,8 @@ class TeamMember(models.Model):
     
     team = models.ForeignKey(StartUpTeam, verbose_name="تیم", on_delete=models.CASCADE, related_name="team_of_team_member")
     user = models.ForeignKey("account.User", verbose_name="عضو", on_delete=models.CASCADE, related_name="user_of_team_member", null=True, blank=True)
-    # If user_number_id is 0 its mean the user added to team automatically after create the team.
-    user_number_id = models.CharField(max_length=10, validators=[validate_numeric], verbose_name="کد ملی فرد", default=0)
-    temporary_name = models.CharField(verbose_name="نام و نام خانوادگی", max_length=255, default="بدون نام")
     is_coordinator = models.BooleanField(verbose_name="هماهنگ کننده؟", default=False)
     is_owner = models.BooleanField(verbose_name="سازنده این تیم؟", default=False)
-
-    user_validation_code = models.CharField(
-        unique=True,
-        max_length=15,
-        blank=True,
-        null=True,
-        editable=False,
-    )
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
@@ -136,12 +125,7 @@ class TeamMember(models.Model):
         verbose_name_plural = "عضو های تیم"
 
     def __str__(self) -> str:
-        return f"{self.user_number_id} از تیم {self.team.name}"
-    
-    def save(self) -> None:
-        if not self.user_validation_code:
-            self.user_validation_code = random_uuid(max_char=15)
-        return super().save()
+        return f"{self.user.get_full_name()} از تیم {self.team.name}"
 
 
 class RoadRegistration(models.Model):
@@ -170,13 +154,12 @@ class RoadRegistration(models.Model):
     accelerator_last_response_date = models.DateField("زمان آخرین واکنش توسط شتابدهنده", auto_now=False, auto_now_add=False, null=True, blank=True)
 
     STATUS_USER_STATE = (
-        ("m", "تیم ممبر"),
-        ("c", "هماهنگ کننده"),
-        ("i", "شخصی"),
-        ("t", "تیمی"),
+        ("1", "ثبت اطلاعات اولیه"),
+        ("2t", "به عنوان تیم"),
+        ("2i", "به عنوان فرد"),
         ("f", "ثبت نام کامل"),
     )
-    status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=1, default="w", choices=STATUS_USER_STATE)
+    status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
