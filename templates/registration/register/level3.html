@@ -11,14 +11,52 @@
 {% block content %}
     <h2>تجارب و اطلاعات مربوط به محیط های استارت‌آپی</h2>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
-        {% for field in form %}
-            <div class="form-group" style="text-align:right">
-                {{ field|as_crispy_field }}
+        <div class="form-group" style="text-align:right">
+            {{ form.type|as_crispy_field }}
+        </div>
+
+        <div class="form-group" id="specialty_div" style="text-align: right">
+            <div id="div_id_specialty" class="form-group">
+              <label for="id_specialty" class="requiredField">زمینه تخصصی شما چیست؟</label>
+              <div>
+                <select name="specialty" style="text-align: right" class="select form-control" id="id_specialty">
+                  <option class="option_tech" value="Devops">Devops</option>
+                  <option class="option_tech" value="Ai">Ai</option>
+                  <option class="option_tech" value="Machine Learning">Machine Learning</option>
+                  <option class="option_tech" value="Data science">Data science</option>
+
+                  <option class="option_business" value="مارکتینگ" style="display: none;">مارکتینگ</option>
+                  <option class="option_business" value="مدیریت محصول" style="display: none;">مدیریت محصول</option>
+                  <option class="option_business" value="فروش" style="display: none;">فروش</option>
+                  <option class="option_business" value="توسعه کسب و کار" style="display: none;">توسعه کسب و کار</option>
+
+                  <option id="others" value="others">دیگر موارد ...</option>
+                </select>
+              </div>
             </div>
-        {% endfor %}
+        </div>
+
+        <div class="form-group" id="div_others" style="text-align: right; display: none;">
+            <div id="div_id_specialty2" class="form-group">
+              <label for="id_specialty2" class="requiredField">
+                زمینه تخصصی خودرا وارد کنید<span class="asteriskField">*</span>
+              </label>
+              <div>
+                <input type="text" name="" maxlength="255" style="text-align: right" class="textinput form-control" id="id_specialty2"/>
+              </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="text-align:right">
+            {{ form.other_specialties|as_crispy_field }}
+        </div>
+
+        <div class="form-group" style="text-align:right">
+            {{ form.resume_file|as_crispy_field }}
+        </div>
         
         <div class="form-group">
             <button type="submit" class="fxt-btn-fill">تائید</button>
@@ -38,5 +76,50 @@
         format: 'YYYY-MM-DD',
     }
     ).attr("autocomplete", "off")
+</script>
+
+<script>
+    $(document).ready(function(){
+        // Function to update the specialty options based on the type
+        function updateSpecialtyOptions() {
+            const type = $('#id_type').val();
+            if (type === 'b') {
+                $('.option_tech').hide();
+                $('.option_business').show();
+                $('#id_specialty').val($('.option_business:first').val());
+            } else if (type === 't') {
+                $('.option_business').hide();
+                $('.option_tech').show();
+                $('#id_specialty').val($('.option_tech:first').val());
+            }
+            handleOthersOption(); // Ensure to handle 'others' option after updating the options
+        }
+
+        // Function to handle the 'others' option selection
+        function handleOthersOption() {
+            if ($('#id_specialty').val() === 'others') {
+                $('#div_others').show();
+                $('#id_specialty2').attr('name', 'specialty').attr('required', true);
+                $('#id_specialty').removeAttr('name').removeAttr('required');
+            } else {
+                $('#div_others').hide();
+                $('#id_specialty2').removeAttr('name').removeAttr('required');
+                $('#id_specialty').attr('name', 'specialty');
+            }
+        }
+
+        // Initial update based on the current value of id_type
+        updateSpecialtyOptions();
+
+        // Update the options whenever the id_type value changes
+        $('#id_type').change(function() {
+            updateSpecialtyOptions();
+        });
+
+        // Update the visibility of 'div_others' whenever the specialty changes
+        $('#id_specialty').change(function() {
+            handleOthersOption();
+        });
+    });
 </script>
 {% endblock extra_js %}

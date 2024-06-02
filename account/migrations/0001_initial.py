@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('type', models.CharField(choices=[('t', 'فنی'), ('b', 'بیزنسی')], default='t', max_length=1, verbose_name='نقش شما')),
                 ('is_accelerator_experience', models.CharField(choices=[('y', 'بله'), ('n', 'خیر')], default='n', max_length=1, verbose_name='تجربه شرکت در برنامه شتابدهی داشته اید؟')),
                 ('is_startup_experience', models.CharField(choices=[('m', 'عضو یک استارت\u200cآپ بود ام'), ('c', 'یک استارت\u200cآپ داشته ام'), ('n', 'هیچ تجربه ای ندارم')], default='n', max_length=1, verbose_name='عضو استارت آپی بوده اید؟ یا استارت آپی داشته اید؟')),
-                ('specialty', models.CharField(blank=True, max_length=255, null=True, verbose_name='ضمینه تخصصی شما')),
+                ('specialty', models.CharField(blank=True, max_length=255, null=True, verbose_name='زمینه تخصصی شما')),
                 ('why_us', models.TextField(blank=True, default='', null=True, verbose_name='علت درخواست شما برای برنامه شتابدهی')),
                 ('bio', models.TextField(blank=True, default='', null=True, verbose_name='بیوگرافی')),
             ],

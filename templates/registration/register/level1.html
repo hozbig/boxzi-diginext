@@ -24,6 +24,19 @@
             </div>
         {% endif %}
         
+        <div class="form-group" style="text-align: right">
+            <div id="div_id_team_or_individual" class="form-group">
+              <label for="id_team_or_individual" class="requiredField">تیم هستید یا فرد؟</label>
+          
+              <div>
+                <select name="team_or_individual" style="text-align: right" class="select form-control" id="id_team_or_individual">
+                  <option value="t" selected="">تیم</option>
+                  <option value="i">فرد</option>
+                </select>
+              </div>
+            </div>
+        </div>
+
         {% for field in form %}
             <div class="form-group">
                 {% if not field.name == "phone_number" %}

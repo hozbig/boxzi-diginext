@@ -153,14 +153,15 @@ class RoadRegistration(models.Model):
     client_last_response_date = models.DateField("زمان آخرین تغییر توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     accelerator_last_response_date = models.DateField("زمان آخرین واکنش توسط شتابدهنده", auto_now=False, auto_now_add=False, null=True, blank=True)
 
+    team_or_individual = models.CharField(verbose_name="تیم یا فرد؟", max_length=1, default="t", choices=(("t","تیم"),("i","فرد")))
     STATUS_USER_STATE = (
-        ("1", "ثبت اطلاعات اولیه"),
-        ("2t", "به عنوان تیم"),
-        ("2i", "به عنوان فرد"),
+        ("0", "درحال تکمیل ثبت نام"),
+        ("1", "تکمیل ثبت نام اولیه"),
         ("f", "ثبت نام کامل"),
     )
     status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
+    complete_registration_date = models.DateField("تاریخ تکمیل اطلاعات توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
 

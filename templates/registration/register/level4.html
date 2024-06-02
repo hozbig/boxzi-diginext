@@ -11,17 +11,53 @@
 {% block content %}
     <h1>با ما در جریان بگزارید</h1>
 
-    <form method="POST">
+    <form method="POST" id="myForm">
         {% csrf_token %}
 
-        {% for field in form %}
-            <div class="form-group" style="text-align:right">
-                {{ field|as_crispy_field }}
+        <div class="form-group" style="text-align:right">
+            {{ form.is_accelerator_experience|as_crispy_field }}
+        </div>
+        <div class="form-group" style="text-align:right; display: none;">
+            {{ form.if_is_accelerator_experience|as_crispy_field }}
+        </div>
+
+        <div class="form-group" id="accelerator_question_div" style="text-align: right; display: none;">
+            <div class="form-group">
+                <input type="text" placeholder="نام برنامه شتابدهی شرکت کرده" maxlength="255" style="text-align: right" class="accelerator_question_a textinput form-control"/>
             </div>
-        {% endfor %}
+
+            <div class="form-group">
+                <input type="number" min="1380" max="1403" placeholder="سال شرکت در برنامه شتابدهی" maxlength="255" style="text-align: right" class="accelerator_question_a textinput form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group" style="text-align:right">
+            {{ form.is_startup_experience|as_crispy_field }}
+        </div>
+        <div class="form-group" style="text-align:right; display: none;">
+            {{ form.if_is_startup_experience|as_crispy_field }}
+        </div>
+
+        <div class="form-group" id="is_startup_experience_div" style="text-align: right; display: none;">
+            <div class="form-group">
+                <input type="text" placeholder="نام استارت آپ" maxlength="255" style="text-align: right" class="startup_question_a textinput form-control"/>
+            </div>
+
+            <div class="form-group">
+                <input type="text" placeholder="حوضه فعالیت" maxlength="255" style="text-align: right" class="startup_question_a textinput form-control"/>
+            </div>
+
+            <div class="form-group">
+                <input type="number" min="1380" max="1403" placeholder="سال شرکت یا راه اندازی استارتاپ" maxlength="255" style="text-align: right" class="startup_question_a textinput form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group" style="text-align:right">
+            {{ form.why_us|as_crispy_field }}
+        </div>
         
         <div class="form-group">
-            <button type="submit" class="fxt-btn-fill">تائید</button>
+            <button id="submitBtn" class="fxt-btn-fill">تائید</button>
         </div>
     </form>
 {% endblock content %}
@@ -29,14 +65,65 @@
 
 {% block extra_js %}
 <script src={% static "jalali-date-picker/jquery-2.2.4.min.js" %}></script>
-<script src={% static "jalali-date-picker/persian-date.js" %}></script>
-<script src={% static "jalali-date-picker/persian-datepicker.js" %}></script>
+
 <script>
-    $("#id_birthday").persianDatepicker({
-        initialValue: false,
-        persianDigit: false,
-        format: 'YYYY-MM-DD',
-    }
-    ).attr("autocomplete", "off")
+    $(document).ready(function(){
+        // Function to show or hide the accelerator question div
+        function toggleAcceleratorQuestion() {
+            if ($('#id_is_accelerator_experience').val() === 'y') {
+                $('#accelerator_question_div').show();
+            } else {
+                $('#accelerator_question_div').hide();
+            }
+        }
+
+        // Function to show or hide the startup experience div
+        function toggleStartupExperience() {
+            const value = $('#id_is_startup_experience').val();
+            if (value === 'm' || value === 'c') {
+                $('#is_startup_experience_div').show();
+            } else {
+                $('#is_startup_experience_div').hide();
+            }
+        }
+
+        // Initially call the functions to set the correct visibility
+        toggleAcceleratorQuestion();
+        toggleStartupExperience();
+
+        // Add event listeners to the select inputs
+        $('#id_is_accelerator_experience').change(function() {
+            toggleAcceleratorQuestion();
+        });
+
+        $('#id_is_startup_experience').change(function() {
+            toggleStartupExperience();
+        });
+
+        // Function to handle form submission
+        $('#submitBtn').click(function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Function to collect input values and create JSON objects for startup questions
+            var startupData = {};
+            $('.startup_question_a').each(function() {
+                startupData[$(this).attr('placeholder')] = $(this).val();
+            });
+            console.log("startupData")
+            console.log(startupData)
+            $('#id_if_is_startup_experience').val(JSON.stringify(startupData)); // Set the JSON variable as value of the corresponding input field
+            
+            // Function to collect input values and create JSON objects for accelerator questions
+            var acceleratorData = {};
+            $('.accelerator_question_a').each(function() {
+                acceleratorData[$(this).attr('placeholder')] = $(this).val();
+            });
+            console.log("acceleratorData")
+            console.log(acceleratorData)
+            $('#id_if_is_accelerator_experience').val(JSON.stringify(acceleratorData)); // Set the JSON variable as value of the corresponding input field
+
+            $("#myForm").submit()
+        });
+    });
 </script>
 {% endblock extra_js %}

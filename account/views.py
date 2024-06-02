@@ -3,6 +3,7 @@ from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.contrib.auth import login
+from django.utils import timezone
 from content.models import WatchedContent
 from utils import date_db_convertor
 from django.contrib import messages
@@ -72,17 +73,23 @@ class RegisterLevel1(View):
             messages.error(request, "مسیری برای ثبت نام پیدا نشد")
             return render(request, self.template_name, self.context) 
         
+        team_or_individual = request.POST.get("team_or_individual")
+        if not team_or_individual in "ti":
+            messages.error(request, "شما باید یکی از روش های تیم یا فرد را انتخاب کنید!")
+            self.context["form"] = request.POST
+            return render(request, self.template_name, self.context) 
+        
         form = UserRegisterFormLevel1(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_team_member = True
             user.save()
-            
             re_obj = RoadRegistration(
                 user=user,
                 road=road,
-                status="1",
-                status_user_state="t",
+                status="w",
+                status_user_state="0",
+                team_or_individual=team_or_individual,
             )
             re_obj.save()
             
@@ -94,7 +101,7 @@ class RegisterLevel1(View):
         self.context["form"] = form
         return render(request, self.template_name, self.context)
 
-class RegisterLevel2(View):
+class RegisterLevel2(LoginRequiredMixin, View):
     template_name = "registration/register/level2.html"
     context = {}
 
@@ -111,7 +118,7 @@ class RegisterLevel2(View):
         form = UserRegisterFormLevel2(form_copy, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, "آخرین مرحله را انجام بدید.")
+            messages.success(request, "ثبت شد، ادامه دهید.")
             return redirect("account:register3")
         
         messages.error(request, "اطلاعات وارد شده صحیح نمی‌باشد!")
@@ -119,7 +126,7 @@ class RegisterLevel2(View):
         return render(request, self.template_name, self.context)
     
 
-class RegisterLevel3(View):
+class RegisterLevel3(LoginRequiredMixin, View):
     template_name = "registration/register/level3.html"
     context = {}
 
@@ -139,7 +146,7 @@ class RegisterLevel3(View):
         return render(request, self.template_name, self.context)
 
 
-class RegisterLevel4(View):
+class RegisterLevel4(LoginRequiredMixin, View):
     template_name = "registration/register/level4.html"
     context = {}
 
@@ -149,9 +156,13 @@ class RegisterLevel4(View):
 
     def post(self, request):
         form = UserRegisterFormLevel4(request.POST, instance=request.user)
+        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "ثبت نام شما به صورت کامل انجام شد.")
+            re_obj = request.user.user_of_road_registration.first()
+            re_obj.complete_registration_date = timezone.datetime.now()
+            re_obj.save()
             return redirect("account:user-dashboard")
         
         messages.error(request, "اطلاعات وارد شده صحیح نمی‌باشد!")

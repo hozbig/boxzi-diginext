@@ -15,6 +15,11 @@ def validate_numeric(value):
             _('Value %(value)s is not numeric.'),
             params={'value': value},
         )
+        
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/users/resumes/<uuid>/<filename>
+    return f'users/resumes/{instance.user.uuid}/{filename}'
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, phone_number, password=None, **extra_fields):
@@ -57,10 +62,17 @@ class User(AbstractUser):
     
     access_to_center = models.ForeignKey("company.Center", verbose_name="دسترسی به مرکز", blank=True, null=True, on_delete=models.CASCADE)
 
-    degree = models.CharField(verbose_name="مدرک تحصیلی", max_length=50, null=True, blank=True)
+    DEGREE = (
+        ("d", "دیپلم"), # Diplome
+        ("k", "کاردانی"), # Kardani
+        ("l", "کارشناسی"), # Lisans
+        ("f", "کارشناسی ارشد"), # Fogh lisans
+        ("o", "دکترا"), # dOctora
+    )
+    degree = models.CharField(verbose_name="مقطع تحصیلی", max_length=1, choices=DEGREE, default="d")
     college_name = models.CharField(verbose_name="نام دانشگاه", max_length=50, null=True, blank=True)
-    province = models.CharField(verbose_name="استان", max_length=50, null=True, blank=True)
-    city = models.CharField(verbose_name="شهر", max_length=50, null=True, blank=True)
+    province = models.CharField(verbose_name="استان محل سکونت", max_length=50, null=True, blank=True)
+    city = models.CharField(verbose_name="شهر محل سکونت", max_length=50, null=True, blank=True)
     interests = models.ManyToManyField("subject.Subject", verbose_name="علاقه مندی ها", related_name="interests_of_user", blank=True)
     abilities = models.ManyToManyField("subject.Subject", verbose_name="توانایی ها", related_name="abilities_of_user", blank=True)
     
@@ -69,19 +81,25 @@ class User(AbstractUser):
         ("b", "بیزنسی"), # Business side
     )
     type = models.CharField(choices=TYPES, max_length=1, verbose_name="نقش شما", default="t")
+    resume_file = models.FileField(verbose_name="فایل pdf رزومه", upload_to=user_directory_path, null=True, blank=True)
+    
     YESNO = (
         ("y", "داشته ام"), # Yes
         ("n", "نداشته ام"), # No
     )
+    is_accelerator_experience = models.CharField(choices=YESNO, max_length=1, verbose_name="تجربه شرکت در برنامه شتابدهی داشته اید؟", default="n")
+    if_is_accelerator_experience = models.JSONField(verbose_name="اطلاعات مربوط به برنامه شتابدهی شرکت کرده توسط کابر", null=True, blank=True)
+    
     STARTUP_EXPERIENCE = (
         ("m", "عضو یک استارت‌آپ بود ام"), # Member
         ("c", "یک استارت‌آپ داشته ام"), # Coordinator
         ("n", "هیچ تجربه ای ندارم"), # No experience
     )
-    is_accelerator_experience = models.CharField(choices=YESNO, max_length=1, verbose_name="تجربه شرکت در برنامه شتابدهی داشته اید؟", default="n")
     is_startup_experience = models.CharField(choices=STARTUP_EXPERIENCE, max_length=1, verbose_name="عضو استارت آپی بوده اید؟ یا استارت آپی داشته اید؟", default="n")
+    if_is_startup_experience = models.JSONField(verbose_name="اطلاعات مربوط به تجربه استارتاپی کابر", null=True, blank=True)
 
-    specialty = models.CharField(verbose_name="ضمینه تخصصی شما", max_length=255, null=True, blank=True)
+    specialty = models.CharField(verbose_name="زمینه تخصصی شما", max_length=255, null=True, blank=True)
+    other_specialties = models.CharField(verbose_name="دیگر تخصص های شما", max_length=255, null=True, blank=True)
     why_us = models.TextField(default="", verbose_name="علت درخواست شما برای برنامه شتابدهی", blank=True, null=True)
 
     bio = models.TextField(default="", verbose_name="بیوگرافی", blank=True, null=True)

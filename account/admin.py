@@ -49,11 +49,22 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     "birthday",
-                    "degree",
                     "number_id",
                     "interests",
                     "abilities",
                     "bio",
+                    "degree",
+                    "college_name",
+                    "province",
+                    "city",
+                    "type",
+                    "is_accelerator_experience",
+                    "is_startup_experience",
+                    "specialty",
+                    "other_specialties",
+                    "why_us",
+                    "if_is_accelerator_experience",
+                    "if_is_startup_experience",
                 )
             },
         ),

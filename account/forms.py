@@ -70,7 +70,7 @@ class UserLoginOrRegisterForm(ModelForm):
         validators=[
             RegexValidator(
                 r'^09\d{9}$',
-                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد.'
+                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد. مطمئن شوید که از اعداد لاتین استفاده میکنید!'
             )
         ]
     )
@@ -98,7 +98,7 @@ class UserRegisterFormLevel1(UserCreationForm):
         validators=[
             RegexValidator(
                 r'^09\d{9}$',
-                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد.'
+                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد. مطمئن شوید که از اعداد لاتین استفاده میکنید!'
             )
         ]
     )
@@ -162,8 +162,9 @@ class UserRegisterFormLevel3(forms.ModelForm):
         model = User
         fields = (
             "type",
-            "is_accelerator_experience",
-            "is_startup_experience",
+            "specialty",
+            "other_specialties",
+            "resume_file",
         )
     
     def __init__(self, *args, **kwargs):
@@ -172,13 +173,17 @@ class UserRegisterFormLevel3(forms.ModelForm):
         for field in self.fields:
             self.fields[field].required = True
             self.fields[field].widget.attrs['style'] = 'text-align:right'
+        self.fields["resume_file"].required = False
 
 
 class UserRegisterFormLevel4(forms.ModelForm):
     class Meta:
         model = User
         fields = (
-            "specialty",
+            "is_accelerator_experience",
+            "if_is_accelerator_experience",
+            "is_startup_experience",
+            "if_is_startup_experience",
             "why_us",
         )
     
@@ -188,3 +193,5 @@ class UserRegisterFormLevel4(forms.ModelForm):
         for field in self.fields:
             self.fields[field].required = True
             self.fields[field].widget.attrs['style'] = 'text-align:right'
+        self.fields["if_is_accelerator_experience"].required = False
+        self.fields["if_is_startup_experience"].required = False

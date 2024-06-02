@@ -83,7 +83,7 @@
                         </li>
 
                         <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                                <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{request.user.get_full_name}}</span><span class="user-status mt-50">{% if request.user.is_superuser or request.user.is_staff %}ادمین سایت{% elif request.user.is_team_member %}عضوتیم{% endif %}</span></div><span><img class="round" src={% static "admin-theme/app-assets/images/nopic.png" %} alt="avatar" height="40" width="40"></span>
+                                <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{request.user.get_full_name}}</span><span class="user-status mt-50">{% if request.user.is_superuser or request.user.is_staff %}ادمین سایت{% elif request.user.is_team_member and request.user.user_of_team_member.first.is_owner %}هماهنگ کننده تیم{% elif request.user.is_team_member %}عضوتیم{% endif %}</span></div><span><img class="round" src={% static "admin-theme/app-assets/images/nopic.png" %} alt="avatar" height="40" width="40"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href={% url 'account:update' request.user.uuid %}><i class="feather icon-user"></i> ویرایش پروفایل</a>
