@@ -1,6 +1,7 @@
 from typing import Iterable
 from django.db import models
 from django.db.models import Q
+from datetime import date
 from utils.uuid_generator import random_uuid
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -70,6 +71,9 @@ class StartUpTeam(models.Model):
     def team_member_count(self) -> int:
         return self.team_of_team_member.count()
     team_member_count.short_description = "تعداد اعضا"
+    
+    def all_users_completed_registration(self):
+        return not self.team_of_road_registration.exclude(status_user_state='f').exists()
     
     
 def search_items(query:str):
@@ -161,6 +165,7 @@ class RoadRegistration(models.Model):
     )
     status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
+    validity_pride_days = models.PositiveIntegerField(verbose_name="مهلت تکمیل درخواست (به روز)", default=10)
     complete_registration_date = models.DateField("تاریخ تکمیل اطلاعات توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
@@ -171,3 +176,11 @@ class RoadRegistration(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user} - {self.road}"
+    
+    def is_valid_registration_period(self):
+        if self.complete_registration_date is None:
+            return False  # or True depending on your requirement when there's no start date
+
+        days_passed = (date.today() - self.complete_registration_date).days
+        return self.validity_pride_days - days_passed
+        # return days_passed <= self.validity_pride_days

@@ -91,11 +91,11 @@ class User(AbstractUser):
     if_is_accelerator_experience = models.JSONField(verbose_name="اطلاعات مربوط به برنامه شتابدهی شرکت کرده توسط کابر", null=True, blank=True)
     
     STARTUP_EXPERIENCE = (
-        ("m", "عضو یک استارت‌آپ بود ام"), # Member
-        ("c", "یک استارت‌آپ داشته ام"), # Coordinator
+        ("m", "تجربه عضویت در استارت آپ دارم"), # Member
+        ("c", "تجربه بنیانگذاری یک استارت اپ را دارم"), # Coordinator
         ("n", "هیچ تجربه ای ندارم"), # No experience
     )
-    is_startup_experience = models.CharField(choices=STARTUP_EXPERIENCE, max_length=1, verbose_name="عضو استارت آپی بوده اید؟ یا استارت آپی داشته اید؟", default="n")
+    is_startup_experience = models.CharField(choices=STARTUP_EXPERIENCE, max_length=1, verbose_name="عضو یا بنیانگذار یک استارتاپ بوده اید؟", default="n")
     if_is_startup_experience = models.JSONField(verbose_name="اطلاعات مربوط به تجربه استارتاپی کابر", null=True, blank=True)
 
     specialty = models.CharField(verbose_name="زمینه تخصصی شما", max_length=255, null=True, blank=True)

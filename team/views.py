@@ -74,10 +74,21 @@ class CreateTeam(LoginRequiredMixin, View):
                 is_owner=True,
             )
             team_member.save()
+            
+            try:
+                re_obj = request.user.user_of_road_registration.first()
+            except:
+                pass
+            
+            re_obj.team = obj
+            re_obj.save()
+            
             messages.success(request, "عملیات با موفقیت انجام شد")
+            default_redirect_url = reverse('team:update-team', args=[obj.uuid])
             next_url = request.GET.get('next')
             if next_url:
-                return redirect(next_url)
+                default_redirect_url += f'?next={next_url}'
+            return redirect(default_redirect_url)
         else:
             messages.error(request, "مشکلی در فرم وجود دارد!")
             self.context["form"] = form
@@ -145,9 +156,6 @@ def save_team_member(request):
                 user = team_member,
             )
             messages.success(request, "عملیات با موفقیت انجام شد")
-            next_url = request.GET.get('next')
-            if next_url and not next_url == "None":
-                return redirect(next_url)
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             # Store form errors and data in session
@@ -367,7 +375,7 @@ class AddProduct(LoginRequiredMixin, View):
     template_name = "team/add-product.html"
     model = Plan
     form_class = PlanCreateForm
-    context = {"title":"پرسش‌نامه محصول"}
+    context = {"title":"مدیریت ایده/محصول"}
 
     def get(self, request):
         self.context["form"] = self.form_class
@@ -379,9 +387,10 @@ class AddProduct(LoginRequiredMixin, View):
         form_copy.update({"user": request.user,})
 
         form = self.form_class(form_copy)
+        print(form)
         if form.is_valid():
             form.save()
-            messages.success(request, "محصول شما موفقیت ثبت شد")
+            messages.success(request, "محصول شما با موفقیت ثبت شد")
             next_url = request.GET.get('next')
             if next_url:
                 return redirect(next_url)

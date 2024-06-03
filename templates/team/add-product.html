@@ -29,7 +29,7 @@
 
                           <form method="POST">
                               {% csrf_token %}
-                              <input name="team" value="{{request.user.user_of_team_member.first.id}}" hidden></input>
+                              <input name="team" value="{{request.user.user_of_team_member.first.team.id}}" hidden></input>
                               <div class="row">
                                   <div class="col-md-12">
                                       {{ form.name|as_crispy_field }}
