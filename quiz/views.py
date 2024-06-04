@@ -93,8 +93,6 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         task = road.pre_register_task
         
         re_obj = user.user_of_road_registration.first()
-        re_obj.status_user_state = "2t"
-        re_obj.save()
         
         self.context["title"] = "به عنوان تیم"
         self.context["registration"] = re_obj

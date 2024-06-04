@@ -98,6 +98,7 @@ class User(AbstractUser):
     is_startup_experience = models.CharField(choices=STARTUP_EXPERIENCE, max_length=1, verbose_name="عضو یا بنیانگذار یک استارتاپ بوده اید؟", default="n")
     if_is_startup_experience = models.JSONField(verbose_name="اطلاعات مربوط به تجربه استارتاپی کابر", null=True, blank=True)
 
+    programming_language = models.CharField(verbose_name="زبانه برنامه نویسی تخصصی شما", max_length=255, null=True, blank=True)
     specialty = models.CharField(verbose_name="زمینه تخصصی شما", max_length=255, null=True, blank=True)
     other_specialties = models.CharField(verbose_name="دیگر تخصص های شما", max_length=255, null=True, blank=True)
     why_us = models.TextField(default="", verbose_name="علت درخواست شما برای برنامه شتابدهی", blank=True, null=True)

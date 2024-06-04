@@ -18,6 +18,17 @@
             {{ form.type|as_crispy_field }}
         </div>
 
+        <div class="form-group" id="div_programming_language" style="text-align: right; display: none;">
+            <div id="div_id_programming_language" class="form-group">
+              <label for="id_programming_language" class="requiredField">
+                زبان برنامه نویسی تخصصی شما<span class="asteriskField">*</span>
+              </label>
+              <div>
+                <input type="text" name="programming_language" maxlength="255" style="text-align: right" class="textinput form-control" id="id_programming_language"/>
+              </div>
+            </div>
+        </div>
+
         <div class="form-group" id="specialty_div" style="text-align: right">
             <div id="div_id_specialty" class="form-group">
               <label for="id_specialty" class="requiredField">زمینه تخصصی شما چیست؟</label>
@@ -87,10 +98,12 @@
                 $('.option_tech').hide();
                 $('.option_business').show();
                 $('#id_specialty').val($('.option_business:first').val());
+                $('#div_programming_language').hide();
             } else if (type === 't') {
                 $('.option_business').hide();
                 $('.option_tech').show();
                 $('#id_specialty').val($('.option_tech:first').val());
+                $('#div_programming_language').show();
             }
             handleOthersOption(); // Ensure to handle 'others' option after updating the options
         }

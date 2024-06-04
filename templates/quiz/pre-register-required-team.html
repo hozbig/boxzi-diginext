@@ -169,132 +169,158 @@
             </div>
             {% endif %} {% endcomment %}
 
-            {% comment %} create team {% endcomment %}
-            {% if request.user.user_of_team_member.first %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
-                <div class="card text-white gradient-light-success text-center h-100">
-                    <div class="card-content d-flex ">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="card-title font-weight-bold">ساخت تیم و اعضا</h3>
-                                </div>
-                                <div class="col-12">
-                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-secondary text-center h-100">
-                    <div class="card-content d-flex ">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="card-title font-weight-bold">ساخت تیم و اعضا</h3>
-                                </div>
-                                <div class="col-12 py-1">
-                                    <p class="card-text text-dark">ساخت و ثبت تیم خود در باکس‌زی.</p>
-                                </div>
-                                <div class="col-12">
-                                    <a href="{% url "team:manage-teams" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ساخت تیم</a>
+            {% if request.user.user_of_road_registration.first.team_or_individual == "t" %}
+                {% comment %} create team {% endcomment %}
+                {% if request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white gradient-light-success text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">ساخت تیم و هم تیمی</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endif %}
+                {% elif request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                    <div class="card text-white gradient-light-secondary text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">ثبت هم تیمی</h3>
+                                    </div>
+                                    <div class="col-12 py-1">
+                                        <p class="card-text text-dark">هم تیمی ها خود را در تیم ثبت کنید.</p>
+                                    </div>
+                                    <div class="col-12">
+                                        {% if request.user.user_of_team_member.first %}
+                                        <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت عضو</a>
+                                        {% else %}
+                                        <a class="btn btn-info btn-darken-3 waves-effect waves-light">ابتدا تیم بسازید</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                    <div class="card text-white gradient-light-secondary text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">ساخت تیم و هم تیمی</h3>
+                                    </div>
+                                    <div class="col-12 py-1">
+                                        <p class="card-text text-dark">ساخت و ثبت تیم خود در باکس‌زی.</p>
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="{% url "team:manage-teams" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ساخت تیم</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
 
-            {% comment %} create team members {% endcomment %}
-            {% comment %} {% if request.user.user_of_team_member.first.team.team_member_count > 1 %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
-                <div class="card text-white gradient-light-success text-center h-100">
-                    <div class="card-content d-flex ">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="card-title font-weight-bold">ثبت اعضای تیم</h3>
-                                </div>
-                                <div class="col-12">
-                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-secondary text-center h-100">
-                    <div class="card-content d-flex ">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="card-title font-weight-bold">ثبت اعضای تیم</h3>
-                                </div>
-                                <div class="col-12 py-1">
-                                    <p class="card-text text-dark">اعضای تیم خودرا در تیم ثبت کنید.</p>
-                                </div>
-                                <div class="col-12">
-                                    {% if request.user.user_of_team_member.first %}
-                                    <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت عضو</a>
-                                    {% else %}
-                                    <a class="btn btn-info btn-darken-3 waves-effect waves-light">ابتدا تیم بسازید</a>
-                                    {% endif %}
+                {% comment %} create team members {% endcomment %}
+                {% comment %} {% if request.user.user_of_team_member.first.team.team_member_count > 1 %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white gradient-light-success text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">ثبت اعضای تیم</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endif %} {% endcomment %}
+                {% else %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                    <div class="card text-white gradient-light-secondary text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">ثبت اعضای تیم</h3>
+                                    </div>
+                                    <div class="col-12 py-1">
+                                        <p class="card-text text-dark">اعضای تیم خودرا در تیم ثبت کنید.</p>
+                                    </div>
+                                    <div class="col-12">
+                                        {% if request.user.user_of_team_member.first %}
+                                        <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت عضو</a>
+                                        {% else %}
+                                        <a class="btn btn-info btn-darken-3 waves-effect waves-light">ابتدا تیم بسازید</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %} {% endcomment %}
 
-            {% comment %} create idea {% endcomment %}
-            {% if request.user.user_of_team_member.first.team.team_of_plan.first %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
-                <div class="card text-white gradient-light-success text-center h-100">
-                    <div class="card-content d-flex ">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
-                                </div>
-                                <div class="col-12">
-                                    <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-secondary text-center h-100">
-                    <div class="card-content d-flex ">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
-                                </div>
-                                <div class="col-12 py-1">
-                                    <p class="card-text text-dark">ایده تیم خود را ثبت کنید.</p>
-                                </div>
-                                <div class="col-12">
-                                    {% if request.user.user_of_team_member.first %}
-                                    <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت ایده</a>
-                                    {% else %}
-                                    <a class="btn btn-info btn-darken-3 waves-effect waves-light">ابتدا تیم بسازید</a>
-                                    {% endif %}
+                {% comment %} create idea {% endcomment %}
+                {% if request.user.user_of_team_member.first.team.team_of_plan.first %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white gradient-light-success text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                {% else %}
+                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                    <div class="card text-white gradient-light-secondary text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                    </div>
+                                    <div class="col-12 py-1">
+                                        <p class="card-text text-dark">ایده تیم خود را ثبت کنید.</p>
+                                    </div>
+                                    <div class="col-12">
+                                        {% if request.user.user_of_team_member.first %}
+                                        <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت ایده</a>
+                                        {% else %}
+                                        <a class="btn btn-info btn-darken-3 waves-effect waves-light">ابتدا تیم بسازید</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             {% endif %}
 
             {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}

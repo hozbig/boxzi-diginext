@@ -163,6 +163,7 @@ class UserRegisterFormLevel3(forms.ModelForm):
         fields = (
             "type",
             "specialty",
+            "programming_language",
             "other_specialties",
             "resume_file",
         )

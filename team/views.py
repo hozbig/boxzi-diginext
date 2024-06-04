@@ -14,6 +14,8 @@ from account.models import User
 from content.models import Road
 from plan.models import Plan
 from plan.forms import PlanCreateForm
+from django.contrib.auth.hashers import make_password
+from utils.uuid_generator import random_uuid
 
 from .models import RoadRegistration, StartUpTeam, TeamMember, search_items
 from .mixins import TeamAccessMixin
@@ -140,22 +142,37 @@ def save_team_member(request):
             email = form.cleaned_data["email"]
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
-            team_member = User.objects.filter(phone_number=phone_number)
-            if not team_member.exists():
-                team_member = User(
+            user_objects = User.objects.filter(phone_number=phone_number)
+            if not user_objects.exists():
+                gpass = phone_number + random_uuid(3)
+                hashed_password = make_password(gpass)
+                user_obj = User(
                     phone_number = phone_number,
                     email = email,
                     first_name = first_name,
                     last_name = last_name,
+                    password = hashed_password,
+                    is_team_member = True
                 )
-                team_member.save()
+                user_obj.save()
+                re_obj = RoadRegistration(
+                    team = request.user.user_of_road_registration.first().team,
+                    user = user_obj,
+                    road = request.user.user_of_road_registration.first().road,
+                    status = "w",
+                    status_user_state = "bc",
+                )
+                re_obj.save()
             else:
-                team_member = team_member.first()
+                user_obj = user_objects.first()
             TeamMember.objects.create(
                 team = request.user.user_of_team_member.first().team,
-                user = team_member,
+                user = user_obj,
             )
             messages.success(request, "عملیات با موفقیت انجام شد")
+            # TODO: Remove this line after email user information to user. or after testing
+            messages.error(request, hashed_password)
+            messages.error(request, gpass)
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             # Store form errors and data in session

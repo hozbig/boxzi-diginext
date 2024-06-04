@@ -156,7 +156,6 @@ class RegisterLevel4(LoginRequiredMixin, View):
 
     def post(self, request):
         form = UserRegisterFormLevel4(request.POST, instance=request.user)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "ثبت نام شما به صورت کامل انجام شد.")

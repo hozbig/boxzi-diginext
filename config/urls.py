@@ -14,7 +14,9 @@ def router(request):
     
     if user.is_superuser or user.is_staff:
         return redirect("admin:index")
-    elif user.is_team_member:
+    elif user.is_team_member and user.user_of_road_registration.first().status_user_state == "bc":
+        return redirect("account:register2")
+    elif user.is_team_member and user.user_of_road_registration.first().status_user_state in "01f":
         return redirect("account:user-dashboard")
     elif user.is_mentor:
         return redirect("account:mentor-dashboard")

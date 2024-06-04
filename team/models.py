@@ -157,11 +157,17 @@ class RoadRegistration(models.Model):
     client_last_response_date = models.DateField("زمان آخرین تغییر توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     accelerator_last_response_date = models.DateField("زمان آخرین واکنش توسط شتابدهنده", auto_now=False, auto_now_add=False, null=True, blank=True)
 
-    team_or_individual = models.CharField(verbose_name="تیم یا فرد؟", max_length=1, default="t", choices=(("t","تیم"),("i","فرد")))
+    TEAM_OR_INDIVIDUAL = (
+        ("t", "تیم"),
+        ("i", "فرد"),
+        ("a", "تیم (اضافه شده توسط هماهنگ کننده)"),
+    )
+    team_or_individual = models.CharField(verbose_name="تیم یا فرد؟", max_length=1, default="t", choices=TEAM_OR_INDIVIDUAL)
     STATUS_USER_STATE = (
+        ("bc", "اضافه شده توسط هماهنگ کننده"), # By Coordinator
         ("0", "درحال تکمیل ثبت نام"),
         ("1", "تکمیل ثبت نام اولیه"),
-        ("f", "ثبت نام کامل"),
+        ("f", "ثبت نام کامل"), # Full registration
     )
     status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
@@ -178,9 +184,13 @@ class RoadRegistration(models.Model):
         return f"{self.user} - {self.road}"
     
     def is_valid_registration_period(self):
-        if self.complete_registration_date is None:
-            return False  # or True depending on your requirement when there's no start date
+        team_owner = self.team.team_of_team_member.filter(is_owner=True).first().user
+        team_owner_complete_registration_date = team_owner.user_of_road_registration.first().complete_registration_date
+        team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
+        
+        if team_owner_complete_registration_date is None:
+            return False 
 
-        days_passed = (date.today() - self.complete_registration_date).days
-        return self.validity_pride_days - days_passed
-        # return days_passed <= self.validity_pride_days
+        days_passed = (date.today() - team_owner_complete_registration_date).days
+        return team_owner_validity_pride_days - days_passed
+        # return days_passed <= team_owner_validity_pride_days

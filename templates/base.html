@@ -144,6 +144,12 @@
                         </a>
                     </li>
                     {% endif %}
+
+                    {% if request.user.user_of_team_member.first.is_owner %}
+                    <li class="nav-item">
+                        <a href="{% url "team:manage-teams" %}"><i class="feather icon-users"></i><span class="menu-title">مدیریت تیم</span></a>
+                    </li>
+                    {% endif %}
                 {% endif %}
 
 
