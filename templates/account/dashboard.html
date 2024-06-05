@@ -287,7 +287,7 @@
 							</div>
 							<div class="timeline-info">
 								<p class="font-weight-bold mb-0">تکمیل اطلاعات برای مسیررشد: <span class="text-dark">{{request.user.user_of_road_registration.first.road.name}}</span></p>
-								<span class="font-small-3">تکمیل اطلاعات لازم برای {{request.user.user_of_road_registration.first.road.name}} <a href={% url "quiz:pre-register-required" re_obj.road.uuid %} class="font-weight-bold">را انجام دهید</a></span></span>
+								<span class="font-small-3">تکمیل اطلاعات لازم برای {{request.user.user_of_road_registration.first.road.name}} <a href={% url "content:roads" %} class="font-weight-bold">را انجام دهید</a></span></span>
 							</div>
 						</li>
 						{% else %}

@@ -14,10 +14,16 @@ def router(request):
     
     if user.is_superuser or user.is_staff:
         return redirect("admin:index")
-    elif user.is_team_member and user.user_of_road_registration.first().status_user_state == "bc":
-        return redirect("account:register2")
-    elif user.is_team_member and user.user_of_road_registration.first().status_user_state in "01f":
-        return redirect("account:user-dashboard")
+    elif user.is_team_member and user.user_of_road_registration.first():
+        re_obj = user.user_of_road_registration.first()
+        if re_obj.status_user_state == "2":
+            return redirect("account:register2")
+        elif re_obj.status_user_state == "3":
+            return redirect("account:register3")
+        elif re_obj.status_user_state == "4":
+            return redirect("account:register4")
+        elif re_obj.status_user_state == "5":
+            return redirect("account:user-dashboard")
     elif user.is_mentor:
         return redirect("account:mentor-dashboard")
     elif user.is_investor:

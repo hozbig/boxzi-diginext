@@ -12,30 +12,11 @@ logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %
 
 class Roads(LoginRequiredMixin, View):
     template_name = "content/roads.html"
-    context = {"title":"مسیرهای آموزشی"}
+    context = {"title":"مسیرآموزشی"}
 
     def get(self, request):
-        user = request.user
-        try:
-            # Retrieve roads registered by the user
-            user_roads = user.user_of_road_registration.all()
-            # Retrieve roads registered by teams the user is a member of
-            team_roads = []
-            for team in user.members_of_team.all():
-                team_roads.extend(team.team_of_road_registration.all())
-            # Convert team_roads to a queryset
-            team_roads_queryset = RoadRegistration.objects.filter(id__in=[road.id for road in team_roads])
-            # Combine user roads and team roads into a single queryset
-            all_roads = user_roads | team_roads_queryset
-            # Ensure uniqueness of roads using distinct() queryset method
-            unique_roads = all_roads.distinct()
-
-            self.context["active_roads"] = unique_roads.filter(status="a")
-            self.context["requested_roads"] = unique_roads.exclude(status='a')
-            self.context["roads"] = Road.objects.all()
-        except AttributeError as e:
-            logging.error("An AttributeError occurred: %s", e)
-
+        self.context["object"] = Road.objects.first()
+        self.context["re_obj"] = request.user.user_of_road_registration.first()
         return render(request, self.template_name, self.context)
     
 

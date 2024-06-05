@@ -161,7 +161,8 @@ def save_team_member(request):
                     user = user_obj,
                     road = request.user.user_of_road_registration.first().road,
                     status = "w",
-                    status_user_state = "bc",
+                    status_user_state = "l0",
+                    team_or_individual = "a"
                 )
                 re_obj.save()
             else:
@@ -397,12 +398,11 @@ class AddProduct(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
     
     def post(self, request):
-        team = request.POST.get("team")
+        # team = request.POST.get("team")
         form_copy = request.POST.copy()
         form_copy.update({"user": request.user,})
 
         form = self.form_class(form_copy)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "محصول شما با موفقیت ثبت شد")

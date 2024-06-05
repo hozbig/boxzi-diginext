@@ -47,39 +47,57 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">تیم شما</h4>
+                <h4 class="card-title"><i class="fa fa-hashtag"></i> تیم شما</h4>
             </div>
             <div class="card-content">
                 <div class="card-body card-dashboard">
                     <div class="table-responsive">
                         <table class="table zero-configuration">
                             <thead>
-                                <tr class="table-warning">
-                                    <th>#</th>
-                                    <th>نام تیم</th>
-                                    <th>تعداد اعضا</th>
-                                    <th>وضعیت</th>
-                                    <th>دسترسی شما</th>
-                                    <th>عملیات</th>
+                                <tr class="table-secondary">
+                                    <th class="border">نام تیم</th>
+                                    <th class="border">تعداد اعضا</th>
+                                    <th class="border">دسترسی شما</th>
+                                    <th class="border">عملیات</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for item in teams %}
-                                    <tr>
-                                        <th scope="row">{{forloop.counter|default:"0"|stringformat:"02d"}}</th>
-                                        <td>{{item.team.name}}</td>
-                                        <td>{{item.team.team_of_team_member.count}}</td>
-                                        <td><span class="badge badge-{% if item.team.status == "a" %}success{% else %}danger{% endif %}">{{item.team.get_status_display}}</span></td>
-                                        <td>
-                                            {% if item.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
-                                            {% if item.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
-                                        </td>
+                                <tr>
+                                    <td class="border">{{teams.first.team.name}}</td>
+                                    <td class="border">{{teams.first.team.team_of_team_member.count}}</td>
+                                    <td class="border">{% if teams.first.is_owner %}<span class="badge badge-warning">سازنده</span>{% else %}***{% endif %}</td>
+                                    <td class="border">{% if teams.first.is_owner %}<a href={% url "team:update-team" teams.first.team.uuid %} class="badge badge-info">ویرایش</a>{% else %}***{% endif %}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-                                        {% if item.is_owner %}
-                                        <td><a href={% url "team:update-team" item.team.uuid %} class="badge badge-info">ویرایش</a></td>
-                                        {% else %}
-                                        <td><a class="badge badge-light text-white">ویرایش</a></td>
-                                        {% endif %}
+            <div class="card-header">
+                <h4 class="card-title"><i class="fa fa-hashtag"></i> وضعیت تکمیل نیازمندی ها توسط هم تیمی های شما</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body card-dashboard">
+                    <div class="table-responsive">
+                        <table class="table zero-configuration">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th>#</th>
+                                    <th>نام هم تیمی</th>
+                                    <th>تکمیل پروفایل</th>
+                                    <th>آزمون شخصیت</th>
+                                    <th>تاریخ تکمیل</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tmember in teams.first.team.team_of_team_member.all %}
+                                    <tr>
+                                        <td class="border">{{forloop.counter|default:"0"|stringformat:"02d"}}</td>
+                                        <td class="border">{{tmember.user.get_full_name}}</td>
+                                        <td class="border">{% if tmember.user.is_profile_complete %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                        <td class="border">{% if tmember.user.user_of_personal_test.exists %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                        <td class="border">{{tmember.user.user_of_road_registration.first.complete_registration_date|to_jalali}}</th>
                                     </tr>
                                 {% endfor %}
                             </tbody>

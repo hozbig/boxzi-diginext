@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 
 from account.models import User
 
@@ -20,3 +21,10 @@ class AdminAccessMixin:
             return super().dispatch(request, *args, **kwargs)
         else:
             raise Http404("Access Denied!")
+
+
+class AnonymousRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('router')
+        return super().dispatch(request, *args, **kwargs)

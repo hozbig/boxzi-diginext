@@ -324,7 +324,7 @@
             {% endif %}
 
             {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
-                {% if all_users_completed_registration %}
+                {% if request.user.user_of_team_member.first.team.all_users_completed_registration %}
                 <div class="col-12" id="final_btn">
                     <form method="post" class="mt-2" action={% url "team:road-registration" road.uuid %}>
                         {% csrf_token %}

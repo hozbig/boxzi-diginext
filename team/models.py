@@ -146,6 +146,7 @@ class RoadRegistration(models.Model):
     road = models.ForeignKey("content.Road", related_name="road_of_road_registration", verbose_name="مسیر", on_delete=models.CASCADE)
 
     STATUS = (
+        ("n", "نیاز به تکمیل اطلاعات"), # Need to complete the profile
         ("w", "عدم برسی شتابدهنده"), # Waiting
         ("p", "درحال برسی شتابدهنده"), # Progressing
         ("a", "تایید شده"), # Approved
@@ -164,10 +165,10 @@ class RoadRegistration(models.Model):
     )
     team_or_individual = models.CharField(verbose_name="تیم یا فرد؟", max_length=1, default="t", choices=TEAM_OR_INDIVIDUAL)
     STATUS_USER_STATE = (
-        ("bc", "اضافه شده توسط هماهنگ کننده"), # By Coordinator
-        ("0", "درحال تکمیل ثبت نام"),
-        ("1", "تکمیل ثبت نام اولیه"),
-        ("f", "ثبت نام کامل"), # Full registration
+        ("2", "مرحله دوم تکمیل ثبت نام"),
+        ("3", "مرحله سوم تکمیل ثبت نام"),
+        ("4", "مرحله چهارم تکمیل ثبت نام"),
+        ("5", "ثبت نام کامل"), # Full registration
     )
     status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
