@@ -184,13 +184,22 @@ class RoadRegistration(models.Model):
         return f"{self.user} - {self.road}"
     
     def is_valid_registration_period(self):
-        team_owner = self.team.team_of_team_member.filter(is_owner=True).first().user
-        team_owner_complete_registration_date = team_owner.user_of_road_registration.first().complete_registration_date
-        team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
-        
-        if team_owner_complete_registration_date is None:
-            return False 
+        try:
+            team_owner = self.team.team_of_team_member.filter(is_owner=True).first().user
+            team_owner_complete_registration_date = team_owner.user_of_road_registration.first().complete_registration_date
+            team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
 
-        days_passed = (date.today() - team_owner_complete_registration_date).days
-        return team_owner_validity_pride_days - days_passed
+            if team_owner_complete_registration_date is None:
+                return False 
+
+            days_passed = (date.today() - team_owner_complete_registration_date).days
+            return team_owner_validity_pride_days - days_passed
+        except:
+            if self.complete_registration_date is None:
+                return False  # or True depending on your requirement when there's no start date
+
+            days_passed = (date.today() - self.complete_registration_date).days
+            return self.validity_pride_days - days_passed
+            # return days_passed <= self.validity_pride_days
+        
         # return days_passed <= team_owner_validity_pride_days

@@ -100,31 +100,35 @@ class RegisterLevel1(View):
         except:
             messages.error(request, "مسیری برای ثبت نام پیدا نشد")
             return render(request, self.template_name, self.context) 
-        
+
         team_or_individual = request.POST.get("team_or_individual")
         if not team_or_individual in "ti":
             messages.error(request, "شما باید یکی از روش های تیم یا فرد را انتخاب کنید!")
             self.context["form"] = request.POST
             return render(request, self.template_name, self.context) 
-        
+
         form = UserRegisterFormLevel1(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.is_team_member = True
             user.save()
-            re_obj = RoadRegistration(
-                user=user,
-                road=road,
-                status="w",
-                status_user_state="0",
-                team_or_individual=team_or_individual,
-            )
-            re_obj.save()
-            
+
+            try:
+                re_obj = RoadRegistration.objects.get(user=user)
+            except:
+                re_obj = RoadRegistration(
+                    user=user,
+                    road=road,
+                    status="w",
+                    status_user_state="0",
+                    team_or_individual=team_or_individual,
+                )
+                re_obj.save()
+
             login(request, user)
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
             return redirect("account:register2")
-        
+
         messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
         self.context["form"] = form
         return render(request, self.template_name, self.context)
