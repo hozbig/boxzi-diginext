@@ -15,7 +15,7 @@ from content.models import Road
 from plan.models import Plan
 from plan.forms import PlanCreateForm
 from django.contrib.auth.hashers import make_password
-from utils.uuid_generator import random_uuid
+from django.utils.crypto import get_random_string
 
 from .models import RoadRegistration, StartUpTeam, TeamMember, search_items
 from .mixins import TeamAccessMixin
@@ -144,9 +144,10 @@ def save_team_member(request):
             last_name = form.cleaned_data["last_name"]
             user_objects = User.objects.filter(phone_number=phone_number)
             if not user_objects.exists():
-                gpass = phone_number + random_uuid(3)
-                hashed_password = make_password(gpass)
-                user_obj = User(
+                # generated_pass is the password can login with it
+                generated_pass = get_random_string(length=10)
+                hashed_password = make_password(generated_pass)
+                user_obj = User.objects.create(
                     phone_number = phone_number,
                     email = email,
                     first_name = first_name,
@@ -154,7 +155,7 @@ def save_team_member(request):
                     password = hashed_password,
                     is_team_member = True
                 )
-                user_obj.save()
+                # user_obj.save()
                 re_obj = RoadRegistration(
                     team = request.user.user_of_road_registration.first().team,
                     user = user_obj,
@@ -170,9 +171,6 @@ def save_team_member(request):
                 user = user_obj,
             )
             messages.success(request, "عملیات با موفقیت انجام شد")
-            # TODO: Remove this line after email user information to user. or after testing
-            messages.error(request, hashed_password)
-            messages.error(request, gpass)
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
             # Store form errors and data in session

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.utils import timezone
 from content.models import WatchedContent
 from utils import date_db_convertor
@@ -10,8 +10,10 @@ from django.contrib import messages
 from content.models import Road
 from team.models import RoadRegistration
 
+
 from .models import User
 from .forms import (
+    LoginForm,
     CustomUserChangeForm,
     UserRegisterFormLevel1,
     UserRegisterFormLevel2,
@@ -51,6 +53,32 @@ class LoginOrRegister(View):
         messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
         self.context["form"] = form
         return render(request, self.template_name, self.context)
+
+
+class UserLoginView(View):
+    template_name = "registration/login.html"
+
+    def get(self, request):
+        form = LoginForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):        
+        form = LoginForm(request.POST)
+        
+        if form.is_valid():
+            phone_number = form.cleaned_data["phone_number"]
+            password = form.cleaned_data["password"]
+            user = authenticate(request, username=phone_number, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, "با موفقیت وارد شدید")
+                return redirect("router")
+            else:
+                messages.error(request, "aaaa!")
+        else:
+            messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
+
+        return render(request, self.template_name, {'form': form})
 
 
 class RegisterLevel1(View):

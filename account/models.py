@@ -156,11 +156,6 @@ class User(AbstractUser):
         total_team_member_count = sum(team.team_member_count() for team in related_teams)
 
         return total_team_member_count
-    
-    def __str__(self):
-        if self.get_full_name():
-            return self.get_full_name()
-        return self.phone_number
 
 
 class Meeting(models.Model):

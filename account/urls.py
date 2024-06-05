@@ -4,7 +4,7 @@ from . import views
 
 app_name = "account"
 urlpatterns = [
-    path("login/", user_views.LoginView.as_view(), name="login"),
+    # path("login/", user_views.LoginView.as_view(), name="login"),
     path("logout/", user_views.LogoutView.as_view(), name="logout"),
     # path('password_change/', user_views.PasswordChangeView.as_view(), name='password_change'),
     # path('password_change/done/', user_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
@@ -15,6 +15,7 @@ urlpatterns = [
     path('<str:uuid>/update/', views.ChangeUser.as_view(), name='update'),
 
     path("login-or-register/", views.LoginOrRegister.as_view(), name="login-or-register"),
+    path("login/", views.UserLoginView.as_view(), name="login"),
     path("register/", views.RegisterLevel1.as_view(), name="register"),
     path("register/level=2", views.RegisterLevel2.as_view(), name="register2"),
     path("register/level=3", views.RegisterLevel3.as_view(), name="register3"),
