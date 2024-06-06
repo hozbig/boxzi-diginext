@@ -44,28 +44,28 @@
                                 <th>آزمون شخصیت</th>
                                 <th>ساخت تیم</th>
                                 <th>اعضای تیم</th>
-                                <th>تکمیل مراحل توسط اعضا</th>
                                 <th>ثبت ایده/محصول</th>
+                                <th>تکمیل مراحل توسط اعضا</th>
                                 <th>تاریخ ثبت</th>
                                 <th>مهلت باقی مانده</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="text-center">
-                                <td class="border ">{{re_obj.get_status_display}}</td>
+                                <td class="border ">{{registration_obj.get_status_display}}</td>
                                 <td class="border ">{% if request.user.is_profile_complete %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                 <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                 <td class="border ">{% if request.user.user_of_team_member.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.team_member_count > 1 %}<span class="badge badge-success">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-times"></i></span>{% endif %}</td>
-                                <td class="border ">{% if request.user.user_of_team_member.first.team.all_users_completed_registration %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.team_of_plan.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                <td class="border ">{{re_obj.complete_registration_date|to_jalali}}</th>
-                                <td class="border ">{{re_obj.is_valid_registration_period}} روز</th>
+                                <td class="border ">{% if request.user.user_of_team_member.first.team.all_users_completed_registration %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                <td class="border ">{{registration_obj.complete_registration_date|to_jalali}}</th>
+                                <td class="border ">{{registration_obj.is_valid_registration_period}} روز</th>
                             </tr>
                         </tbody>
                     </table>
 
-                    <a href={% url "quiz:pre-register-required" re_obj.road.uuid %} class="btn btn-block btn-gradient-bg bg-gradient-success mt-2">تکمیل درخواست</a>
+                    <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-block btn-gradient-bg bg-gradient-success mt-2">تکمیل درخواست</a>
                 </div>
             </div>
         </div>

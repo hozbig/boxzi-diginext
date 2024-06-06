@@ -85,6 +85,7 @@
                                 <tr class="table-primary">
                                     <th>#</th>
                                     <th>نام هم تیمی</th>
+                                    <th>شماره تماس</th>
                                     <th>تکمیل پروفایل</th>
                                     <th>آزمون شخصیت</th>
                                     <th>تاریخ تکمیل</th>
@@ -95,6 +96,7 @@
                                     <tr>
                                         <td class="border">{{forloop.counter|default:"0"|stringformat:"02d"}}</td>
                                         <td class="border">{{tmember.user.get_full_name}}</td>
+                                        <td class="border">{{tmember.user.phone_number}}</td>
                                         <td class="border">{% if tmember.user.is_profile_complete %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                         <td class="border">{% if tmember.user.user_of_personal_test.exists %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                         <td class="border">{{tmember.user.user_of_road_registration.first.complete_registration_date|to_jalali}}</th>

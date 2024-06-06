@@ -16,6 +16,7 @@ from plan.models import Plan
 from plan.forms import PlanCreateForm
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
+from utils.check_status_user_state_level import add_one_level
 
 from .models import RoadRegistration, StartUpTeam, TeamMember, search_items
 from .mixins import TeamAccessMixin
@@ -68,6 +69,11 @@ class CreateTeam(LoginRequiredMixin, View):
         form = self.form_class(form)
         
         if form.is_valid():
+            registration_obj = request.user.user_of_road_registration.first()
+
+            if request.user.user_of_team_member.first() or registration_obj.team_or_individual == "i":
+                return redirect("router")
+
             obj = form.save()
             team_member = TeamMember(
                 team=obj,
@@ -77,13 +83,8 @@ class CreateTeam(LoginRequiredMixin, View):
             )
             team_member.save()
             
-            try:
-                re_obj = request.user.user_of_road_registration.first()
-            except:
-                pass
-            
-            re_obj.team = obj
-            re_obj.save()
+            registration_obj.team = obj
+            registration_obj.save()
             
             messages.success(request, "عملیات با موفقیت انجام شد")
             default_redirect_url = reverse('team:update-team', args=[obj.uuid])
@@ -91,13 +92,10 @@ class CreateTeam(LoginRequiredMixin, View):
             if next_url:
                 default_redirect_url += f'?next={next_url}'
             return redirect(default_redirect_url)
-        else:
-            messages.error(request, "مشکلی در فرم وجود دارد!")
-            self.context["form"] = form
-            self.context["teams"] = request.user.user_of_team_member.filter(is_coordinator=True)
-            return render(request, self.template_name, self.context)
-        
-        return redirect(reverse('team:manage-teams'))
+        messages.error(request, "مشکلی در فرم وجود دارد!")
+        self.context["form"] = form
+        self.context["teams"] = request.user.user_of_team_member.filter(is_coordinator=True)
+        return render(request, self.template_name, self.context)
 
     
 class UpdateTeam(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -155,22 +153,22 @@ def save_team_member(request):
                     password = hashed_password,
                     is_team_member = True
                 )
-                # user_obj.save()
-                re_obj = RoadRegistration(
+                registration_obj = RoadRegistration(
                     team = request.user.user_of_road_registration.first().team,
                     user = user_obj,
                     road = request.user.user_of_road_registration.first().road,
                     status = "w",
-                    status_user_state = "l0",
+                    status_user_state = "2",
                     team_or_individual = "a"
                 )
-                re_obj.save()
+                registration_obj.save()
+                TeamMember.objects.create(
+                    team = request.user.user_of_team_member.first().team,
+                    user = user_obj,
+                )
             else:
-                user_obj = user_objects.first()
-            TeamMember.objects.create(
-                team = request.user.user_of_team_member.first().team,
-                user = user_obj,
-            )
+                messages.error(request, "این کاربر از قبل ثبت نام کرده است، امکان اضافه کردن آن به تیم خود وجود ندارد!")
+                return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
             messages.success(request, "عملیات با موفقیت انجام شد")
             return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
         else:
@@ -243,11 +241,11 @@ class RoadRegistrationView(LoginRequiredMixin, View):
             try:
                 team = StartUpTeam.objects.get(uuid=team_uuid)
 
-                re_obj = RoadRegistration.objects.filter(road=road, user=request.user).first()
-                if re_obj:
-                    re_obj.team = team
-                    re_obj.status_user_state = "f"
-                    re_obj.save()
+                registration_obj = RoadRegistration.objects.filter(road=road, user=request.user).first()
+                if registration_obj:
+                    registration_obj.team = team
+                    registration_obj.status_user_state = "f"
+                    registration_obj.save()
                     messages.success(request, "درخواست شما ثبت شد")
                     messages.info(request, "درخواست شما برای شرکت تیمتان در این مسیر رشد با موقیت ثبت شد.")
                     return redirect(reverse('team:road-registration', kwargs={'uuid': road.uuid}))
@@ -398,6 +396,9 @@ class AddProduct(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
     
     def post(self, request):
+        if request.user.user_of_plan.first():
+            return redirect("router")
+        
         # team = request.POST.get("team")
         form_copy = request.POST.copy()
         form_copy.update({"user": request.user,})

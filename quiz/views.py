@@ -8,6 +8,7 @@ from content.models import Collection, Road
 from team.models import RoadRegistration
 from django.http import HttpResponseRedirect
 from account.models import User
+from utils.check_status_user_state_level import add_one_level
 
 from .models import Exam, UserExamAnsewrHistory, Answer, PreRegisterTask, PreRegisterTaskResponse, PersonalTest
 from .forms import PreRegisterTaskResponseCreateForm, PreRegisterTaskResponseUpdateForm
@@ -71,12 +72,12 @@ class ExamDetail(LoginRequiredMixin, View):
 #     def get(self, request, road_uuid):
 #         user = request.user
 #         road = Road.objects.get(uuid=road_uuid)
-#         re_obj = user.user_of_road_registration.first()
+#         registration_obj = user.user_of_road_registration.first()
 
-#         if not re_obj.status_user_state == "1":
-#             if re_obj.status_user_state == "2t":
+#         if not registration_obj.status_user_state == "1":
+#             if registration_obj.status_user_state == "2t":
 #                 return redirect(reverse('quiz:pre-register-required-team', args=[road_uuid]))
-#             elif re_obj.status_user_state == "2i":
+#             elif registration_obj.status_user_state == "2i":
 #                 return redirect(reverse('quiz:pre-register-required-individual', args=[road_uuid]))
 
 #         self.context["title"] = "تیم یا فرد؟"
@@ -92,10 +93,10 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         road = Road.objects.get(uuid=road_uuid)
         task = road.pre_register_task
         
-        re_obj = user.user_of_road_registration.first()
+        registration_obj = user.user_of_road_registration.first()
         
         self.context["title"] = "به عنوان تیم"
-        self.context["registration"] = re_obj
+        self.context["registration"] = registration_obj
         self.context["task"] = task
         self.context["road"] = road
         return render(request, self.template_name, self.context)
@@ -116,12 +117,12 @@ class PreRegisterRequiredTeam(LoginRequiredMixin, View):
         road = Road.objects.get(uuid=road_uuid)
         task = road.pre_register_task
         
-        re_obj = user.user_of_road_registration.first()
-        re_obj.status_user_state = "2t"
-        re_obj.save()
+        registration_obj = user.user_of_road_registration.first()
+        registration_obj.status_user_state = "2t"
+        registration_obj.save()
         
         self.context["title"] = "به عنوان تیم"
-        self.context["registration"] = re_obj
+        self.context["registration"] = registration_obj
         self.context["task"] = task
         self.context["road"] = road
         return render(request, self.template_name, self.context)
@@ -143,23 +144,23 @@ class PreRegisterRequiredIndividual(LoginRequiredMixin, View):
         road = Road.objects.get(uuid=road_uuid)
 
         try:
-            re_obj = RoadRegistration.objects.get(road=road, user=request.user)        
-            if re_obj.status_user_state in "fm":
+            registration_obj = RoadRegistration.objects.get(road=road, user=request.user)        
+            if registration_obj.status_user_state in "fm":
                 return redirect(reverse('team:road-registration', args=[road_uuid]))
         except:
-            re_obj = False
+            registration_obj = False
         
-        if not re_obj:
-            re_obj = RoadRegistration(
+        if not registration_obj:
+            registration_obj = RoadRegistration(
                 user=request.user,
                 road=road,
                 status="w",
                 status_user_state="i",
             )
-            re_obj.save()
+            registration_obj.save()
             return redirect(reverse('quiz:pre-register-required-individual', args=[task_uuid, road_uuid]))
         else:
-            self.context["registration"] = re_obj
+            self.context["registration"] = registration_obj
 
         try:
             self.context["challenge_response"] = PreRegisterTaskResponse.objects.get(user=request.user, task=task, road=road)
@@ -228,16 +229,22 @@ class PreRegisterPersonalTests(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-personal-tests.html"
     context = {}
     
-    def get(self, request, task_uuid, road_uuid):
+    def get(self, request, road_uuid):
+        if request.user.user_of_personal_test.first():
+                return redirect("router")
         self.context["title"] = "آزمون ورودی شخصیت"
         return render(request, self.template_name, self.context)
     
-    def post(self, request, task_uuid, road_uuid):
+    def post(self, request, road_uuid):
+        if request.user.user_of_personal_test.first():
+                return redirect("router")
+
         road = Road.objects.get(uuid=road_uuid)
         PersonalTest.objects.create(user=request.user, road=road)
+
         next_url = request.GET.get('next')
         messages.success(request, "آزمون شما با موفقیت ثبت شد")
-        return redirect(next_url if next_url else reverse("quiz:pre-register-required", kwargs={"task_uuid": task_uuid, "road_uuid": road_uuid,}))
+        return redirect(next_url if next_url else reverse("quiz:pre-register-required", kwargs={"road_uuid": road_uuid,}))
 
 
 class PreRegisterChallenges(LoginRequiredMixin, View):

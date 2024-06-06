@@ -75,7 +75,7 @@ class UserLoginView(AnonymousRequiredMixin, View):
                 messages.success(request, "با موفقیت وارد شدید")
                 return redirect("router")
             else:
-                messages.error(request, "aaaa!")
+                messages.error(request, "شما یک کاربرمجاز نمیباشید!")
         else:
             messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
 
@@ -93,7 +93,7 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
             self.context["is_road"] = False
 
             try:
-                re_obj = RoadRegistration.objects.get(user=request.user)
+                registration_obj = RoadRegistration.objects.get(user=request.user)
                 return redirect("router")
             except:
                 pass
@@ -121,17 +121,17 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
             user.save()
 
             try:
-                re_obj = RoadRegistration.objects.get(user=request.user)
+                registration_obj = RoadRegistration.objects.get(user=request.user)
                 return redirect("router")
             except:
-                re_obj = RoadRegistration(
+                registration_obj = RoadRegistration(
                     user=user,
                     road=road,
                     status="n",
                     status_user_state="2",
                     team_or_individual=team_or_individual,
                 )
-                re_obj.save()
+                registration_obj.save()
 
             login(request, user)
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
@@ -147,15 +147,19 @@ class RegisterLevel2(LoginRequiredMixin, View):
     context = {}
 
     def get(self, request):
-        re_obj = RoadRegistration.objects.filter(user=request.user).first()
+        registration_obj = RoadRegistration.objects.filter(user=request.user).first()
             
-        if int(re_obj.status_user_state) != 2:
+        if int(registration_obj.status_user_state) != 2:
             return redirect("router")
         
         self.context["form"] = UserRegisterFormLevel2(instance=request.user)
         return render(request, self.template_name, self.context)
 
     def post(self, request):
+        registration_obj = RoadRegistration.objects.filter(user=request.user).first()
+        if int(registration_obj.status_user_state) != 2:
+            return redirect("router")
+
         form_copy = request.POST.copy()
         form_copy.update({
             "birthday": date_db_convertor.jdate_edge_convertor(form_copy["birthday"])
@@ -164,13 +168,8 @@ class RegisterLevel2(LoginRequiredMixin, View):
         form = UserRegisterFormLevel2(form_copy, instance=request.user)
         if form.is_valid():
             form.save()
-            
-            re_obj = RoadRegistration.objects.filter(user=request.user).first()
-
-            if int(re_obj.status_user_state) != 2:
-                return redirect("router")
-            re_obj.status_user_state = add_one_level(re_obj.status_user_state)
-            re_obj.save()
+            registration_obj.status_user_state = add_one_level(registration_obj.status_user_state)
+            registration_obj.save()
 
             messages.success(request, "ثبت شد، ادامه دهید.")
             return redirect("account:register3")
@@ -185,25 +184,23 @@ class RegisterLevel3(LoginRequiredMixin, View):
     context = {}
 
     def get(self, request):
-        re_obj = RoadRegistration.objects.filter(user=request.user).first()
-            
-        if int(re_obj.status_user_state) != 3:
+        registration_obj = RoadRegistration.objects.filter(user=request.user).first()
+        if int(registration_obj.status_user_state) != 3:
             return redirect("router")
 
         self.context["form"] = UserRegisterFormLevel3(instance=request.user)
         return render(request, self.template_name, self.context)
 
     def post(self, request):
+        registration_obj = RoadRegistration.objects.filter(user=request.user).first()
+        if int(registration_obj.status_user_state) != 3:
+            return redirect("router")
+        
         form = UserRegisterFormLevel3(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-
-            re_obj = RoadRegistration.objects.filter(user=request.user).first()
-            
-            if int(re_obj.status_user_state) != 3:
-                return redirect("router")
-            re_obj.status_user_state = add_one_level(re_obj.status_user_state)
-            re_obj.save()
+            registration_obj.status_user_state = add_one_level(registration_obj.status_user_state)
+            registration_obj.save()
 
             messages.success(request, "به مرحله آخر خوش آمدید.")
             return redirect("account:register4")
@@ -218,26 +215,24 @@ class RegisterLevel4(LoginRequiredMixin, View):
     context = {}
 
     def get(self, request):
-        re_obj = RoadRegistration.objects.filter(user=request.user).first()
-            
-        if int(re_obj.status_user_state) != 4:
+        registration_obj = RoadRegistration.objects.filter(user=request.user).first()
+        if int(registration_obj.status_user_state) != 4:
             return redirect("router")
         
         self.context["form"] = UserRegisterFormLevel4(instance=request.user)
         return render(request, self.template_name, self.context)
 
     def post(self, request):
+        registration_obj = RoadRegistration.objects.filter(user=request.user).first()
+        if int(registration_obj.status_user_state) != 4:
+            return redirect("router")
+    
         form = UserRegisterFormLevel4(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-
-            re_obj = RoadRegistration.objects.filter(user=request.user).first()
-            
-            if int(re_obj.status_user_state) != 4:
-                return redirect("router")
-            re_obj.status_user_state = add_one_level(re_obj.status_user_state)
-            re_obj.complete_registration_date = timezone.datetime.now()
-            re_obj.save()
+            registration_obj.status_user_state = add_one_level(registration_obj.status_user_state)
+            registration_obj.complete_registration_date = timezone.datetime.now()
+            registration_obj.save()
 
             messages.success(request, "ثبت نام شما به صورت کامل انجام شد.")
             return redirect("account:user-dashboard")
@@ -284,5 +279,5 @@ class UserDashboard(LoginRequiredMixin, View):
     context = {"title":"داشبورد کاربر"}
 
     def get(self, request):
-        self.context["re_obj"] = RoadRegistration.objects.get(user=request.user)
+        self.context["registration_obj"] = RoadRegistration.objects.get(user=request.user)
         return render(request, self.template_name, self.context)

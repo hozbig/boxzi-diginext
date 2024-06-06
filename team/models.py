@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Union
 from django.db import models
 from django.db.models import Q
 from datetime import date
@@ -168,7 +168,7 @@ class RoadRegistration(models.Model):
         ("2", "مرحله دوم تکمیل ثبت نام"),
         ("3", "مرحله سوم تکمیل ثبت نام"),
         ("4", "مرحله چهارم تکمیل ثبت نام"),
-        ("5", "ثبت نام کامل"), # Full registration
+        ("5", "ثبت نام کامل"),
     )
     status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
@@ -204,3 +204,31 @@ class RoadRegistration(models.Model):
             # return days_passed <= self.validity_pride_days
         
         # return days_passed <= team_owner_validity_pride_days
+
+    def is_complete_registration_for_coordinator(self) -> Union[bool, None]:
+        if self.team_or_individual == "t":
+            user = self.user
+            is_profile_complete = user.is_profile_complete()
+            has_personal_test = user.user_of_personal_test.exists()
+            
+            first_team_member = user.user_of_team_member.first()
+            if not first_team_member:
+                return False
+            
+            team = first_team_member.team
+            team_member_count = team.team_member_count() > 1
+            has_team_plan = team.team_of_plan.exists()
+            
+            return is_profile_complete and has_personal_test and team_member_count and has_team_plan
+            
+        return None
+
+    def is_complete_registration_for_team_member(self) -> Union[bool, None]:
+        if self.team_or_individual == "a":
+            user = self.user
+            is_profile_complete = user.is_profile_complete()
+            has_personal_test = user.user_of_personal_test.exists()
+            
+            return is_profile_complete and has_personal_test
+            
+        return None

@@ -16,7 +16,7 @@ class Roads(LoginRequiredMixin, View):
 
     def get(self, request):
         self.context["object"] = Road.objects.first()
-        self.context["re_obj"] = request.user.user_of_road_registration.first()
+        self.context["registration_obj"] = request.user.user_of_road_registration.first()
         return render(request, self.template_name, self.context)
     
 

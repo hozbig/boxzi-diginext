@@ -15,7 +15,7 @@ urlpatterns = [
     path("iam-tmember/<str:uuid>/", views.i_am_team_member, name="iam-tmember"),
     path("iam-coordinator/<str:uuid>/", views.i_am_team_coordinator, name="iam-coordinator"),
 
-    path("pre-register-personal-tests/<str:task_uuid>/<str:road_uuid>/", views.PreRegisterPersonalTests.as_view(), name="pre-register-personal-tests"),
+    path("pre-register-personal-tests/<str:road_uuid>/", views.PreRegisterPersonalTests.as_view(), name="pre-register-personal-tests"),
     path("pre-register-challenge/<str:task_uuid>/<str:road_uuid>/", views.PreRegisterChallenges.as_view(), name="pre-register-challenge"),
     path("pre-register-challenge-update/<str:task_res_uuid>/<str:road_uuid>/", views.PreRegisterChallengesUpdate.as_view(), name="pre-register-challenge-update"),
 ]
