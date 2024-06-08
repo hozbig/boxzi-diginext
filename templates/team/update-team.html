@@ -18,84 +18,149 @@
     {% include "elements/messages-section.html" %}
 
     <div class="col-lg-8">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">ثبت و مدیریت اعضای تیم</h4>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <form method="POST" action="{% url "team:save-team-member" %}?next={{next_url}}">
-                        {% csrf_token %}
-                        <input name="team" value="{{object.id}}" hidden>
-                        <div class="row">
-                            {% for field in add_member_form %}
-                                {% if not field.name == "team" %}
-                                <div class="col-md-6">
-                                    {{ field|as_crispy_field }}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">ثبت و مدیریت اعضای تیم</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form method="POST" action="{% url "team:save-team-member" %}?next={{next_url}}">
+                                {% csrf_token %}
+                                <input name="team" value="{{object.id}}" hidden>
+                                <div class="row">
+                                    {% for field in add_member_form %}
+                                        {% if not field.name == "team" %}
+                                        <div class="col-md-6">
+                                            {{ field|as_crispy_field }}
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
+        
+                                <button class="btn btn-success btn-block" type="submit">ثبت عضو</button>
+                                {% if next_url %}
+                                <a href="{{next_url}}" class="btn btn-info btn-block" type="submit">اتمام و بازگشت به مسیر</a>
                                 {% endif %}
-                            {% endfor %}
+                            </form>
+        
+                            <h4 class="mt-3">اعضای ثبت شده</h4>
+                            <table class="table table-responsive-md mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">نام و نام خانوادگی</th>
+                                        <th scope="col">شماره تماس</th>
+                                        <th scope="col">دسترسی هماهنگ کننده؟</th>
+                                        <th scope="col">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for person in object.team_of_team_member.all %}
+                                        {% if person.user %}
+                                        <tr>
+                                            <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                            <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
+                                            <td>{{person.user.phone_number}}</td>
+                                            <td>
+                                                {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
+                                                {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
+                                                {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
+                                            </td>
+                                            {% if not person.is_owner %}
+                                            <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
+                                            {% else %}
+                                            <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                            <td class="font-weight-bold">
+                                                <a class="">{{person.temporary_name}}</a>
+                                                <span class="badge badge-danger">عضویت تایید نشده!</span>
+                                                <div class="mt-50 small">کد دعوت: {{person.user_validation_code}}</div>
+                                            </td>
+                                            <td>{{person.user_number_id|default:"0"}}</td>
+                                            <td>
+                                                {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
+                                                {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
+                                                {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
+                                            </td>
+                                            {% if not person.is_owner %}
+                                            <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
+                                            {% else %}
+                                            <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
+                                            {% endif %}
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <button class="btn btn-success btn-block" type="submit">ثبت عضو</button>
-                        {% if next_url %}
-                        <a href="{{next_url}}" class="btn btn-info btn-block" type="submit">اتمام و بازگشت به مسیر</a>
-                        {% endif %}
-                    </form>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{% if not request.user.user_of_team_member.first.team.team_of_plan.first %}ثبت ایده/محصول{% else %}ایده شما{% endif %}</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
+                            <form method="POST" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input name="team" value="{{object.id}}" hidden>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {{ add_product_form.name|as_crispy_field }}
+                                    </div>
 
-                    <h4 class="mt-3">اعضای ثبت شده</h4>
-                    <table class="table table-responsive-md mb-0">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">نام و نام خانوادگی</th>
-                                <th scope="col">شماره تماس</th>
-                                <th scope="col">دسترسی هماهنگ کننده؟</th>
-                                <th scope="col">عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for person in object.team_of_team_member.all %}
-                                {% if person.user %}
-                                <tr>
-                                    <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
-                                    <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
-                                    <td>{{person.user.phone_number}}</td>
-                                    <td>
-                                        {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
-                                        {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
-                                        {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
-                                    </td>
-                                    {% if not person.is_owner %}
-                                    <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
-                                    {% else %}
-                                    <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
-                                    {% endif %}
-                                </tr>
-                                {% else %}
-                                <tr>
-                                    <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
-                                    <td class="font-weight-bold">
-                                        <a class="">{{person.temporary_name}}</a>
-                                        <span class="badge badge-danger">عضویت تایید نشده!</span>
-                                        <div class="mt-50 small">کد دعوت: {{person.user_validation_code}}</div>
-                                    </td>
-                                    <td>{{person.user_number_id|default:"0"}}</td>
-                                    <td>
-                                        {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
-                                        {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
-                                        {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
-                                    </td>
-                                    {% if not person.is_owner %}
-                                    <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
-                                    {% else %}
-                                    <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
-                                    {% endif %}
-                                </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                    <div class="col-md-12">
+                                        {{ add_product_form.description|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        {{ add_product_form.video|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        {{ add_product_form.has_mvp|as_crispy_field }}
+                                    </div>
+                                </div>
+        
+                                <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button>
+                            </form>
+                            {% else %}
+                            <table class="table table-responsive-md mt-1 table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>نام ایده</th>
+                                        <th>توضیحات</th>
+                                        <th>دارای کمینه</th>
+                                        <th>فیلم ارسال شده</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for idea in request.user.user_of_team_member.first.team.team_of_plan.all %}
+                                        <tr>
+                                            <td>{{idea.name|truncatechars:25}}</td>
+                                            <td>{{idea.description|truncatechars:25}}</td>
+                                            <td>{% if idea.has_mvp %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{% if idea.video %}<a class="badge badge-primary" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            
+                                            <td><a href="" class="badge badge-info"><i class="feather icon-edit-2"></i> ویرایش</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

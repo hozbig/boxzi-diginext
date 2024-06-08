@@ -8,7 +8,7 @@
     {% if not is_road %}
     <h1 class="text-danger">بازه ثبت نامی شروع نشده است!</h1>
     {% else %}
-    <h1>شروع ثبت نام</h1>
+    <h2>شروع ثبت نام</h2>
 
     <form method="POST">
         {% csrf_token %}
@@ -46,7 +46,7 @@
         {% endfor %}
         
         <div class="form-group">
-            <p class="text-center text-success">ثبت نام برای: <b>{{is_road.name}}</b></p>
+            <p class="text-center text-success">درخواست شما برای <b>{{is_road.name}}</b> می‌باشد</p>
             <button type="submit" class="fxt-btn-fill">بزن بریم</button>
         </div>
     </form>

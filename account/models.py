@@ -82,6 +82,7 @@ class User(AbstractUser):
     )
     type = models.CharField(choices=TYPES, max_length=1, verbose_name="نقش شما", default="t")
     resume_file = models.FileField(verbose_name="فایل pdf رزومه", upload_to=user_directory_path, null=True, blank=True)
+    # video = models.FileField(verbose_name="فیلم کوتاه از محصول خود", upload_to=user_directory_path, max_length=100, null=True, blank=True)
     
     YESNO = (
         ("y", "داشته ام"), # Yes

@@ -11,6 +11,10 @@ def validate_is_investor(value):
         raise ValidationError('کاربر انتخابی باید درسترسی سرمایه گذار یا ادمین شتابدهنده را داشته باشد.')
 
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/users/resumes/<uuid>/<filename>
+    return f'users/resumes/{instance.user.uuid}/{filename}'
+
 class Plan(models.Model):
     uuid = models.CharField(
         unique=True,
@@ -26,8 +30,9 @@ class Plan(models.Model):
     industry = models.CharField(verbose_name="صنعت", max_length=255, null=True, blank=True)
     description = models.TextField(verbose_name="توصیف کوتاه")
     text = QuillField(verbose_name="توضیحات کامل", default="", null=True, blank=True)
-    has_mvp = models.BooleanField(verbose_name="دارای کمینه", null=True, blank=True)
+    has_mvp = models.BooleanField(verbose_name="دارای کمینه", default=False)
     likes = models.ManyToManyField("account.User", related_name='user_of_likes_plan', blank=True)
+    video = models.FileField(verbose_name="فیلم کوتاه از محصول خود", upload_to=user_directory_path, max_length=100, null=True, blank=True)
     
     STATUS = (
         ("p", "درحال انجام"), # inProgress

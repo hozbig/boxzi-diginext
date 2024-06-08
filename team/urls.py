@@ -16,6 +16,7 @@ urlpatterns = [
     path("funds/management/", views.FundsManagements.as_view(), name="funds-management"),
     path("idea/management/", views.IdeaManagements.as_view(), name="idea-management"),
     path("product/management/", views.ProductManagements.as_view(), name="product-management"),
+    path("save/product/", views.save_product, name="save-product"),
     path("add/product/", views.AddProduct.as_view(), name="add-product"),
     path("searchZi/", views.searchzi, name="searchZi"),
     path("search/", views.search_iframe, name="search-iframe"),

@@ -16,6 +16,8 @@ def router(request):
         return redirect("admin:index")
     elif user.is_team_member and user.user_of_road_registration.first():
         registration_obj = user.user_of_road_registration.first()
+        if registration_obj.status != "n":
+            return redirect("content:roads")
         if int(registration_obj.status_user_state) == 2:
             return redirect("account:register2")
         elif int(registration_obj.status_user_state) == 3:

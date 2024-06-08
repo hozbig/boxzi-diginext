@@ -118,7 +118,7 @@ class UpdateTeam(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         else:
             add_member_form = TeamMemberForm()
 
-
+        context["add_product_form"] = PlanCreateForm
         context["add_member_form"] = add_member_form
         context["next_url"] = self.request.GET.get('next', None)
         return context
@@ -157,7 +157,7 @@ def save_team_member(request):
                     team = request.user.user_of_road_registration.first().team,
                     user = user_obj,
                     road = request.user.user_of_road_registration.first().road,
-                    status = "w",
+                    status = "n",
                     status_user_state = "2",
                     team_or_individual = "a"
                 )
@@ -231,59 +231,17 @@ class RoadRegistrationView(LoginRequiredMixin, View):
         user = request.user
         road = Road.objects.get(uuid=uuid)
         
-        # The 'register_type' field returns either '0' or a team UUID.
-        # If '0' is returned, it indicates that the client wants to register the road for itself.
-        # If the value is a UUID, it indicates that the client wants to register for a team.
-        team_uuid = request.POST.get("register_type")
-        if team_uuid == "0":
-            team = False
+        registration_obj = RoadRegistration.objects.filter(road=road, user=request.user).first()
+        if registration_obj.team_or_individual == "t" and user.user_of_team_member.first().is_owner:
+            registration_obj.status = "w"
+            registration_obj.client_last_response_date = timezone.datetime.now()
+            registration_obj.save()
+            messages.success(request, "درخواست شما ثبت شد")
+            messages.info(request, "درخواست شما برای شرکت تیمتان در این مسیر رشد با موقیت ثبت شد.")
+            return redirect("router")
         else:
-            try:
-                team = StartUpTeam.objects.get(uuid=team_uuid)
-
-                registration_obj = RoadRegistration.objects.filter(road=road, user=request.user).first()
-                if registration_obj:
-                    registration_obj.team = team
-                    registration_obj.status_user_state = "f"
-                    registration_obj.save()
-                    messages.success(request, "درخواست شما ثبت شد")
-                    messages.info(request, "درخواست شما برای شرکت تیمتان در این مسیر رشد با موقیت ثبت شد.")
-                    return redirect(reverse('team:road-registration', kwargs={'uuid': road.uuid}))
-
-            except StartUpTeam.DoesNotExist:
-                messages.error(request, "تیم مورد نظر پیدا نشد")
-        
-        form_copy = request.POST.copy()
-        del form_copy['register_type']
-        
-        if team:
-            form_copy.update(
-                {
-                    "user": user,
-                    "team": team,
-                    "road": road,
-                    "client_last_response_date": timezone.now().date(),
-                    "status": "w",
-                }
-            )
-        else:
-            form_copy.update(
-                {
-                    "user": user,
-                    "road": road,
-                    "client_last_response_date": timezone.now().date(),
-                    "status": "w",
-                }
-            )
-        
-        form = self.form_class(form_copy)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "عملیات با موفقیت انجام شد")
-        else:
-            messages.error(request, "مشکلی در فرم وجود دارد!")
-        
-        return redirect(reverse('team:road-registration', kwargs={'uuid': uuid}))
+            messages.error(request, "شما دسترسی لازم برای انجام این عملیات را ندارید!")
+            return redirect("router")
 
 
 class RegistrationDetail(LoginRequiredMixin, View):
@@ -414,6 +372,31 @@ class AddProduct(LoginRequiredMixin, View):
         messages.error(request, "مشکلی پیش آمده است!")
         self.context["form"] = form
         return render(request, self.template_name, self.context)
+
+
+def save_product(request):
+    if request.user.user_of_plan.first():
+        return redirect("router")
+    
+    context = {"title":"مدیریت ایده/محصول"}
+    # team = request.POST.get("team")
+    form_copy = request.POST.copy()
+    has_mvp = request.POST.get("has_mvp")
+    if has_mvp in "01":
+        has_mvp = has_mvp == 1
+    form_copy.update({"user": request.user, "has_mvp": has_mvp})
+
+    form = PlanCreateForm(form_copy, request.FILES)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "محصول شما با موفقیت ثبت شد")
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+    messages.error(request, "مشکلی پیش آمده است!")
+    request.session['form_errors'] = form.errors
+    request.session['form_data'] = request.POST
+    context["form"] = form
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 # This functions dont need any authentication

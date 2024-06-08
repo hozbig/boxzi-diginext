@@ -154,3 +154,22 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MESSAGE_TAGS = {messages.ERROR: "danger", messages.INFO: "info"}
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+
+# Session management configs
+
+# Set the session age to 2 hours (2 * 60 * 60 seconds)
+SESSION_COOKIE_AGE = 6 * 60 * 60  # 2 hours in seconds
+
+# Ensure that sessions are saved immediately after modification
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Optionally, make the session cookie secure and HttpOnly for better security
+SESSION_COOKIE_SECURE = True  # Set to True if using HTTPS
+SESSION_COOKIE_HTTPONLY = True
+
+# Ensure the session engine is properly set
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # or another session backend if you prefer
+
+# Optionally, expire sessions when the browser is closed
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True                 

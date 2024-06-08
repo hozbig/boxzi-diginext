@@ -72,8 +72,33 @@ class StartUpTeam(models.Model):
         return self.team_of_team_member.count()
     team_member_count.short_description = "تعداد اعضا"
     
-    def all_users_completed_registration(self):
-        return not self.team_of_road_registration.exclude(status_user_state='f').exists()
+    def all_users_completed_registration(self) -> bool:
+        team_member_objects = self.team_of_team_member.all()
+        team_member_count = team_member_objects.count() - 1
+        coordinator_completion_status = None
+
+        if team_member_count < 1:
+            return False
+
+        for member in team_member_objects:
+            member_register_object = member.user.user_of_road_registration.first()
+
+            if member_register_object.team != self:
+                continue
+
+            if member.is_owner:
+                coordinator_completion_status = member_register_object.is_complete_registration_for_coordinator()
+                continue
+
+            if member_register_object.is_complete_registration_for_team_member():
+                team_member_count -= 1
+
+        if team_member_count == 0:
+            team_member_count = True
+        else:
+            team_member_count = False
+
+        return team_member_count and coordinator_completion_status
     
     
 def search_items(query:str):
@@ -146,14 +171,14 @@ class RoadRegistration(models.Model):
     road = models.ForeignKey("content.Road", related_name="road_of_road_registration", verbose_name="مسیر", on_delete=models.CASCADE)
 
     STATUS = (
-        ("n", "نیاز به تکمیل اطلاعات"), # Need to complete the profile
-        ("w", "عدم برسی شتابدهنده"), # Waiting
-        ("p", "درحال برسی شتابدهنده"), # Progressing
-        ("a", "تایید شده"), # Approved
-        ("r", "رد شده"), # Reject
-        ("c", "نیاز به اصلاح توسط شما"), # Correction
+        ("n", "شما نیاز به تکمیل فرایند ثبت‌نام خود دارید"), # Need to complete the profile
+        ("w", "درخواست شما توسط برگزار کننده هنوز بررسی نشده است"), # Waiting
+        ("p", "درخواست شما در حال بررسی توسط برگزارکننده می‌باشد"), # Progressing
+        ("a", "پذیرش شما در برنامه تایید شده است"), # Approved
+        ("r", "درخواست شما رد شده"), # Reject
+        ("c", "شما برای تکمیل فرایند ثبت‌نام نیاز به اصلاح درخواست و اطلاعات خود دارید"), # Correction
     )
-    status = models.CharField(verbose_name="وضعیت", max_length=1, default="w", choices=STATUS)
+    status = models.CharField(verbose_name="وضعیت", max_length=1, default="n", choices=STATUS)
 
     client_last_response_date = models.DateField("زمان آخرین تغییر توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     accelerator_last_response_date = models.DateField("زمان آخرین واکنش توسط شتابدهنده", auto_now=False, auto_now_add=False, null=True, blank=True)
