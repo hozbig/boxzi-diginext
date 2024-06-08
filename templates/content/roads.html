@@ -93,7 +93,7 @@
                                 <th class="col-1">ثبت اطلاعات و دموی ایده/محصول</th>
                                 <th class="col-1">تکمیل مراحل توسط اعضای تیم</th>
                                 {% if registration_obj.status != "n" %}
-                                <th>تاریخ تکمیل فرایند ثبت نام</th>
+                                <th class="col-1">تاریخ تکمیل فرایند ثبت نام</th>
                                 {% else %}
                                 <th class="col-1">تاریخ شروع فرایند ثبت‌نام</th>
                                 {% endif %}
@@ -109,7 +109,6 @@
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.team_member_count > 1 %}<span class="badge badge-success">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-times"></i></span>{% endif %}</td>
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.team_of_plan.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.all_users_completed_registration %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                <td class="border ">{{registration_obj.complete_registration_date|to_jalali}}</th>
                                 {% if registration_obj.status != "n" %}
                                 <td class="border ">{{registration_obj.client_last_response_date|to_jalali}}</th>
                                 <td class="border">ارسال شد<i class="fa fa-check text-success"></i></th>

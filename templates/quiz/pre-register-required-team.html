@@ -47,11 +47,11 @@
     </div>
     
     <div class="col-12">
-        <div class="row">
+        <div class="row justify-content-center">
             {% comment %} is profile complete {% endcomment %}
             {% if request.user.is_profile_complete %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
-                <div class="card text-white gradient-light-success text-center h-100">
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                <div class="card text-white bg-transparent border-success text-center h-100">
                     <div class="card-content d-flex">
                         <div class="card-body">
                             <div class="row">
@@ -67,8 +67,8 @@
                 </div>
             </div>
             {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-secondary text-center h-100">
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                <div class="card text-white bg-transparent border-info text-center h-100">
                     <div class="card-content d-flex">
                         <div class="card-body">
                             <div class="row">
@@ -90,8 +90,8 @@
             
             {% comment %} personal test {% endcomment %}
             {% if request.user.user_of_personal_test.exists %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
-                <div class="card text-white gradient-light-success text-center h-100">
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                <div class="card text-white bg-transparent border-success text-center h-100">
                     <div class="card-content d-flex ">
                         <div class="card-body">
                             <div class="row">
@@ -107,16 +107,13 @@
                 </div>
             </div>
             {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-secondary text-center h-100">
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                <div class="card text-white bg-transparent border-info text-center h-100">
                     <div class="card-content d-flex ">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12">
                                     <h3 class="card-title font-weight-bold">آزمون شخصیت</h3>
-                                </div>
-                                <div class="col-12 py-1">
-                                    <p class="card-text text-dark">بیشتر از ۲۰ دقیقه از شما وقت نمیگیرد</p>
                                 </div>
                                 <div class="col-12">
                                     <a href="{% url "quiz:pre-register-personal-tests" road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">انجام آزمون</a>
@@ -130,8 +127,8 @@
 
             {% comment %} Intro challenge {% endcomment %}
             {% comment %} {% if challenge_response %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-success text-center h-100">
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                <div class="card text-white bg-transparent border-success text-center h-100">
                     <div class="card-content d-flex">
                         <div class="card-body">
                             <h4 class="card-title font-weight-bold">چالش ورودی</h4>
@@ -148,8 +145,8 @@
                 </div>
             </div>
             {% else %}
-            <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white gradient-light-secondary text-center h-100">
+            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
+                <div class="card text-white bg-transparent border-info text-center h-100">
                     <div class="card-content d-flex">
                         <div class="card-body">
                             <div class="row">
@@ -172,8 +169,8 @@
             {% if request.user.user_of_road_registration.first.team_or_individual == "t" %}
                 {% comment %} create team {% endcomment %}
                 {% if request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
-                    <div class="card text-white gradient-light-success text-center h-100">
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-success text-center h-100">
                         <div class="card-content d-flex ">
                             <div class="card-body">
                                 <div class="row">
@@ -189,16 +186,13 @@
                     </div>
                 </div>
                 {% elif request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                    <div class="card text-white gradient-light-secondary text-center h-100">
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-info text-center h-100">
                         <div class="card-content d-flex ">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
                                         <h3 class="card-title font-weight-bold">ثبت هم تیمی</h3>
-                                    </div>
-                                    <div class="col-12 py-1">
-                                        <p class="card-text text-dark">هم تیمی ها خود را در تیم ثبت کنید.</p>
                                     </div>
                                     <div class="col-12">
                                         <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت عضو</a>
@@ -209,19 +203,16 @@
                     </div>
                 </div>
                 {% elif request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_of_plan.first %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                    <div class="card text-white gradient-light-secondary text-center h-100">
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-info text-center h-100">
                         <div class="card-content d-flex ">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
                                         <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
                                     </div>
-                                    <div class="col-12 py-1">
-                                        <p class="card-text text-dark">ایده یا محصول تیم خود را ثبت کنید.</p>
-                                    </div>
                                     <div class="col-12">
-                                        <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت ایده</a>
+                                        <a href="{% url "team:update-team" request.user.user_of_team_member.first.team.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
                                     </div>
                                 </div>
                             </div>
@@ -229,16 +220,13 @@
                     </div>
                 </div>
                 {% else %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                    <div class="card text-white gradient-light-secondary text-center h-100">
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-info text-center h-100">
                         <div class="card-content d-flex ">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12">
                                         <h3 class="card-title font-weight-bold">مدیریت تیم و ایده</h3>
-                                    </div>
-                                    <div class="col-12 py-1">
-                                        <p class="card-text text-dark">ثبت و مدیریت تیم، ایده یا محصول شما.</p>
                                     </div>
                                     <div class="col-12">
                                         <a href="{% url "team:manage-teams" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ساخت تیم</a>

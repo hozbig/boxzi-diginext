@@ -70,7 +70,7 @@ class User(AbstractUser):
         ("o", "دکترا"), # dOctora
     )
     degree = models.CharField(verbose_name="مقطع تحصیلی", max_length=1, choices=DEGREE, default="d")
-    college_name = models.CharField(verbose_name="نام دانشگاه", max_length=50, null=True, blank=True)
+    college_name = models.CharField(verbose_name="محل تحصیل", max_length=50, null=True, blank=True)
     province = models.CharField(verbose_name="استان محل سکونت", max_length=50, null=True, blank=True)
     city = models.CharField(verbose_name="شهر محل سکونت", max_length=50, null=True, blank=True)
     interests = models.ManyToManyField("subject.Subject", verbose_name="علاقه مندی ها", related_name="interests_of_user", blank=True)
