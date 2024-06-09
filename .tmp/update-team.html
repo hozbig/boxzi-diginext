@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+
+<link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-lg-9">
+        <div class="row">
+            <div class="col-12">
+                <div class="card overflow-hidden">
+                    <div class="card-header">
+                        <h4 class="card-title">Vertical Left Tabs</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <div class="nav-vertical">
+                                <ul class="nav nav-tabs nav-left flex-column" role="tablist">
+                                    <li class="nav-item border">
+                                        <a class="nav-link active" id="baseVerticalLeft-tab1" data-toggle="tab" aria-controls="tabVerticalLeft1" href="#tabVerticalLeft1" role="tab" aria-selected="true">ثبت اعضای تیم</a>
+                                    </li>
+                                    <li class="nav-item border">
+                                        <a class="nav-link" id="baseVerticalLeft-tab2" data-toggle="tab" aria-controls="tabVerticalLeft2" href="#tabVerticalLeft2" role="tab" aria-selected="false">ثبت ایده/محصول</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tabVerticalLeft1" role="tabpanel" aria-labelledby="baseVerticalLeft-tab1">
+                                        <form method="POST" action="{% url "team:save-team-member" %}?next={{next_url}}">
+                                            {% csrf_token %}
+                                            <input name="team" value="{{object.id}}" hidden>
+                                            <div class="row">
+                                                {% for field in add_member_form %}
+                                                    {% if not field.name == "team" %}
+                                                    <div class="col-md-6">
+                                                        {{ field|as_crispy_field }}
+                                                    </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                    
+                                            <button class="btn btn-success btn-block" type="submit">ثبت عضو</button>
+                                            {% if next_url %}
+                                            <a href="{{next_url}}" class="btn btn-info btn-block" type="submit">اتمام و بازگشت به مسیر</a>
+                                            {% endif %}
+                                        </form>
+                    
+                                        <h4 class="mt-3">اعضای ثبت شده</h4>
+                                        <table class="table table-responsive-md mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">نام و نام خانوادگی</th>
+                                                    <th scope="col">شماره تماس</th>
+                                                    <th scope="col">دسترسی هماهنگ کننده؟</th>
+                                                    <th scope="col">عملیات</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for person in object.team_of_team_member.all %}
+                                                    <tr>
+                                                        <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                                        <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
+                                                        <td>{{person.user.phone_number}}</td>
+                                                        <td>
+                                                            {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
+                                                            {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
+                                                            {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
+                                                        </td>
+                                                        {% if not person.is_owner %}
+                                                        <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
+                                                        {% else %}
+                                                        <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
+                                                        {% endif %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <div class="tab-pane" id="tabVerticalLeft2" role="tabpanel" aria-labelledby="baseVerticalLeft-tab2">
+                                        {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
+                                        <form method="POST" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input name="team" value="{{object.id}}" hidden>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    {{ add_product_form.name|as_crispy_field }}
+                                                </div>
+            
+                                                <div class="col-md-12">
+                                                    {{ add_product_form.description|as_crispy_field }}
+                                                </div>
+            
+                                                <div class="col-md-4">
+                                                    {{ add_product_form.video|as_crispy_field }}
+                                                </div>
+            
+                                                <div class="col-md-4">
+                                                    {{ add_product_form.pitch_deck|as_crispy_field }}
+                                                </div>
+            
+                                                <div class="col-md-4">
+                                                    {{ add_product_form.has_mvp|as_crispy_field }}
+                                                </div>
+                                            </div>
+                    
+                                            <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button>
+                                        </form>
+                                        {% else %}
+                                        <table class="table table-responsive-md mt-1 table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>نام ایده</th>
+                                                    <th>توضیحات</th>
+                                                    <th>دارای کمینه</th>
+                                                    <th>فیلم ارسال شده</th>
+                                                    <th>فایل pitch deck</th>
+                                                    {% comment %} <th>عملیات</th> {% endcomment %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for idea in request.user.user_of_team_member.first.team.team_of_plan.all %}
+                                                    <tr>
+                                                        <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
+                                                        <td>{{idea.description|truncatechars:25}}</td>
+                                                        <td>{% if idea.has_mvp %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                                        <td>{% if idea.video %}<a class="badge badge-primary" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                                        <td>{% if idea.pitch_deck %}<a class="badge badge-primary" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                                        
+                                                        {% comment %} <td><a href="" class="badge badge-info"><i class="feather icon-edit-2"></i> ویرایش</a></td> {% endcomment %}
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">ثبت و مدیریت اعضای تیم</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form method="POST" action="{% url "team:save-team-member" %}?next={{next_url}}">
+                                {% csrf_token %}
+                                <input name="team" value="{{object.id}}" hidden>
+                                <div class="row">
+                                    {% for field in add_member_form %}
+                                        {% if not field.name == "team" %}
+                                        <div class="col-md-6">
+                                            {{ field|as_crispy_field }}
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+        
+                                <button class="btn btn-success btn-block" type="submit">ثبت عضو</button>
+                                {% if next_url %}
+                                <a href="{{next_url}}" class="btn btn-info btn-block" type="submit">اتمام و بازگشت به مسیر</a>
+                                {% endif %}
+                            </form>
+        
+                            <h4 class="mt-3">اعضای ثبت شده</h4>
+                            <table class="table table-responsive-md mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">نام و نام خانوادگی</th>
+                                        <th scope="col">شماره تماس</th>
+                                        <th scope="col">دسترسی هماهنگ کننده؟</th>
+                                        <th scope="col">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for person in object.team_of_team_member.all %}
+                                        <tr>
+                                            <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                            <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
+                                            <td>{{person.user.phone_number}}</td>
+                                            <td>
+                                                {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
+                                                {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
+                                                {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
+                                            </td>
+                                            {% if not person.is_owner %}
+                                            <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
+                                            {% else %}
+                                            <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">{% if not request.user.user_of_team_member.first.team.team_of_plan.first %}ثبت ایده/محصول{% else %}ایده شما{% endif %}</h4>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-body">
+                            {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
+                            <form method="POST" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input name="team" value="{{object.id}}" hidden>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {{ add_product_form.name|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        {{ add_product_form.description|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        {{ add_product_form.video|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        {{ add_product_form.pitch_deck|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        {{ add_product_form.has_mvp|as_crispy_field }}
+                                    </div>
+                                </div>
+        
+                                <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button>
+                            </form>
+                            {% else %}
+                            <table class="table table-responsive-md mt-1 table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>نام ایده</th>
+                                        <th>توضیحات</th>
+                                        <th>دارای کمینه</th>
+                                        <th>فیلم ارسال شده</th>
+                                        <th>فایل pitch deck</th>
+                                        {% comment %} <th>عملیات</th> {% endcomment %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for idea in request.user.user_of_team_member.first.team.team_of_plan.all %}
+                                        <tr>
+                                            <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
+                                            <td>{{idea.description|truncatechars:25}}</td>
+                                            <td>{% if idea.has_mvp %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{% if idea.video %}<a class="badge badge-primary" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{% if idea.pitch_deck %}<a class="badge badge-primary" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            
+                                            {% comment %} <td><a href="" class="badge badge-info"><i class="feather icon-edit-2"></i> ویرایش</a></td> {% endcomment %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">ویرایش تیم «{{object.name}}»</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                {{ form.name|as_crispy_field }}
+                            </div>
+                            <div class="col-lg-12">
+                                {{ form.category|as_crispy_field }}
+                            </div>
+                            <div class="col-lg-12">
+                                {{ form.description|as_crispy_field }}
+                            </div>
+                        </div>
+                    
+                        <button class="btn btn-success btn-block" type="submit">ویرایش</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

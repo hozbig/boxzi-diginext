@@ -40,10 +40,18 @@ class Plan(models.Model):
     pitch_deck = models.FileField(verbose_name="آپلود فایل pitch deck", upload_to=pitch_deck_directory_path, max_length=100, null=True, blank=True)
     
     STATUS = (
-        ("p", "درحال انجام"), # inProgress
-        ("f", "تمام شده"), # Finish
+        ("i", "فقط دارای ایده هستم"), # Idea
+        ("m", "دارای یک محصول هستم"), # MVP
     )
-    status = models.CharField(choices=STATUS, max_length=1, default="p", verbose_name="وضعیت", null=True, blank=True)
+    status = models.CharField(choices=STATUS, max_length=1, default="i", verbose_name="وضعیت")
+
+    PROGRESS_STATUS = (
+        ("0", "در حال توسعه نسخه MVP هستیم"),
+        ("1", "نسخه MVP آماده داریم"),
+        ("2", "محصول آماده به کار داریم"),
+        ("3", "قبلا محصول خود را به بازار ارایه کرده‌ایم"),
+    )
+    progress_status = models.CharField(choices=PROGRESS_STATUS, max_length=1, default="i", verbose_name="سطح محصول")
 
     created_time = models.DateTimeField(auto_now_add=True)
     last_update_time = models.DateTimeField(auto_now=True)

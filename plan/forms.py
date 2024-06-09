@@ -8,6 +8,9 @@ class PlanCreateForm(ModelForm):
     class Meta:
         model = Plan
         exclude = ("created_time", "last_update_time", "likes")
-        widgets = {
-            'description': Textarea(attrs={'style': 'height: 150px;'}),
-        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].label = ""

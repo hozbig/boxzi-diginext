@@ -392,12 +392,14 @@ def save_product(request):
     context = {"title":"مدیریت ایده/محصول"}
     # team = request.POST.get("team")
     form_copy = request.POST.copy()
-    has_mvp = request.POST.get("has_mvp")
-    if has_mvp in "01":
-        has_mvp = has_mvp == 1
-    form_copy.update({"user": request.user, "has_mvp": has_mvp})
+    # has_mvp = request.POST.get("has_mvp")
+    # if has_mvp in "01":
+    #     has_mvp = has_mvp == 1
+    # form_copy.update({"user": request.user, "has_mvp": has_mvp})
+    form_copy.update({"user": request.user,})
 
     form = PlanCreateForm(form_copy, request.FILES)
+    print(form)
     if form.is_valid():
         form.save()
         messages.success(request, "محصول شما با موفقیت ثبت شد")

@@ -6,8 +6,16 @@
 
 {% block page_css %}
 <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
-
 <link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+
+<style>
+    .level {
+        display: none;
+    }
+    .level.active {
+        display: block;
+    }
+</style>
 {% endblock page_css %}
 
 {% block extra_menu %}{% endblock extra_menu %}
@@ -89,32 +97,49 @@
                     <div class="card-content">
                         <div class="card-body">
                             {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
-                            <form method="POST" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
+                            <form method="POST" id="multiStepForm" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input name="team" value="{{object.id}}" hidden>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-12 level active" id="level1">
+                                        <h5 class="">نام برند شما چیست؟</h5>
                                         {{ add_product_form.name|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-md-12">
+                                    <div class="col-12 level active" id="level2">
+                                        <h5 class="">توضیحی کوتاه درباره برند خود بنویسید</h5>
                                         {{ add_product_form.description|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-md-4">
-                                        {{ add_product_form.video|as_crispy_field }}
-                                    </div>
-
-                                    <div class="col-md-4">
+                                    <div class="col-12 level" id="level3">
+                                        <h5 class="">لطفا فایل پیچ دک ایده یا محصول خودتون رو آپلود کنید:</h5>
+                                        <h6 class="text-warning">فقط فرمت های pdf و docx قابل ارسال میباشد</h6>
                                         {{ add_product_form.pitch_deck|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-md-4">
-                                        {{ add_product_form.has_mvp|as_crispy_field }}
+                                    <div class="col-12 level" id="level4">
+                                        <h5 class="">محصول یا ایده شما در چه وضعیتی قرار دارد؟</h5>
+                                        {{ add_product_form.status|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-12 level" id="level5">
+                                        <h5 class="">محصول شما در چه سطحی از توسعه قرار دارد؟</h5>
+                                        {{ add_product_form.progress_status|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-12 level" id="level6">
+                                        <h5 class="">در صورت تمایل فیلم کوتاه یا اسکرین‌شات از محصول خود را بارگزاری کنید</h5>
+                                        {{ add_product_form.video|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-12">
+                                        <span class="btn text-dark gradient-light-secondary" id="previous">قبلی</span>
+                                        <span class="btn text-dark gradient-light-success" id="next">بعدی</span>
+                                        <button type="submit" class="btn text-dark gradient-light-success" id="submit" style="display: none;">ارسال</button>
                                     </div>
                                 </div>
         
-                                <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button>
+                                <!-- <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button> -->
                             </form>
                             {% else %}
                             <table class="table table-responsive-md mt-1 table-bordered">
@@ -123,6 +148,7 @@
                                         <th>نام ایده</th>
                                         <th>توضیحات</th>
                                         <th>دارای کمینه</th>
+                                        <th>سطح محصول</th>
                                         <th>فیلم ارسال شده</th>
                                         <th>فایل pitch deck</th>
                                         {% comment %} <th>عملیات</th> {% endcomment %}
@@ -133,7 +159,8 @@
                                         <tr>
                                             <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
                                             <td>{{idea.description|truncatechars:25}}</td>
-                                            <td>{% if idea.has_mvp %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{% if idea.status == "m" %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{{idea.get_progress_status_display}}</td>
                                             <td>{% if idea.video %}<a class="badge badge-primary" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                             <td>{% if idea.pitch_deck %}<a class="badge badge-primary" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                             
@@ -147,6 +174,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -181,4 +209,61 @@
 </div>
 {% endblock main %}
 
-{% block page_js %}{% endblock page_js %}
+{% block page_js %}
+<script>
+    $(document).ready(function () {
+        var currentLevel = 1;
+
+        function showLevel(level) {
+            $('.level').removeClass('active');
+            $('#level' + level).addClass('active');
+            if (level === 5) {
+                $('#next').hide();
+                $('#submit').show();
+            } else {
+                $('#next').show();
+                $('#submit').hide();
+            }
+            if (level === 1) {
+                $('#previous').hide();
+            } else {
+                $('#previous').show();
+            }
+        }
+
+        function validateLevel(level) {
+            var isValid = true;
+            $('#level' + level + ' input').each(function () {
+                if (!$(this).val()) {
+                    isValid = false;
+                    alert('لطفاً تمام فیلدها را پر کنید');
+                    return false;
+                }
+            });
+            return isValid;
+        }
+
+        $('#next').click(function () {
+            if (validateLevel(currentLevel)) {
+                if (currentLevel < 6) {
+                    currentLevel++;
+                    showLevel(currentLevel);
+                }
+            }
+        });
+
+        $('#previous').click(function () {
+            if (currentLevel > 1) {
+                currentLevel--;
+                showLevel(currentLevel);
+            }
+        });
+
+        // Initially hide the "previous" button
+        $('#previous').hide();
+
+        // Show the initial level
+        showLevel(currentLevel);
+    });
+</script>
+{% endblock page_js %}
