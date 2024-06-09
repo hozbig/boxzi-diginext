@@ -232,6 +232,10 @@ class RoadRegistrationView(LoginRequiredMixin, View):
         road = Road.objects.get(uuid=uuid)
         
         registration_obj = RoadRegistration.objects.filter(road=road, user=request.user).first()
+
+        if registration_obj.status != "n":
+            return redirect("router")
+
         if registration_obj.team_or_individual == "t" and user.user_of_team_member.first().is_owner:
             registration_obj.status = "w"
             registration_obj.client_last_response_date = timezone.datetime.now()

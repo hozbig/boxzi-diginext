@@ -78,6 +78,7 @@ class UserLoginView(AnonymousRequiredMixin, View):
                 messages.error(request, "شما یک کاربرمجاز نمیباشید!")
         else:
             messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
+            return render(request, self.template_name, {'form': form})
 
         return render(request, self.template_name, {'form': form})
 
