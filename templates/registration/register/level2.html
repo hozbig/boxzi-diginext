@@ -5,59 +5,75 @@
 
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+
+<script type="text/javascript">
+    function validateForm() {
+        var province = document.querySelector('select[name="province"]').value;
+        var city = document.querySelector('select[name="city"]').value;
+        if (province === "0") {
+            alert("لطفا یک استان را انتخاب کنید.");
+            return false;
+        }
+        if (city === "0") {
+            alert("لطفا یک شهر را انتخاب کنید.");
+            return false;
+        }
+        return true;
+    }
+</script>
 {% endblock extra_style %}
 
 
 {% block content %}
     <h2>اطلاعات فردی شما</h2>
 
-    <form method="POST">
+    <form method="POST" id="myForm" onsubmit="return validateForm()">
         {% csrf_token %}
 
         {% for field in form %}
             {% if not field.name in "province city" %}
-            {% endif %}
             <div class="form-group" style="text-align:right">
                 {{ field|as_crispy_field }}
             </div>
+            {% endif %}
         {% endfor %}
 
         <div class="form-group" style="text-align:right">
             <div id="div_id_degree" class="form-group">
               <div>
                 <select class="form-control" name="province" onChange="CityList(this.value);">
-                    <option value="0">لطفا استان خود را انتخاب کنید</option>
-                    <option value="تهران">تهران</option>
-                    <option value="البرز">البرز</option>
-                    <option value="گیلان">گیلان</option>
-                    <option value="آذربایجان شرقی">آذربایجان شرقی</option>
-                    <option value="خوزستان">خوزستان</option>
-                    <option value="فارس">فارس</option>
-                    <option value="اصفهان">اصفهان</option>
-                    <option value="خراسان رضوی">خراسان رضوی</option>
-                    <option value="قزوین">قزوین</option>
-                    <option value="سمنان">سمنان</option>
-                    <option value="قم">قم</option>
-                    <option value="مرکزی">مرکزی</option>
-                    <option value="زنجان">زنجان</option>
-                    <option value="مازندران">مازندران</option>
-                    <option value="گلستان">گلستان</option>
-                    <option value="اردبیل">اردبیل</option>
-                    <option value="آذربایجان غربی">آذربایجان غربی</option>
-                    <option value="همدان">همدان</option>
-                    <option value="کردستان">کردستان</option>
-                    <option value="کرمانشاه">کرمانشاه</option>
-                    <option value="لرستان">لرستان</option>
-                    <option value="بوشهر">بوشهر</option>
-                    <option value="کرمان">کرمان</option>
-                    <option value="هرمزگان">هرمزگان</option>
-                    <option value="چهارمحال و بختیاری">چهارمحال و بختیاری</option>
-                    <option value="یزد">یزد</option>
-                    <option value="سیستان و بلوچستان">سیستان و بلوچستان</option>
-                    <option value="ایلام">ایلام</option>
-                    <option value="کهگلویه و بویراحمد">کهگلویه و بویراحمد</option>
-                    <option value="خراسان شمالی">خراسان شمالی</option>
-                    <option value="خراسان جنوبی">خراسان جنوبی</option>
+                    <option value="0">لطفا استان را انتخاب نمایید</option>
+                    <option value="1">تهران</option>
+                    <option value="31">البرز</option>
+                    <option value="2">گیلان</option>
+                    <option value="3">آذربایجان شرقی</option>
+                    <option value="4">خوزستان</option>
+                    <option value="5">فارس</option>
+                    <option value="6">اصفهان</option>
+                    <option value="7">خراسان رضوی</option>
+                    <option value="8">قزوین</option>
+                    <option value="9">سمنان</option>
+                    <option value="10">قم</option>
+                    <option value="11">مرکزی</option>
+                    <option value="12">زنجان</option>
+                    <option value="13">مازندران</option>
+                    <option value="14">گلستان</option>
+                    <option value="15">اردبیل</option>
+                    <option value="16">آذربایجان غربی</option>
+                    <option value="17">همدان</option>
+                    <option value="18">کردستان</option>
+                    <option value="19">کرمانشاه</option>
+                    <option value="20">لرستان</option>
+                    <option value="21">بوشهر</option>
+                    <option value="22">کرمان</option>
+                    <option value="23">هرمزگان</option>
+                    <option value="24">چهارمحال و بختیاری</option>
+                    <option value="25">یزد</option>
+                    <option value="26">سیستان و بلوچستان</option>
+                    <option value="27">ایلام</option>
+                    <option value="28">کهگلویه و بویراحمد</option>
+                    <option value="29">خراسان شمالی</option>
+                    <option value="30">خراسان جنوبی</option>
                 </select>
               </div>
             </div>
@@ -66,12 +82,10 @@
         <div class="form-group" style="text-align:right">
             <div id="div_id_degree" class="form-group">
               <div>
-                <select class="form-control" name="city" id="city">
-                </select>
+                <select class="form-control" name="city" id="city"><option value="0">لطفا استان را انتخاب نمایید</option></select>
               </div>
             </div>
         </div>
-
         
         <div class="form-group">
             <button type="submit" class="fxt-btn-fill">تائید</button>

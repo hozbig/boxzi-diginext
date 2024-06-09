@@ -11,7 +11,7 @@
 {% block content %}
     <h2>داستان استارتاپی شما</h2>
 
-    <form method="POST" id="myForm">
+    <form method="POST" id="myForm" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-group" style="text-align:right">
@@ -56,16 +56,8 @@
             {{ form.why_us|as_crispy_field }}
         </div>
 
-        <div id="div_id_why_us_file" class="form-group">
-            <label for="id_why_us_file" class=""> فیلم یک الی دو دقیقه ای </label>
-            <input
-              type="file"
-              name="why_us_file"
-              style="text-align: right"
-              class="clearablefileinput form-control-file"
-              id="id_why_us_file"
-              disable
-            />
+        <div class="form-group" style="text-align:right">
+            {{ form.why_us_video|as_crispy_field }}
         </div>
         
         <div class="form-group">

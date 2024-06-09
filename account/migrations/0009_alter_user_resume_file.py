@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='resume_file',
-            field=models.FileField(blank=True, null=True, upload_to=account.models.user_directory_path, verbose_name='فایل pdf رزومه'),
+            field=models.FileField(blank=True, null=True, upload_to=account.models.resume_directory_path, verbose_name='فایل pdf رزومه'),
         ),
     ]

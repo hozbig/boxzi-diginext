@@ -196,7 +196,7 @@ class RegisterLevel3(LoginRequiredMixin, View):
         if int(registration_obj.status_user_state) != 3:
             return redirect("router")
         
-        form = UserRegisterFormLevel3(request.POST, instance=request.user)
+        form = UserRegisterFormLevel3(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             registration_obj.status_user_state = add_one_level(registration_obj.status_user_state)
@@ -227,7 +227,7 @@ class RegisterLevel4(LoginRequiredMixin, View):
         if int(registration_obj.status_user_state) != 4:
             return redirect("router")
     
-        form = UserRegisterFormLevel4(request.POST, instance=request.user)
+        form = UserRegisterFormLevel4(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             registration_obj.status_user_state = add_one_level(registration_obj.status_user_state)

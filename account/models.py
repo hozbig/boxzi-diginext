@@ -16,9 +16,11 @@ def validate_numeric(value):
             params={'value': value},
         )
         
-def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/users/resumes/<uuid>/<filename>
-    return f'users/resumes/{instance.user.uuid}/{filename}'
+def resume_directory_path(instance, filename):
+    return f'users/resumes/{instance.uuid}/{filename}'
+
+def why_us_directory_path(instance, filename):
+    return f'users/why_us/{instance.uuid}/{filename}'
 
 
 class CustomUserManager(BaseUserManager):
@@ -81,8 +83,7 @@ class User(AbstractUser):
         ("b", "بیزنسی"), # Business side
     )
     type = models.CharField(choices=TYPES, max_length=1, verbose_name="نقش شما", default="t")
-    resume_file = models.FileField(verbose_name="فایل pdf رزومه", upload_to=user_directory_path, null=True, blank=True)
-    # video = models.FileField(verbose_name="فیلم کوتاه از محصول خود", upload_to=user_directory_path, max_length=100, null=True, blank=True)
+    resume_file = models.FileField(verbose_name="فایل pdf رزومه", upload_to=resume_directory_path, null=True, blank=True)
     
     YESNO = (
         ("y", "داشته ام"), # Yes
@@ -103,6 +104,7 @@ class User(AbstractUser):
     specialty = models.CharField(verbose_name="زمینه تخصصی شما", max_length=255, null=True, blank=True)
     other_specialties = models.CharField(verbose_name="دیگر تخصص های شما", max_length=255, null=True, blank=True)
     why_us = models.TextField(default="", verbose_name="علت درخواست شما برای برنامه شتابدهی", blank=True, null=True)
+    why_us_video = models.FileField(verbose_name="توضیحات کوتاه شما به صورت فیلم", upload_to=why_us_directory_path, max_length=100, null=True, blank=True)
 
     bio = models.TextField(default="", verbose_name="بیوگرافی", blank=True, null=True)
 

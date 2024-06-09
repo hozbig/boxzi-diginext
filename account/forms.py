@@ -199,6 +199,7 @@ class UserRegisterFormLevel4(forms.ModelForm):
             "is_startup_experience",
             "if_is_startup_experience",
             "why_us",
+            "why_us_video",
         )
     
     def __init__(self, *args, **kwargs):
