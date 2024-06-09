@@ -372,7 +372,7 @@ class AddProduct(LoginRequiredMixin, View):
         form_copy = request.POST.copy()
         form_copy.update({"user": request.user,})
 
-        form = self.form_class(form_copy)
+        form = self.form_class(form_copy, request.FILES)
         if form.is_valid():
             form.save()
             messages.success(request, "محصول شما با موفقیت ثبت شد")

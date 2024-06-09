@@ -9,7 +9,7 @@ urlpatterns = [
     path("pre-register-required/<str:road_uuid>/", views.PreRegisterRequired.as_view(), name="pre-register-required"),
     path("pre-register-required-team/<str:road_uuid>/", views.PreRegisterRequiredTeam.as_view(), name="pre-register-required-team"),
     path("pre-register-required-individual/<str:road_uuid>/", views.PreRegisterRequiredIndividual.as_view(), name="pre-register-required-individual"),
-    path("task-response-detail/<str:road_uuid>/<str:username>/", views.PreRegisterTaskResponseDetail.as_view(), name="task-response-detail"),
+    path("task-response-detail/<str:road_uuid>/<str:uuid>/", views.PreRegisterTaskResponseDetail.as_view(), name="task-response-detail"),
 
     path("iam-individual/<str:uuid>/", views.i_am_team_individual, name="iam-individual"),
     path("iam-tmember/<str:uuid>/", views.i_am_team_member, name="iam-tmember"),

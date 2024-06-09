@@ -188,6 +188,7 @@ class UserRegisterFormLevel3(forms.ModelForm):
             self.fields[field].required = True
             self.fields[field].widget.attrs['style'] = 'text-align:right'
         self.fields["resume_file"].required = False
+        self.fields["other_specialties"].required = False
 
 
 class UserRegisterFormLevel4(forms.ModelForm):

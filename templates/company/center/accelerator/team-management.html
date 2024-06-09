@@ -76,9 +76,9 @@
                         <table class="table zero-configuration">
                             <thead>
                                 <tr class="table-warning">
-									<th>نام تیم/شخص</th>
-                                    <th>حوضه فعالیت تیم</th>
-                                    <th>تاریخ ثبت درخواست</th>
+									<th>نام و نام خانوادگی</th>
+                                    <th>تیم</th>
+                                    <th>تاریخ ارسال درخواست</th>
                                     <th>وضعیت</th>
                                     <th>عملیات</th>
                                 </tr>
@@ -86,12 +86,13 @@
                             <tbody>
 								{% for road in acc_object.accelerator_of_road.all %}
 									{% for item in road.road_of_road_registration.all %}
-										{% if item.status_user_state == "f" %}
+										{% if item.status != "n" %}
 										<tr>
-											<th>{% if item.team %}{{item.team.name}} / {% else %}*** / {% endif %}{{item.user.get_full_name}}</th>
-											<th>{{item.team.category.name|default:"***"}}</th>
-											<th>{{item.created_time|to_jalali}}</th>
-											<th scope="row" class="{% if item.status == "p" %}table-info{% elif item.status == "r" %}table-danger{% elif item.status == "a" %}table-success{% endif %}">{{item.get_status_display}}</th>
+											<th>{{item.user.get_full_name}}</th>
+											<th>{% if item.team_or_individual == "t" %}{{item.team.name}}{% else %}<span class="badge badge-primary">شخص</span>{% endif %}</th>
+											<th>{{item.client_last_response_date|to_jalali}}</th>
+
+											<th scope="row" class="{% if item.status == "w" %}table-info{% elif item.status == "p" %}table-primary{% elif item.status == "a" %}table-success{% elif item.status == "r" %}table-danger{% elif item.status == "c" %}table-warning{% endif %}">{{item.get_status_display}}</th>
 											
 											<td>
 												<a href={% url "team:registration-detail" item.uuid %} class="badge badge-info">مشاهده <i class="feather icon-eye"></i></a>

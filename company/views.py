@@ -614,7 +614,6 @@ class NewSubject(LoginRequiredMixin, View):
 
 
 class TeamManagement(LoginRequiredMixin, View):
-    form_class = TopicSubjectCreationForm
     template_name = "company/center/accelerator/team-management.html"
     context = {"title": "مدیریت تیم ها"}
 

@@ -338,9 +338,9 @@ class PreRegisterTaskResponseDetail(LoginRequiredMixin, View):
     template_name = "quiz/task-response-detail.html"
     context = {}
 
-    def get(self, request, road_uuid, username):
+    def get(self, request, road_uuid, uuid):
         road = Road.objects.get(uuid=road_uuid)
-        user = User.objects.get(username=username)
+        user = User.objects.get(uuid=uuid)
         self.context["title"] = "مشاهده پاسخ به چالش" 
         self.context["object"] = PreRegisterTaskResponse.objects.get(user=user, road=road)
         return render(request, self.template_name, self.context)

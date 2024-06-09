@@ -34,7 +34,6 @@ class Plan(models.Model):
     industry = models.CharField(verbose_name="صنعت", max_length=255, null=True, blank=True)
     description = models.TextField(verbose_name="توصیف کوتاه")
     text = QuillField(verbose_name="توضیحات کامل", default="", null=True, blank=True)
-    has_mvp = models.BooleanField(verbose_name="دارای کمینه", default=False)
     likes = models.ManyToManyField("account.User", related_name='user_of_likes_plan', blank=True)
     video = models.FileField(verbose_name="فیلم کوتاه از محصول خود", upload_to=user_directory_path, max_length=100, null=True, blank=True)
     pitch_deck = models.FileField(verbose_name="آپلود فایل pitch deck", upload_to=pitch_deck_directory_path, max_length=100, null=True, blank=True)
