@@ -78,7 +78,11 @@
                         {% if registration_obj.status != "n" %}
                         <a class="btn btn-gradient-bg bg-gradient-info text-white mb-2">{{registration_obj.get_status_display}}</a>
                         {% else %}
-                        <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-gradient-bg bg-gradient-success mb-2">ادامه تکمیل درخواست!</a>
+                            {% if registration_obj.is_valid_registration_period %}
+                            <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-gradient-bg bg-gradient-success mb-2">ادامه تکمیل درخواست!</a>
+                            {% else %}
+                            <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-gradient-bg bg-gradient-danger mb-2">ادامه تکمیل درخواست!</a>
+                            {% endif %}
                         {% endif %}
                     </div>
 
@@ -114,7 +118,7 @@
                                 <td class="border">ارسال شد<i class="fa fa-check text-success"></i></th>
                                 {% else %}
                                 <td class="border ">{{registration_obj.complete_registration_date|to_jalali}}</th>
-                                <td class="border">{{registration_obj.is_valid_registration_period}} روز</th>
+                                <td class="border">{% if registration_obj.is_valid_registration_period %}{{registration_obj.is_valid_registration_period}} روز{% else %}<span class="badge badge-danger"><i class="fa fa-clock-o"></i></span>{% endif %}</th>
                                 {% endif %}
                             </tr>
                         </tbody>

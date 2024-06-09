@@ -10,10 +10,14 @@ def validate_is_investor(value):
     if not value.is_investor or not value.access_to_center():
         raise ValidationError('کاربر انتخابی باید درسترسی سرمایه گذار یا ادمین شتابدهنده را داشته باشد.')
 
-
 def user_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT/users/resumes/<uuid>/<filename>
-    return f'users/resumes/{instance.user.uuid}/{filename}'
+    # file will be uploaded to MEDIA_ROOT/plan/resumes/<uuid>/<filename>
+    return f'plan/video/{instance.name}/{filename}'
+
+def pitch_deck_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/plan/resumes/<uuid>/<filename>
+    return f'plan/pitch_deck/{instance.name}/{filename}'
+
 
 class Plan(models.Model):
     uuid = models.CharField(
@@ -33,6 +37,7 @@ class Plan(models.Model):
     has_mvp = models.BooleanField(verbose_name="دارای کمینه", default=False)
     likes = models.ManyToManyField("account.User", related_name='user_of_likes_plan', blank=True)
     video = models.FileField(verbose_name="فیلم کوتاه از محصول خود", upload_to=user_directory_path, max_length=100, null=True, blank=True)
+    pitch_deck = models.FileField(verbose_name="آپلود فایل pitch deck", upload_to=pitch_deck_directory_path, max_length=100, null=True, blank=True)
     
     STATUS = (
         ("p", "درحال انجام"), # inProgress

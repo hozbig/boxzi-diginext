@@ -18,31 +18,37 @@
     </div>
 
     {% comment %} progressbar {% endcomment %}
-    <div class="col-12 mt-2">
-        {% if request.user.is_profile_complete and not request.user.user_of_personal_test.exists and not request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
-        <div class="progress progress-bar-success progress-lg">
-            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="20" aria-valuemax="100" style="width:20%;"></div>
-        </div>
-        {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and not request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
-        <div class="progress progress-bar-success progress-lg">
-            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="40" aria-valuemax="100" style="width:40%;"></div>
-        </div>
-        {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
-        <div class="progress progress-bar-success progress-lg">
-            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="60" aria-valuemax="100" style="width:60%;"></div>
-        </div>
-        {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
-        <div class="progress progress-bar-success progress-lg">
-            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="80" aria-valuemax="100" style="width:80%;"></div>
-        </div>
-        {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
-        <div class="progress progress-bar-success progress-lg">
+    <div class="col-12 my-2">
+        {% if not registration.is_valid_registration_period %}
+        <div class="progress progress-bar-dark progress-lg">
             <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width:100%;"></div>
         </div>
         {% else %}
-        <div class="progress progress-bar-danger progress-lg">
-            <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width:100%;"></div>
-        </div>
+            {% if request.user.is_profile_complete and not request.user.user_of_personal_test.exists and not request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
+            <div class="progress progress-bar-success progress-lg">
+                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="20" aria-valuemax="100" style="width:20%;"></div>
+            </div>
+            {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and not request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
+            <div class="progress progress-bar-success progress-lg">
+                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="40" aria-valuemax="100" style="width:40%;"></div>
+            </div>
+            {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and not request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
+            <div class="progress progress-bar-success progress-lg">
+                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="60" aria-valuemax="100" style="width:60%;"></div>
+            </div>
+            {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and not request.user.user_of_team_member.first.team.team_of_plan.first %}
+            <div class="progress progress-bar-success progress-lg">
+                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="80" aria-valuemax="100" style="width:80%;"></div>
+            </div>
+            {% elif request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
+            <div class="progress progress-bar-success progress-lg">
+                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width:100%;"></div>
+            </div>
+            {% else %}
+            <div class="progress progress-bar-danger progress-lg">
+                <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width:100%;"></div>
+            </div>
+            {% endif %}
         {% endif %}
     </div>
     
@@ -240,21 +246,30 @@
             {% endif %}
 
             {% if request.user.user_of_team_member.first.is_owner %}
-                {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
-                    {% if request.user.user_of_team_member.first.team.all_users_completed_registration %}
-                    <div class="col-12 mt-3" id="final_btn">
-                        <form method="post" action={% url "team:road-registration" road.uuid %}>
-                            {% csrf_token %}
-                            <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</div>
-                            <button type="submit" class="btn btn-block bg-gradient-primary">تائید و ثبت درخواست</button>
-                        </form>
-                    </div>
-                    {% else %}
-                    <div class="col-12 mt-3">
-                        <h3 class="text-danger text-center">{{registration.is_valid_registration_period}} روز زمان باقی مانده است</h3>
-                        <button class="btn btn-block bg-gradient-warning">تمام اعضای شما باید به حساب خود وارد و تکمیل اطلاعات خودرا انجام دهند</button>
-                    </div>
+                {% if registration.is_valid_registration_period %}
+                    {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
+                        {% if request.user.user_of_team_member.first.team.all_users_completed_registration %}
+                        <div class="col-12 mt-3" id="final_btn">
+                            <form method="post" action={% url "team:road-registration" road.uuid %}>
+                                {% csrf_token %}
+                                <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</div>
+                                <button type="submit" class="btn btn-block bg-gradient-primary">تائید و ثبت درخواست</button>
+                            </form>
+                        </div>
+                        {% else %}
+                        <div class="col-12 mt-3">
+                            <h3 class="text-danger text-center">{{registration.is_valid_registration_period}} روز زمان باقی مانده است</h3>
+                            <button class="btn btn-block bg-gradient-warning">تمام اعضای شما باید به حساب خود وارد و تکمیل اطلاعات خودرا انجام دهند</button>
+                        </div>
+                        {% endif %}
                     {% endif %}
+                {% else %}
+                <div class="col-12 mt-3">
+                    <div class="divider divider-danger">
+                        <div class="divider-text text-danger bg-transparent font-medium-5">مهلت تکمیل ثبت نام شما به پایان رسیده است</div>
+                    </div>
+                    {% comment %} <button class="btn btn-block bg-gradient-danger">مهلت تکمیل درخواست ثبت نام در مسیر توسط شما به پایان رسیده است !!</button> {% endcomment %}
+                </div>
                 {% endif %}
             {% endif %}
         </div>

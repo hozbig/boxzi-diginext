@@ -18,13 +18,28 @@
             {{ form.type|as_crispy_field }}
         </div>
 
-        <div class="form-group" id="div_programming_language" style="text-align: right; display: none;">
+        <div class="form-group" id="div_programming_language" style="text-align: right">
             <div id="div_id_programming_language" class="form-group">
-              <label for="id_programming_language" class="requiredField">
-                زبان برنامه نویسی تخصصی شما<span class="asteriskField">*</span>
+              <label for="id_programming_language" class="requiredField">زبان برنامه نویسی تخصصی شما*</label>
+              <div>
+                <select name="programming_language" style="text-align: right" class="select form-control" id="id_programming_language">
+                  <option value="Python3">Python3</option>
+                  <option value="JavaScript">JavaScript</option>
+                  <option value="Rust">Rust</option>
+                  <option value="Go">Go</option>
+                  <option id="others_pr" value="others_pr">دیگر موارد ...</option>
+                </select>
+              </div>
+            </div>
+        </div>
+
+        <div class="form-group" id="div_programming_language2" style="text-align: right; display: none;">
+            <div id="div_id_programming_language2" class="form-group">
+              <label for="id_programming_language2" class="requiredField">
+                زبان برنامه نویسی خود را وارید کنید<span class="asteriskField">*</span>
               </label>
               <div>
-                <input type="text" name="programming_language" maxlength="255" style="text-align: right" class="textinput form-control" id="id_programming_language"/>
+                <input type="text" name="programming_language2" maxlength="255" style="text-align: right" class="textinput form-control" id="id_programming_language2"/>
               </div>
             </div>
         </div>
@@ -121,6 +136,19 @@
             }
         }
 
+        // Function to handle the 'others' option selection
+        function handleOthersProgrammingLangOption() {
+            if ($('#id_programming_language').val() === 'others_pr') {
+                $('#div_programming_language2').show();
+                $('#id_programming_language2').attr('name', 'programming_language').attr('required', true);
+                $('#id_programming_language').removeAttr('name').removeAttr('required');
+            } else {
+                $('#div_programming_language2').hide();
+                $('#id_programming_language2').removeAttr('name').removeAttr('required');
+                $('#id_programming_language').attr('name', 'programming_language');
+            }
+        }
+
         // Initial update based on the current value of id_type
         updateSpecialtyOptions();
 
@@ -132,6 +160,11 @@
         // Update the visibility of 'div_others' whenever the specialty changes
         $('#id_specialty').change(function() {
             handleOthersOption();
+        });
+
+        // Update the visibility of 'id_programming_language' whenever the specialty changes
+        $('#id_programming_language').change(function() {
+            handleOthersProgrammingLangOption();
         });
     });
 </script>

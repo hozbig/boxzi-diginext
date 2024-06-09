@@ -58,7 +58,6 @@
                                 </thead>
                                 <tbody>
                                     {% for person in object.team_of_team_member.all %}
-                                        {% if person.user %}
                                         <tr>
                                             <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
                                             <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
@@ -74,27 +73,6 @@
                                             <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
                                             {% endif %}
                                         </tr>
-                                        {% else %}
-                                        <tr>
-                                            <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
-                                            <td class="font-weight-bold">
-                                                <a class="">{{person.temporary_name}}</a>
-                                                <span class="badge badge-danger">عضویت تایید نشده!</span>
-                                                <div class="mt-50 small">کد دعوت: {{person.user_validation_code}}</div>
-                                            </td>
-                                            <td>{{person.user_number_id|default:"0"}}</td>
-                                            <td>
-                                                {% if person.is_coordinator %}<span class="badge badge-warning">هماهنگ کننده</span>{% endif %}
-                                                {% if person.is_owner %} | <span class="badge badge-warning">سازنده</span>{% endif %}
-                                                {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
-                                            </td>
-                                            {% if not person.is_owner %}
-                                            <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge badge-danger">حذف</a></td>
-                                            {% else %}
-                                            <td><span class="badge badge-primary text-white">سازنده تیم</span></td>
-                                            {% endif %}
-                                        </tr>
-                                        {% endif %}
                                     {% endfor %}
                                 </tbody>
                             </table>
@@ -123,11 +101,15 @@
                                         {{ add_product_form.description|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         {{ add_product_form.video|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        {{ add_product_form.pitch_deck|as_crispy_field }}
+                                    </div>
+
+                                    <div class="col-md-4">
                                         {{ add_product_form.has_mvp|as_crispy_field }}
                                     </div>
                                 </div>
@@ -142,18 +124,20 @@
                                         <th>توضیحات</th>
                                         <th>دارای کمینه</th>
                                         <th>فیلم ارسال شده</th>
-                                        <th>عملیات</th>
+                                        <th>فایل pitch deck</th>
+                                        {% comment %} <th>عملیات</th> {% endcomment %}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for idea in request.user.user_of_team_member.first.team.team_of_plan.all %}
                                         <tr>
-                                            <td>{{idea.name|truncatechars:25}}</td>
+                                            <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
                                             <td>{{idea.description|truncatechars:25}}</td>
                                             <td>{% if idea.has_mvp %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                             <td>{% if idea.video %}<a class="badge badge-primary" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{% if idea.pitch_deck %}<a class="badge badge-primary" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                             
-                                            <td><a href="" class="badge badge-info"><i class="feather icon-edit-2"></i> ویرایش</a></td>
+                                            {% comment %} <td><a href="" class="badge badge-info"><i class="feather icon-edit-2"></i> ویرایش</a></td> {% endcomment %}
                                         </tr>
                                     {% endfor %}
                                 </tbody>
