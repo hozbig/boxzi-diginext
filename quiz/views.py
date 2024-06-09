@@ -99,6 +99,8 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         self.context["registration"] = registration_obj
         self.context["task"] = task
         self.context["road"] = road
+        if user.user_of_road_registration.first().team_or_individual == "i":
+            self.context["challenge_response"] = user.user_of_pre_register_task_response.exists()
         return render(request, self.template_name, self.context)
     
     def post(self, request, task_uuid, road_uuid):
@@ -253,6 +255,10 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
     context = {}
     
     def get(self, request, task_uuid, road_uuid):
+        if request.user.user_of_pre_register_task_response.exists():
+            messages.error(request, "عملیات غیرمجاز !")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
         task = PreRegisterTask.objects.get(uuid=task_uuid)
         road = Road.objects.get(uuid=road_uuid)
         self.context["title"] = "تست ورودی"
@@ -262,6 +268,10 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
     
     def post(self, request, task_uuid, road_uuid):
+        if request.user.user_of_pre_register_task_response.exists():
+            messages.error(request, "عملیات غیرمجاز !")
+            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
         task = PreRegisterTask.objects.get(uuid=task_uuid)
         road = Road.objects.get(uuid=road_uuid)
 
@@ -283,7 +293,7 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
         
         messages.error(request, "مشکلی پیش آمده است!")
         self.context["title"] = "تست ورودی"
-        self.context["exam_form"] = self.form_class
+        self.context["exam_form"] = form
         self.context["task"] = task
         self.context["road"] = road
         return render(request, self.template_name, self.context)

@@ -149,7 +149,8 @@ class Road(models.Model):
     accelerator = models.ForeignKey("company.Center", related_name="accelerator_of_road", verbose_name="برگزارکننده", null=True, on_delete=models.CASCADE)
     holders = models.ManyToManyField("company.Center", verbose_name="برگزارکنندگان", related_name="holders_of_road",)
     sponsors = models.ManyToManyField("company.Center", verbose_name="حمایت کنندگان", related_name="sponsors_of_road", blank=True)
-    pre_register_task = models.ForeignKey("quiz.PreRegisterTask", related_name="pre_register_task_of_road", verbose_name="آزمون ورودی", null=True, on_delete=models.CASCADE)
+    pre_register_task = models.ForeignKey("quiz.PreRegisterTask", related_name="pre_register_task_of_road", verbose_name="آزمون ورودی برای افراد فنی", null=True, on_delete=models.CASCADE)
+    pre_register_task_for_business_side = models.ForeignKey("quiz.PreRegisterTask", related_name="pre_register_task_for_business_side_of_road", verbose_name="آزمون ورودی برای افراد بیزنس ساید", null=True, on_delete=models.CASCADE)
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ایجاد")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")

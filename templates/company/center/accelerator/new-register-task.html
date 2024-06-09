@@ -41,13 +41,16 @@
                                                     {% csrf_token %}
                                                     <input name="accelerator" value="{{acc_object.id}}" hidden>
                                                     <div class="row">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             {{ form.title|as_crispy_field }}
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
+                                                            {{ form.type|as_crispy_field }}
+                                                        </div>
+                                                        <div class="col-md-3">
                                                             {{ form.start_date|as_crispy_field }}
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             {{ form.expiration_date|as_crispy_field }}
                                                         </div>
                                                         <div class="col-md-12">
@@ -62,14 +65,15 @@
                                     </div>
                                 </div>
 
-                                <table class="table table-responsive-md mb-0">
+                                <table class="table table-responsive-md mb-0 table-bordered">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">نام آزمون</th>
-                                            <th scope="col">تاریخ شروع</th>
-                                            <th scope="col">تاریخ پایان</th>
-                                            <th scope="col">عملیات</th>
+                                            <th class="col-1">#</th>
+                                            <th>نام آزمون</th>
+                                            <th class="col-1 text-center">نوع</th>
+                                            <th class="col-1 text-center">تاریخ شروع</th>
+                                            <th class="col-1 text-center">تاریخ پایان</th>
+                                            <th class="col-2 text-center">عملیات</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -77,9 +81,10 @@
                                             <tr>
                                                 <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
                                                 <td class="font-weight-bold">{{task.title}}</td>
-                                                <td>{{task.start_date|to_jalali}}</td>
-                                                <td>{{task.expiration_date|to_jalali}}</td>
-                                                <td>
+                                                <td class="text-center table-{% if task.type == "t" %}primary{% else %}warning{% endif %}">{{task.get_type_display}}</td>
+                                                <td class="text-center">{{task.start_date|to_jalali}}</td>
+                                                <td class="text-center">{{task.expiration_date|to_jalali}}</td>
+                                                <td class="text-center">
                                                     <a href={% url "company:update-register-task" task.uuid %} class="badge badge-info">ویرایش</a>
                                                     <a href={% url "company:delete-register-task" task.uuid %} class="badge badge-danger">حذف <i class="feather icon-trash-2"></i></a>
                                                 </td>

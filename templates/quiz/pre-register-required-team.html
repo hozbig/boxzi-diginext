@@ -18,7 +18,7 @@
     </div>
 
     {% comment %} progressbar {% endcomment %}
-    <div class="col-12 my-2">
+    {% comment %} <div class="col-12 my-2">
         {% if not registration.is_valid_registration_period %}
         <div class="progress progress-bar-dark progress-lg">
             <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width:100%;"></div>
@@ -50,9 +50,9 @@
             </div>
             {% endif %}
         {% endif %}
-    </div>
+    </div> {% endcomment %}
     
-    <div class="col-12">
+    <div class="col-12 mt-2">
         <div class="row justify-content-center">
             {% comment %} is profile complete {% endcomment %}
             {% if request.user.is_profile_complete %}
@@ -131,46 +131,81 @@
             </div>
             {% endif %}
 
-            {% comment %} Intro challenge {% endcomment %}
-            {% comment %} {% if challenge_response %}
-            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white bg-transparent border-success text-center h-100">
-                    <div class="card-content d-flex">
-                        <div class="card-body">
-                            <h4 class="card-title font-weight-bold">چالش ورودی</h4>
-                            <div class="row">
-                                <div class="col-12 py-1">
-                                    <p class="card-text text-dark">تبریک! پاسخ شما توسط شتابدهنده تایید شد</p>
-                                </div>
-                                <div class="col-12">
-                                    <a class="btn btn-success btn-darken-3 waves-success waves-light disabled">انجام شد <i class="fa fa-check"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% else %}
-            <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 13em;">
-                <div class="card text-white bg-transparent border-info text-center h-100">
-                    <div class="card-content d-flex">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h4 class="card-title font-weight-bold">چالش ورودی</h4>
-                                </div>
-                                <div class="col-12 py-1">
-                                    <p class="card-text text-dark">انجام چالش ورودی</p>
-                                </div>
-                                <div class="col-12">
-                                    <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
+            {% comment %} ================ INDIVIDUAL ================ {% endcomment %}
+            {% if registration.team_or_individual == "i" %}
+                {% comment %} Intro challenge {% endcomment %}
+                {% if not challenge_response %}
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-info text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">چالش ورودی</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            {% endif %} {% endcomment %}
+                {% else %}
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-success text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">چالش ورودی</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if not request.user.user_of_plan.first %}
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-info text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-info btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-lg-2 col-md-6 col-sm-12 mt-3 mt-sm-1" style="height: 8em;">
+                    <div class="card text-white bg-transparent border-success text-center h-100">
+                        <div class="card-content d-flex ">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <a class="btn btn-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
 
             {% if request.user.user_of_road_registration.first.team_or_individual == "t" %}
                 {% comment %} create team {% endcomment %}
@@ -245,7 +280,7 @@
                 {% endif %}
             {% endif %}
 
-            {% if request.user.user_of_team_member.first.is_owner %}
+            {% if request.user.user_of_team_member.first.is_owner and registration.team_or_individual == "t" %}
                 {% if registration.is_valid_registration_period %}
                     {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
                         {% if request.user.user_of_team_member.first.team.all_users_completed_registration %}
@@ -269,6 +304,22 @@
                         <div class="divider-text text-danger bg-transparent font-medium-5">مهلت تکمیل ثبت نام شما به پایان رسیده است</div>
                     </div>
                     {% comment %} <button class="btn btn-block bg-gradient-danger">مهلت تکمیل درخواست ثبت نام در مسیر توسط شما به پایان رسیده است !!</button> {% endcomment %}
+                </div>
+                {% endif %}
+            {% endif %}
+
+            {% if registration.team_or_individual == "i" and registration.is_complete_registration_for_individual %}
+                {% if registration.status == "n" %}
+                <div class="col-12 mt-3" id="final_btn">
+                    <form method="post" action={% url "team:road-registration" road.uuid %}>
+                        {% csrf_token %}
+                        <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</div>
+                        <button type="submit" class="btn btn-block bg-gradient-primary">تائید و ثبت درخواست</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="col-12 mt-3" id="final_btn">
+                    <button class="btn btn-block bg-gradient-info">{{registration.get_status_display}}</button>
                 </div>
                 {% endif %}
             {% endif %}

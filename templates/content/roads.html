@@ -89,35 +89,73 @@
                     <table class="table table-responsive-md mb-0 border">
                         <thead>
                             <tr class="table-secondary text-center text-dark">
+                                
                                 <th>آخرین وضعیت درخواست شما</th>
                                 <th class="col-1">تکمیل پروفایل شخصی</th>
                                 <th class="col-1">انجام آزمون شخصیت</th>
+
+                                {% if registration_obj.team_or_individual != "i" %}
                                 <th class="col-1">تکمیل اطلاعات تیم توسط سرپرست‌تیم</th>
                                 <th class="col-1">ثبت اطلاعات اعضای تیم</th>
+                                {% else %}
+                                <th class="col-1">انجام چالش ورودی</th>
+                                {% endif %}
+
                                 <th class="col-1">ثبت اطلاعات و دموی ایده/محصول</th>
+
+                                {% if registration_obj.team_or_individual != "i" %}
                                 <th class="col-1">تکمیل مراحل توسط اعضای تیم</th>
+                                {% endif %}
+
                                 {% if registration_obj.status != "n" %}
                                 <th class="col-1">تاریخ تکمیل فرایند ثبت نام</th>
                                 {% else %}
                                 <th class="col-1">تاریخ شروع فرایند ثبت‌نام</th>
                                 {% endif %}
+
                                 <th class="col-1">مهلت باقی مانده برای ثبت درخواست</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr class="text-center">
+                                <!-- وضعیت درخواست -->
                                 <td class="border table-light">{{registration_obj.get_status_display}}</td>
+                                <!-- تکمیل بودن پروفایل -->
                                 <td class="border ">{% if request.user.is_profile_complete %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                <!-- انجام آزمون شخصیت -->
                                 <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+
+                                {% if registration_obj.team_or_individual != "i" %}
+                                <!-- تیم؟ -->
                                 <td class="border ">{% if request.user.user_of_team_member.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                <!-- تعداد اعضای تیم؟ -->
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.team_member_count > 1 %}<span class="badge badge-success">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-times"></i></span>{% endif %}</td>
+                                {% else %}
+                                <!-- چالش ورودی -->
+                                <td class="border ">{% if request.user.user_of_pre_register_task_response.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                {% endif %}
+
+                                <!-- ایده یا محصول -->
+                                {% if registration_obj.team_or_individual != "i" %}
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.team_of_plan.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                {% else %}
+                                <td class="border ">{% if request.user.user_of_plan.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                {% endif %}
+
+                                <!-- تکمیل پروفایل تمام اعضای تیم -->
+                                {% if registration_obj.team_or_individual != "i" %}
                                 <td class="border ">{% if request.user.user_of_team_member.first.team.all_users_completed_registration %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                {% endif %}
+
                                 {% if registration_obj.status != "n" %}
+                                <!-- تاریخ اخرین تغییر کاربر -->
                                 <td class="border ">{{registration_obj.client_last_response_date|to_jalali}}</th>
+                                <!-- وضعیت ارسال شده درخواست -->
                                 <td class="border">ارسال شد<i class="fa fa-check text-success"></i></th>
                                 {% else %}
+                                <!-- زمان تکمیل درخواست -->
                                 <td class="border ">{{registration_obj.complete_registration_date|to_jalali}}</th>
+                                <!-- زمان باقی مانده برای تکمیل درخواست -->
                                 <td class="border">{% if registration_obj.is_valid_registration_period %}{{registration_obj.is_valid_registration_period}} روز{% else %}<span class="badge badge-danger"><i class="fa fa-clock-o"></i></span>{% endif %}</th>
                                 {% endif %}
                             </tr>

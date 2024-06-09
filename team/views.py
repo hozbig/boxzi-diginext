@@ -236,12 +236,19 @@ class RoadRegistrationView(LoginRequiredMixin, View):
         if registration_obj.status != "n":
             return redirect("router")
 
-        if registration_obj.team_or_individual == "t" and user.user_of_team_member.first().is_owner:
+        if registration_obj.team_or_individual == "t" and user.user_of_team_member.first().is_owner and registration_obj.team.all_users_completed_registration():
             registration_obj.status = "w"
             registration_obj.client_last_response_date = timezone.datetime.now()
             registration_obj.save()
             messages.success(request, "درخواست شما ثبت شد")
             messages.info(request, "درخواست شما برای شرکت تیمتان در این مسیر رشد با موقیت ثبت شد.")
+            return redirect("router")
+        elif registration_obj.team_or_individual == "i" and registration_obj.is_complete_registration_for_individual():
+            registration_obj.status = "w"
+            registration_obj.client_last_response_date = timezone.datetime.now()
+            registration_obj.save()
+            messages.success(request, "درخواست شما ثبت شد")
+            messages.info(request, "درخواست شما برای شرکت انفرادی در این مسیر رشد با موقیت ثبت شد.")
             return redirect("router")
         else:
             messages.error(request, "شما دسترسی لازم برای انجام این عملیات را ندارید!")

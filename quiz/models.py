@@ -192,6 +192,11 @@ class PreRegisterTask(models.Model):
     text = QuillField(default="", verbose_name="محتوا متنی")
     start_date = models.DateField("تاریخ شروع", auto_now=False, auto_now_add=False, null=True)
     expiration_date = models.DateField("تاریخ پایان", auto_now=False, auto_now_add=False, null=True)
+    TYPES = (
+        ("t", "فنی"), # Tech
+        ("b", "بیزنسی"), # Business
+    )
+    type = models.CharField(choices=TYPES, max_length=1, default="t", verbose_name="نوع")
 
     accelerator = models.ForeignKey("company.Center", related_name="accelerator_of_pre_register_task", verbose_name="برگزارکننده", null=True, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True, null=True, verbose_name="زمان ساخت")
@@ -202,7 +207,7 @@ class PreRegisterTask(models.Model):
         verbose_name_plural = "آزمون های پیش ثبت نام"
 
     def __str__(self) -> str:
-        return self.title
+        return f"{self.title} ({self.get_type_display()})"
 
 
 class PreRegisterTaskResponse(models.Model):

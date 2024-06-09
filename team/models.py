@@ -257,3 +257,14 @@ class RoadRegistration(models.Model):
             return is_profile_complete and has_personal_test
             
         return None
+    
+    def is_complete_registration_for_individual(self) -> Union[bool, None]:
+        if self.team_or_individual == "i":
+            user = self.user
+            is_profile_complete = user.is_profile_complete()
+            has_personal_test = user.user_of_personal_test.exists()
+            has_challenge_response = user.user_of_pre_register_task_response.exists()
+            
+            return is_profile_complete and has_personal_test and has_challenge_response
+            
+        return None
