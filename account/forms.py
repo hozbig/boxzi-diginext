@@ -211,4 +211,5 @@ class UserRegisterFormLevel4(forms.ModelForm):
             self.fields[field].widget.attrs['style'] = 'text-align:right'
         self.fields["if_is_accelerator_experience"].required = False
         self.fields["if_is_startup_experience"].required = False
+        self.fields["why_us"].required = False
         self.fields["why_us_video"].required = False

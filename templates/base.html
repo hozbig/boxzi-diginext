@@ -131,8 +131,10 @@
                 {% if request.user.is_team_member %}
                     {% comment %} <li class="navigation-header"><span>برای شما</span></li> {% endcomment %}
                     
-
-                    {% if request.user.is_profile_complete %}
+                    <li class="{% if request.path == "/content/roads/" %}active{% endif %} nav-item">
+                        <a href="{% url "content:roads" %}" class="text-success"><i class="fa fa-graduation-cap text-success"></i><span class="menu-title">مسیر رشد</span></a>
+                    </li>
+                    {% comment %} {% if request.user.is_profile_complete %}
                     <li class="{% if request.path == "/content/roads/" %}active{% endif %} nav-item">
                         <a href="{% url "content:roads" %}" class="text-success"><i class="fa fa-graduation-cap text-success"></i><span class="menu-title">مسیر رشد</span></a>
                     </li>
@@ -143,7 +145,7 @@
                             <span class="badge badge badge-warning badge-pill float-right ml-1">پروفایل !</span>
                         </a>
                     </li>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
 
                     {% if request.user.user_of_team_member.first.is_owner %}
                     <li class="{% if request.path == "/team/manage-teams/" %}active{% endif %} nav-item">

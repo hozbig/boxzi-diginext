@@ -105,7 +105,7 @@
                                         {{ add_product_form.name|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-12 level active" id="level2">
+                                    <div class="col-12 level" id="level2">
                                         <h5 class="">توضیحی کوتاه درباره برند خود بنویسید</h5>
                                         {{ add_product_form.description|as_crispy_field }}
                                     </div>
@@ -131,11 +131,12 @@
                                         {{ add_product_form.video|as_crispy_field }}
                                     </div>
 
-                                    <div class="col-12">
+                                    <div class="col-12" id="submit_div">
                                         <span class="btn text-dark gradient-light-secondary" id="previous">قبلی</span>
                                         <span class="btn text-dark gradient-light-success" id="next">بعدی</span>
-                                        <button type="submit" class="btn text-dark gradient-light-success" id="submit" style="display: none;">ارسال</button>
+                                        <button type="submit" class="btn text-dark gradient-light-success" id="submit" style="display: none;">ثبت</button>
                                     </div>
+                                    <button type="submit" class="btn text-dark gradient-light-success" id="submit2" style="display: none;">ثبت</button>
                                 </div>
         
                                 <!-- <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button> -->
@@ -213,13 +214,31 @@
 {% endblock main %}
 
 {% block page_js %}
+
 <script>
     $(document).ready(function () {
         var currentLevel = 1;
+        var stepTitles = [
+            "مرحله اول:",
+            "مرحله دوم:",
+            "مرحله سوم:",
+            "مرحله چهارم:",
+            "مرحله پنجم:",
+            "مرحله ششم:",
+        ];
+        var levelDescriptions = [
+            "نام محصول یا ایده",
+            "توضیحات محصول یا ایده",
+            "فایل پیچ دک",
+            "وضعیت محصول",
+            "سطح توسعه",
+            "عکس یا فیلم محصول",
+        ];
 
         function showLevel(level) {
             $('.level').removeClass('active');
             $('#level' + level).addClass('active');
+            updateButtonText(level);
             if (level === 6) {
                 $('#next').hide();
                 $('#submit').show();
@@ -236,7 +255,7 @@
 
         function validateLevel(level) {
             var isValid = true;
-            $('#level' + level + ' input').each(function () {
+            $('#level' + level + ' input, #level' + level + ' textarea, #level' + level + ' select').each(function () {
                 if (!$(this).val()) {
                     isValid = false;
                     alert('لطفاً تمام فیلدها را پر کنید');
@@ -246,10 +265,24 @@
             return isValid;
         }
 
+        function updateButtonText(level) {
+            var nextLevelTitle = stepTitles[level] ? stepTitles[level] + " " + levelDescriptions[level] : 'بعدی';
+            var prevLevelTitle = stepTitles[level - 2] ? stepTitles[level - 2] + " " + levelDescriptions[level - 2] : 'قبلی';
+            $('#next').text(nextLevelTitle);
+            $('#previous').text(prevLevelTitle);
+        }
+
         $('#next').click(function () {
             if (validateLevel(currentLevel)) {
                 if (currentLevel < 6) {
                     currentLevel++;
+                    if (currentLevel === 5 && $('#level4 select').val() === 'i') {
+                        currentLevel++;
+                        currentLevel++;
+                        $('.level').removeClass('active');
+                        $('#submit_div').hide();
+                        $('#submit2').show();
+                    }
                     showLevel(currentLevel);
                 }
             }
@@ -258,6 +291,10 @@
         $('#previous').click(function () {
             if (currentLevel > 1) {
                 currentLevel--;
+                if (currentLevel === 5 && $('#level4 select').val() === 'i') {
+                    currentLevel--;
+                    currentLevel--;
+                }
                 showLevel(currentLevel);
             }
         });
@@ -269,4 +306,5 @@
         showLevel(currentLevel);
     });
 </script>
+
 {% endblock page_js %}

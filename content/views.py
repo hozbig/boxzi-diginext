@@ -15,6 +15,10 @@ class Roads(LoginRequiredMixin, View):
     context = {"title":"مسیرآموزشی"}
 
     def get(self, request):
+        registration_obj = request.user.user_of_road_registration.first().status_user_state
+        if not registration_obj == "5":
+            return redirect("router")
+
         self.context["object"] = Road.objects.first()
         self.context["registration_obj"] = request.user.user_of_road_registration.first()
         return render(request, self.template_name, self.context)

@@ -90,30 +90,30 @@
                         <thead>
                             <tr class="table-secondary text-center text-dark">
                                 
-                                <th>آخرین وضعیت درخواست شما</th>
-                                <th class="col-1">تکمیل پروفایل شخصی</th>
-                                <th class="col-1">انجام آزمون شخصیت</th>
+                                <th class="col-4">آخرین وضعیت درخواست شما</th>
+                                <th>تکمیل پروفایل شخصی</th>
+                                <th>انجام آزمون شخصیت</th>
 
                                 {% if registration_obj.team_or_individual != "i" %}
-                                <th class="col-1">تکمیل اطلاعات تیم توسط سرپرست‌تیم</th>
-                                <th class="col-1">ثبت اطلاعات اعضای تیم</th>
+                                <th>تکمیل اطلاعات تیم توسط سرپرست‌تیم</th>
+                                <th>ثبت اطلاعات اعضای تیم</th>
                                 {% else %}
-                                <th class="col-1">انجام چالش ورودی</th>
+                                <th>انجام چالش ورودی</th>
                                 {% endif %}
 
-                                <th class="col-1">ثبت اطلاعات و دموی ایده/محصول</th>
+                                <th>ثبت اطلاعات و دموی ایده/محصول</th>
 
                                 {% if registration_obj.team_or_individual != "i" %}
-                                <th class="col-1">تکمیل مراحل توسط اعضای تیم</th>
+                                <th>تکمیل مراحل توسط اعضای تیم</th>
                                 {% endif %}
 
                                 {% if registration_obj.status != "n" %}
-                                <th class="col-1">تاریخ تکمیل فرایند ثبت نام</th>
+                                <th>تاریخ تکمیل فرایند ثبت نام</th>
                                 {% else %}
-                                <th class="col-1">تاریخ شروع فرایند ثبت‌نام</th>
+                                <th>تاریخ شروع فرایند ثبت‌نام</th>
                                 {% endif %}
 
-                                <th class="col-1">مهلت باقی مانده برای ثبت درخواست</th>
+                                <th>مهلت باقی مانده برای ثبت درخواست</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -169,7 +169,7 @@
 
     <div class="col-12">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <!-- FAQ -->
                 <div class="card">
                     <div class="card-header">

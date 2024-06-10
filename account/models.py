@@ -118,7 +118,7 @@ class User(AbstractUser):
 
     def is_profile_complete(self):
         if self.is_team_member or self.is_mentor:
-            if self.first_name and self.last_name and self.email and self.birthday and self.degree and self.college_name and self.province and self.city and self.type and self.is_accelerator_experience and self.is_startup_experience and self.specialty and self.why_us:
+            if self.first_name and self.last_name and self.email and self.birthday and self.degree and self.college_name and self.province and self.city and self.type and self.is_accelerator_experience and self.is_startup_experience and self.specialty:
                 return True
                 # return self.user_of_work_experience.exists() and self.interests.exists() and self.abilities.exists()
             else:

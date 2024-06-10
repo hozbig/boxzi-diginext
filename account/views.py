@@ -235,7 +235,7 @@ class RegisterLevel4(LoginRequiredMixin, View):
             registration_obj.complete_registration_date = timezone.datetime.now()
             registration_obj.save()
 
-            messages.success(request, "ثبت نام شما به صورت کامل انجام شد.")
+            messages.success(request, "ثبت نام شما در باکس زی کامل شد. جهت ثبت درخواست برای مسیر آموزشی مورد نظر فرایند هارو از طریق راهنمای داخل داشبورد خود ادامه بدید.")
             return redirect("account:user-dashboard")
         
         messages.error(request, "اطلاعات وارد شده صحیح نمی‌باشد!")
