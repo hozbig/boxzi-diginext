@@ -29,3 +29,24 @@ class TeamMemberForm(forms.Form):
     email = forms.EmailField(required=True, label="ایمیل")
     first_name = forms.CharField(max_length=30, required=True, label="نام")
     last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")
+
+
+class ExtraDaysForCompleteRegistration(forms.Form):
+    extra_days = forms.IntegerField(
+        label='تعداد روز های اضافی',
+        required=True,
+        min_value=1,
+        error_messages={
+            'required': 'پر کردن این فیلد لازم است',
+            'min_value': 'مقدار روز وارد شده باید حداقل ۱ باشد'
+        }
+    )
+    registration_object_uuid = forms.CharField(
+        label='Enter some text',
+        required=True,
+        max_length=10,
+        error_messages={
+            'required': 'پر کردن این فیلد لازم است',
+            'max_length': 'مقدار وارد شده بیش از طولانی میباشد'
+        }
+    )

@@ -16,11 +16,10 @@ from plan.models import Plan
 from plan.forms import PlanCreateForm
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
-from utils.check_status_user_state_level import add_one_level
 
 from .models import RoadRegistration, StartUpTeam, TeamMember, search_items
 from .mixins import TeamAccessMixin
-from .forms import RoadRegistrationForm, StartUpTeamForm, TeamMemberForm
+from .forms import RoadRegistrationForm, StartUpTeamForm, TeamMemberForm, ExtraDaysForCompleteRegistration
 
 
 class TeamDashboard(LoginRequiredMixin, TeamAccessMixin, View):
@@ -385,6 +384,7 @@ class AddProduct(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
 
+@require_POST
 def save_product(request):
     if request.user.user_of_plan.first():
         return redirect("router")
@@ -409,6 +409,23 @@ def save_product(request):
     request.session['form_errors'] = form.errors
     request.session['form_data'] = request.POST
     context["form"] = form
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+@require_POST
+def save_extra_day_for_complete_registraion(request):
+    form = ExtraDaysForCompleteRegistration(request.POST)
+    
+    if form.is_valid():
+        uuid = form.cleaned_data["registration_object_uuid"]
+        days = form.cleaned_data["extra_days"]
+
+        registration_object = RoadRegistration.objects.get(uuid=uuid)
+        registration_object.validity_pride_days += days
+        registration_object.save()
+        messages.success(request, "عملیات مورد نظر با موفقیت انجام شد")
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    messages.success(request, "خطا در انجام عملیات!")
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 

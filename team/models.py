@@ -207,7 +207,7 @@ class RoadRegistration(models.Model):
         verbose_name_plural = "ثبت نام مسیرهای آموزشی"
 
     def __str__(self) -> str:
-        return f"{self.user} - {self.road}"
+        return f"{self.user} - {self.user.get_full_name()} - {self.road}"
     
     def is_valid_registration_period(self):
         try:

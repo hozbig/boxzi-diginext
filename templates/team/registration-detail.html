@@ -262,6 +262,36 @@
         </div>
     </div>
 
+    {% if object.is_valid_registration_period < 2 %}
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">اختصاص زمان بیشتر برای مهلت تکمیل اطلاعات</h4>
+            </div>
+            <div class="card-body">
+                <div class="card-content">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input name="registration_object_uuid" value="{{object.uuid}}" hidden>
+                        <div class="row">
+                            {% for field in form %}
+                                {% if not field.name == "registration_object_uuid" %}
+                                <div class="col-md-4">
+                                    {% if field.name == "subjects" %}<a href={% url "company:new-subject" %} class="small badge badge-primary" target="popup"  onclick="window.open('{% url "company:new-subject" %}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><i class="feather icon-plus"></i> موضوع جدید</a>{% endif %}
+                                    {{ field|as_crispy_field }}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <button class="btn btn-success btn-block" type="submit">ایجاد فصل</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="col-12">
         {% if not object.status in "a" %}<a href={% url "team:approve_registration" object.uuid %} class="btn btn-success">تایید درخواست <i class="feather icon-check"></i></a>{% endif %}
         {% if not object.status in "r" %}<a href={% url "team:reject_registration" object.uuid %} class="btn btn-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}

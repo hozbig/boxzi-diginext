@@ -622,6 +622,7 @@ class TeamManagement(LoginRequiredMixin, View):
         self.context["acc_object"] = acc_object
         all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all()
         
+        self.context["all_requests"] = all_requests
         self.context["approved_requests"] = all_requests.filter(status="a")
         self.context["rejected_requests"] = all_requests.filter(status="r")
         
