@@ -618,7 +618,26 @@ class TeamManagement(LoginRequiredMixin, View):
     context = {"title": "مدیریت تیم ها"}
 
     def get(self, request):
-        self.context["acc_object"] = self.request.user.access_to_center
+        acc_object = self.request.user.access_to_center
+        self.context["acc_object"] = acc_object
+        all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all()
+        
+        self.context["approved_requests"] = all_requests.filter(status="a")
+        self.context["rejected_requests"] = all_requests.filter(status="r")
+        
+        filtered_objects = all_requests.exclude(status="n")
+        individual_objects = all_requests.exclude(status="n").filter(team_or_individual="i")
+        unique_teams = set()
+        unique_objects = []
+
+        for obj in filtered_objects:
+            if obj.team not in unique_teams:
+                unique_teams.add(obj.team)
+                if obj.team_or_individual == "t":
+                    unique_objects.append(obj)
+        combined_results = unique_objects + list(individual_objects)
+        self.context["valid_requests"] = combined_results
+        self.context["valid_requests_count"] = len(combined_results)
         return render(request, self.template_name, self.context)
 
 

@@ -18,7 +18,16 @@
             {{ form.type|as_crispy_field }}
         </div>
 
-        <div class="form-group" id="div_programming_language" style="text-align: right">
+        <div class="form-group" id="div_is_programming_language" style="text-align:right;">
+            <div class="form-group">
+                <label for="is_programming_language" class="requiredField">آیا به زبان برنامه نویسی مسلط هستید؟*</label>
+                <div>
+                    <input type="checkbox" id="is_programming_language">
+              </div>
+            </div>
+        </div>
+
+        <div class="form-group" id="div_programming_language" style="text-align: right; display: none;">
             <div id="div_id_programming_language" class="form-group">
               <label for="id_programming_language" class="requiredField">زبان برنامه نویسی تخصصی شما*</label>
               <div>
@@ -76,7 +85,16 @@
             </div>
         </div>
 
-        <div class="form-group" style="text-align:right">
+
+        <div class="form-group" id="div_is_other_specialties" style="text-align:right;">
+            <div class="form-group">
+                <label for="is_other_specialties" class="requiredField">آیا تخصص دیگری دارید؟*</label>
+                <div>
+                    <input type="checkbox" id="is_other_specialties">
+              </div>
+            </div>
+        </div>
+        <div class="form-group" id="div_other_specialties" style="text-align:right; display: none;">
             {{ form.other_specialties|as_crispy_field }}
         </div>
 
@@ -106,19 +124,44 @@
 
 <script>
     $(document).ready(function(){
+        function isProgrammingLanguage() {
+            if ($('#is_programming_language').is(":checked"))
+            {
+                $('#div_programming_language').show();
+            } else {
+                $('#div_programming_language').hide();
+            };
+        }
+
+        function isOtherSpecialties() {
+            if ($('#is_other_specialties').is(":checked"))
+            {
+                $('#div_other_specialties').show();
+            } else {
+                $('#div_other_specialties').hide();
+            };
+        }
+
         // Function to update the specialty options based on the type
         function updateSpecialtyOptions() {
             const type = $('#id_type').val();
             if (type === 'b') {
+                $('#is_programming_language').prop('checked', false);
+                $('#is_other_specialties').prop('checked', false);
                 $('.option_tech').hide();
                 $('.option_business').show();
                 $('#id_specialty').val($('.option_business:first').val());
                 $('#div_programming_language').hide();
+                $('#div_programming_language2').hide();
+                $('#div_is_programming_language').hide();
             } else if (type === 't') {
+                $('#is_programming_language').prop('checked', false);
+                $('#is_other_specialties').prop('checked', false);
                 $('.option_business').hide();
                 $('.option_tech').show();
                 $('#id_specialty').val($('.option_tech:first').val());
-                $('#div_programming_language').show();
+                //$('#div_programming_language').show();
+                $('#div_is_programming_language').show();
             }
             handleOthersOption(); // Ensure to handle 'others' option after updating the options
         }
@@ -155,6 +198,14 @@
         // Update the options whenever the id_type value changes
         $('#id_type').change(function() {
             updateSpecialtyOptions();
+        });
+
+        $('#is_programming_language').change(function() {
+            isProgrammingLanguage();
+        });
+
+        $('#is_other_specialties').change(function() {
+            isOtherSpecialties();
         });
 
         // Update the visibility of 'div_others' whenever the specialty changes

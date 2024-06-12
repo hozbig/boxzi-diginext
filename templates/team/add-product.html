@@ -29,50 +29,36 @@
           <div class="card-content">
               <div class="card-body">
                   {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
-                  <form method="POST" id="multiStepForm" enctype="multipart/form-data">
-                      {% csrf_token %}
-                      <input name="team" value="{{object.id}}" hidden>
-                      <div class="row">
-                          <div class="col-12 level active" id="level1">
-                              <h5 class="">نام برند شما چیست؟</h5>
-                              {{ form.name|as_crispy_field }}
-                          </div>
+                  <form method="POST" id="multiStepForm" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input name="team" value="{{object.id}}" hidden>
+                    <div class="row">
+                        <div class="col-12 level active" id="level1">
+                            <h4 class="mb-1"><span class="text-danger font-weight-bold">مرحله اول: </span>اطلاعات کلی ایده/محصول خود را وارد کنید</h4>
+                            {{ add_product_form.name|as_crispy_field }}
+                            {{ add_product_form.description|as_crispy_field }}
+                        </div>
 
-                          <div class="col-12 level active" id="level2">
-                              <h5 class="">توضیحی کوتاه درباره برند خود بنویسید</h5>
-                              {{ form.description|as_crispy_field }}
-                          </div>
+                        <div class="col-12 level active" id="level2">
+                            <h4 class="mb-1"><span class="text-danger font-weight-bold">مرحله دوم: </span>آپلود فایل پیچ دک</h4>
+                            {{ add_product_form.pitch_deck|as_crispy_field }}
+                        </div>
 
-                          <div class="col-12 level" id="level3">
-                              <h5 class="">لطفا فایل پیچ دک ایده یا محصول خودتون رو آپلود کنید:</h5>
-                              <h6 class="text-warning">فقط فرمت های pdf و docx قابل ارسال میباشد</h6>
-                              {{ form.pitch_deck|as_crispy_field }}
-                          </div>
+                        <div class="col-12 level active" id="level3">
+                            <h4 class="mb-1"><span class="text-danger font-weight-bold">مرحله سوم: </span>مشخص کردن سطح رشدی ایده/محصول</h4>
+                            {{ add_product_form.status|as_crispy_field }}
+                            {{ add_product_form.progress_status|as_crispy_field }}
+                            {{ add_product_form.video|as_crispy_field }}
+                        </div>
 
-                          <div class="col-12 level" id="level4">
-                              <h5 class="">محصول یا ایده شما در چه وضعیتی قرار دارد؟</h5>
-                              {{ form.status|as_crispy_field }}
-                          </div>
+                        <div class="col-12">
+                            <span class="btn text-dark gradient-light-success" id="next">تایید</span>
+                            <button type="submit" class="btn text-dark gradient-light-success" id="submit" style="display: none;">ثبت</button>
+                        </div>
+                    </div>
 
-                          <div class="col-12 level" id="level5">
-                              <h5 class="">محصول شما در چه سطحی از توسعه قرار دارد؟</h5>
-                              {{ form.progress_status|as_crispy_field }}
-                          </div>
-
-                          <div class="col-12 level" id="level6">
-                              <h5 class="">در صورت تمایل فیلم کوتاه یا اسکرین‌شات از محصول خود را بارگزاری کنید</h5>
-                              {{ form.video|as_crispy_field }}
-                          </div>
-
-                          <div class="col-12">
-                              <span class="btn text-dark gradient-light-secondary" id="previous">قبلی</span>
-                              <span class="btn text-dark gradient-light-success" id="next">بعدی</span>
-                              <button type="submit" class="btn text-dark gradient-light-success" id="submit" style="display: none;">ارسال</button>
-                          </div>
-                      </div>
-
-                      <!-- <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button> -->
-                  </form>
+                    <!-- <button class="btn btn-success btn-block" type="submit">ثبت ایده/محصول</button> -->
+                </form>
                   {% else %}
                   <table class="table table-responsive-md mt-1 table-bordered">
                       <thead>
@@ -112,59 +98,76 @@
 
 {% block page_js %}
 <script>
-  $(document).ready(function () {
-      var currentLevel = 1;
+    $(document).ready(function() {
+        var currentLevel = 1;
+        var totalLevels = $(".level").length;
 
-      function showLevel(level) {
-          $('.level').removeClass('active');
-          $('#level' + level).addClass('active');
-          if (level === 6) {
-              $('#next').hide();
-              $('#submit').show();
-          } else {
-              $('#next').show();
-              $('#submit').hide();
-          }
-          if (level === 1) {
-              $('#previous').hide();
-          } else {
-              $('#previous').show();
-          }
-      }
+        function showCurrentLevel() {
+            $(".level").removeClass("active");
+            $("#level" + currentLevel).addClass("active");
+            if (currentLevel === 1) {
+                $("#previous").hide();
+            } else {
+                $("#previous").show();
+            }
 
-      function validateLevel(level) {
-          var isValid = true;
-          $('#level' + level + ' input').each(function () {
-              if (!$(this).val()) {
-                  isValid = false;
-                  alert('لطفاً تمام فیلدها را پر کنید');
-                  return false;
-              }
-          });
-          return isValid;
-      }
+            if (currentLevel === totalLevels) {
+                $("#next").hide();
+                $("#submit").show();
+            } else {
+                $("#next").show();
+                $("#submit").hide();
+            }
+        }
 
-      $('#next').click(function () {
-          if (validateLevel(currentLevel)) {
-              if (currentLevel < 6) {
-                  currentLevel++;
-                  showLevel(currentLevel);
-              }
-          }
-      });
+        function validateLevel(level) {
+            var isValid = true;
+            $("#level" + level + " :input").each(function() {
+                if ($(this).prop('required') && $(this).val() === '') {
+                    isValid = false;
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            return isValid;
+        }
 
-      $('#previous').click(function () {
-          if (currentLevel > 1) {
-              currentLevel--;
-              showLevel(currentLevel);
-          }
-      });
+        $("#next").click(function() {
+            if (validateLevel(currentLevel)) {
+                if (currentLevel < totalLevels) {
+                    currentLevel++;
+                    showCurrentLevel();
+                }
+            } else {
+                alert("لطفاً تمام فیلدها را پر کنید.");
+            }
+        });
 
-      // Initially hide the "previous" button
-      $('#previous').hide();
+        $("#previous").click(function() {
+            if (currentLevel > 1) {
+                currentLevel--;
+                showCurrentLevel();
+            }
+        });
 
-      // Show the initial level
-      showLevel(currentLevel);
-  });
+        showCurrentLevel();
+
+
+        function ideaOrProduct() {
+            if ($('#id_status').val() === 'i') {
+                $('#div_id_progress_status').hide();
+                $('#div_id_video').hide();
+            } else if ($('#id_status').val() === 'm') {
+                $('#div_id_progress_status').show();
+                $('#div_id_video').show();
+            }
+        }
+
+        ideaOrProduct();
+        $('#id_status').change(function() {
+            ideaOrProduct();
+        });
+    });
 </script>
 {% endblock page_js %}

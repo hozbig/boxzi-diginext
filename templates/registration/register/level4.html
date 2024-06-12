@@ -52,11 +52,23 @@
             </div>
         </div>
 
-        <div class="form-group" style="text-align:right">
+
+        <div id="div_torm" class="form-group">
+            <label for="id_torm" id="label_torm" class="requiredField">
+            علت درخواست شرکت در این برنامه<span class="asteriskField">*</span>
+            </label>
+            <div>
+                <select style="text-align: right" class="select form-control" id="id_torm">
+                    <option>پاسخ از طریق ...</option>
+                    <option value="t">متن</option>
+                    <option value="v">ویدیو کوتاه</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" id="text_why_us" style="text-align:right">
             {{ form.why_us|as_crispy_field }}
         </div>
-
-        <div class="form-group" style="text-align:right">
+        <div class="form-group" id="video_why_us" style="text-align:right">
             {{ form.why_us_video|as_crispy_field }}
         </div>
         
@@ -72,6 +84,25 @@
 
 <script>
     $(document).ready(function(){
+        function whichWayToWhyUsResponse() {
+            const type = $('#id_torm').val();
+            if (type === 't') {
+                $('#text_why_us').attr('required', true);
+                $('#text_why_us').show();
+                $('#video_why_us').hide();
+                $('#label_torm').hide();
+            } else if (type === 'v') {
+                $('#video_why_us').attr('required', true);
+                $('#video_why_us').show();
+                $('#text_why_us').hide();
+                $('#label_torm').hide();
+            } else {
+                $('#video_why_us').hide();
+                $('#text_why_us').hide();
+                $('#label_torm').show();
+            }
+        }
+
         // Function to show or hide the accelerator question div
         function toggleAcceleratorQuestion() {
             if ($('#id_is_accelerator_experience').val() === 'y') {
@@ -128,6 +159,11 @@
 
             $("#myForm").submit()
         });
+
+        $('#id_torm').change(function() {
+            whichWayToWhyUsResponse();
+        });
+        whichWayToWhyUsResponse();
     });
 </script>
 {% endblock extra_js %}

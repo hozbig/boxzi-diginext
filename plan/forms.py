@@ -12,5 +12,3 @@ class PlanCreateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].label = ""

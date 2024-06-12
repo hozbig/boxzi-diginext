@@ -19,8 +19,8 @@
 				<div class="card">
 					<div class="card-header d-flex align-items-start pb-0">
 						<div>
-							<h2 class="text-bold-700 mb-0">24 </h2>
-							<p class="mt-25">درخواست های ارسال شده</p>
+							<h2 class="text-bold-700 mb-0">{{valid_requests_count}}</h2>
+							<p class="mt-25">درخواست های ارسالی تکمیل شده</p>
 						</div>
 						<div class="avatar bg-rgba-primary p-50 m-0">
 							<div class="avatar-content">
@@ -35,7 +35,7 @@
 				<div class="card">
 					<div class="card-header d-flex align-items-start pb-0">
 						<div>
-							<h2 class="text-bold-700 mb-0">4 </h2>
+							<h2 class="text-bold-700 mb-0">{{approved_requests.count}}</h2>
 							<p class="mt-25">درخواست های تایید شده</p>
 						</div>
 						<div class="avatar bg-rgba-success p-50 m-0">
@@ -51,7 +51,7 @@
 				<div class="card">
 					<div class="card-header d-flex align-items-start pb-0">
 						<div>
-							<h2 class="text-bold-700 mb-0">9 </h2>
+							<h2 class="text-bold-700 mb-0">{{rejected_requests.count}}</h2>
 							<p class="mt-25">درخواست های رد شده</p>
 						</div>
 						<div class="avatar bg-rgba-danger p-50 m-0">
@@ -68,14 +68,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">مدیریت درخواست ها برای شرکت در برنامه آموزشی</h4>
+                <h4 class="card-title"><i class="fa fa-hashtag text-black-50"></i> لیست درخواست های تکمیل شده ارسالی برای <span class="font-weight-bold">"{{acc_object.accelerator_of_road.first.name}}"</span></h4>
             </div>
             <div class="card-content">
                 <div class="card-body card-dashboard">
                     <div class="table-responsive">
                         <table class="table zero-configuration">
                             <thead>
-                                <tr class="table-warning">
+                                <tr class="table-light">
 									<th>نام و نام خانوادگی</th>
                                     <th>تیم</th>
                                     <th>تاریخ ارسال درخواست</th>
@@ -84,24 +84,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-								{% for road in acc_object.accelerator_of_road.all %}
-									{% for item in road.road_of_road_registration.all %}
-										{% if item.status != "n" %}
-										<tr>
-											<th>{{item.user.get_full_name}}</th>
-											<th>{% if item.team_or_individual == "t" %}{{item.team.name}}{% else %}<span class="badge badge-primary">شخص</span>{% endif %}</th>
-											<th>{{item.client_last_response_date|to_jalali}}</th>
+								{% for item in valid_requests %}
+									<tr>
+										<th>{{item.user.get_full_name}}</th>
+										<th>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge badge-primary">شخص</span>{% endif %}</th>
+										<th>{{item.client_last_response_date|to_jalali}}</th>
 
-											<th scope="row" class="{% if item.status == "w" %}table-info{% elif item.status == "p" %}table-primary{% elif item.status == "a" %}table-success{% elif item.status == "r" %}table-danger{% elif item.status == "c" %}table-warning{% endif %}">{{item.get_status_display}}</th>
-											
-											<td>
-												<a href={% url "team:registration-detail" item.uuid %} class="badge badge-info">مشاهده <i class="feather icon-eye"></i></a>
-												{% if not item.status in "a" %}<a href={% url "team:approve_registration" item.uuid %} class="badge badge-success">تایید <i class="feather icon-check"></i></a>{% endif %}
-												{% if not item.status in "r" %}<a href={% url "team:reject_registration" item.uuid %} class="badge badge-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
-											</td>
-										</tr>
-										{% endif %}
-									{% endfor %}
+										<th scope="row" class="{% if item.status == "w" %}table-info{% elif item.status == "p" %}table-primary{% elif item.status == "a" %}table-success{% elif item.status == "r" %}table-danger{% elif item.status == "c" %}table-warning{% endif %}">{{item.get_status_display}}</th>
+										
+										<td>
+											<a href={% url "team:registration-detail" item.uuid %} class="badge badge-info">مشاهده <i class="feather icon-eye"></i></a>
+										</td>
+									</tr>
 								{% endfor %}
                             </tbody>
                         </table>
