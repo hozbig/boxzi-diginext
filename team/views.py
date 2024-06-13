@@ -269,7 +269,7 @@ class RegistrationDetail(LoginRequiredMixin, View):
             messages.info(request, "وضعیت مشاهده شده برای این درخواست ثبت شد")
 
         self.context["object"] = obj
-        
+        self.context["extra_day_form"] = ExtraDaysForCompleteRegistration
         return render(request, self.template_name, self.context)
 
 
@@ -413,7 +413,7 @@ def save_product(request):
 
 
 @require_POST
-def save_extra_day_for_complete_registraion(request):
+def save_extra_day_for_complete_registration(request):
     form = ExtraDaysForCompleteRegistration(request.POST)
     
     if form.is_valid():

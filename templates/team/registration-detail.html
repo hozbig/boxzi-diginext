@@ -270,21 +270,16 @@
             </div>
             <div class="card-body">
                 <div class="card-content">
-                    <form method="POST">
+                    <form method="POST" action="{% url "team:save-extra-day-for-complete-registration" %}">
                         {% csrf_token %}
                         <input name="registration_object_uuid" value="{{object.uuid}}" hidden>
-                        <div class="row">
-                            {% for field in form %}
-                                {% if not field.name == "registration_object_uuid" %}
-                                <div class="col-md-4">
-                                    {% if field.name == "subjects" %}<a href={% url "company:new-subject" %} class="small badge badge-primary" target="popup"  onclick="window.open('{% url "company:new-subject" %}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><i class="feather icon-plus"></i> موضوع جدید</a>{% endif %}
-                                    {{ field|as_crispy_field }}
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                        {% for field in extra_day_form %}
+                            {% if not field.name == "registration_object_uuid" %}
+                                {{ field|as_crispy_field }}
+                            {% endif %}
+                        {% endfor %}
 
-                        <button class="btn btn-success btn-block" type="submit">ایجاد فصل</button>
+                        <button class="btn btn-success btn-block" type="submit">ثبت</button>
                     </form>
                 </div>
             </div>

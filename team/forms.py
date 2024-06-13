@@ -42,7 +42,6 @@ class ExtraDaysForCompleteRegistration(forms.Form):
         }
     )
     registration_object_uuid = forms.CharField(
-        label='Enter some text',
         required=True,
         max_length=10,
         error_messages={
