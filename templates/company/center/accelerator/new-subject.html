@@ -29,18 +29,18 @@
                                     <label class="custom-control-label" for="toggleCheckbox">مایل به ساخت یه موضوع جدید هستم</label>
                                 </div>
                             </div>
-                            <div class="col-md-6" id="topic_div" >
+                            <div class="col-md-6 mt-1" id="topic_div" >
                                 {{ form.topic|as_crispy_field }}
                             </div>
-                            <div class="col-md-6" id="topic_name_div" style="display: none;">
+                            <div class="col-md-6 mt-1" id="topic_name_div" style="display: none;">
                                 {{ form.topic_name|as_crispy_field }}
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-1">
                                 {{ form.subject_name|as_crispy_field }}
                             </div>
                         </div>
 
-                        <button class="btn btn-success btn-block" type="submit">ایجاد موضوع</button>
+                        <button class="btn btn-label-success mt-3" type="submit">ایجاد موضوع</button>
                     </form>
                 </div>
             </div>

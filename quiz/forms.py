@@ -78,6 +78,11 @@ class PreRegisterTaskCreateForm(ModelForm):
         model = PreRegisterTask
         text = QuillFormField()
         exclude = ("created_time", "last_update_time")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["start_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["expiration_date"].widget.attrs['class'] = "flatpickr-date"
         
         
 class PreRegisterTaskUpdateForm(ModelForm):
@@ -85,6 +90,11 @@ class PreRegisterTaskUpdateForm(ModelForm):
         model = PreRegisterTask
         text = QuillFormField()
         exclude = ("created_time", "last_update_time", "accelerator")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["start_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["expiration_date"].widget.attrs['class'] = "flatpickr-date"
         
 
 class PreRegisterTaskResponseCreateForm(ModelForm):

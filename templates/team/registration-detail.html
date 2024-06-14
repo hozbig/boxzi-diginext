@@ -4,10 +4,7 @@
 {% load crispy_forms_tags %}
 {% load tag_library %}
 
-{% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/faq.css" %}>
-{% endblock page_css %}
+{% block page_css %}{% endblock page_css %}
 
 {% block main %}
 <div class="row">
@@ -15,67 +12,67 @@
     {% include "elements/messages-section.html" %}
 
     <div class="col-12">
-		<div class="row">
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{% if object.team_or_individual in "at" %}تیمی{% else %}فردی{% endif %}</h2>
-							<p class="mt-25">نوع درخواست</p>
-						</div>
-						<div class="avatar bg-rgba-primary p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-users text-primary font-medium-5"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+		<div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-border-shadow-primary h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="card-title mb-0">
+                            <h5 class="mb-0 me-2">{% if object.team_or_individual in "at" %}تیمی{% else %}فردی{% endif %}</h5>
+                            <small>نوع درخواست</small>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-primary rounded-pill p-2">
+                                <i class="ti ti-user-question ti-md"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{object.user.get_full_name}}</h2>
-							<p class="mt-25">درخواست دهنده</p>
-						</div>
-						<div class="avatar bg-rgba-primary p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-user text-primary font-medium-5"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-border-shadow-primary h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="card-title mb-0">
+                            <h5 class="mb-0 me-2">{{object.user.get_full_name}}</h5>
+                            <small>درخواست دهنده</small>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-primary rounded-pill p-2">
+                                <i class="ti ti-user ti-md"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <div class="col-md-4">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{object.complete_registration_date|to_jalali}}</h2>
-							<p class="mt-25">تاریخ تکمیل و ارسال</p>
-						</div>
-						<div class="avatar bg-rgba-primary p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-calendar text-primary font-medium-5"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card card-border-shadow-primary h-100">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="card-title mb-0">
+                            <h5 class="mb-0 me-2">{{object.complete_registration_date|to_jalali}}</h5>
+                            <small>تاریخ تکمیل و ارسال</small>
+                        </div>
+                        <div class="card-icon">
+                            <span class="badge bg-label-primary rounded-pill p-2">
+                                <i class="ti ti-calendar ti-md"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 		</div>
 	</div>
 
+    <!-- Striped Rows -->
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">اطلاعات کلی درخواست ارسالی به شما</h4>
-            </div>
-            <div class="card-content">
+            <h5 class="card-header">اطلاعات کلی درخواست</h5>
+            <div class="table-responsive text-nowrap">
                 {% if object.team_or_individual in "ta" %}
-                <table class="table table-responsive mt-2 mb-0 table-bordered">
+                <table class="table table-striped">
                     <thead>
-                        <tr class="text-dark">
+                        <tr>
                             <th class="col-3" scope="col">نام تیم</th>
                             <th scope="col">حوضه فعالیت</th>
                             <th scope="col">تعداد اعضا</th>
@@ -86,7 +83,7 @@
                             {% endif %}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-border-bottom-0">
                         <tr>
                             <td>{{object.team.name}}</td>
                             <td>{{object.team.category}}</td>
@@ -100,9 +97,9 @@
                     </tbody>
                 </table>
                 {% else %}
-                <table class="table table-responsive mt-2 mb-0 table-bordered">
+                <table class="table table-striped">
                     <thead>
-                        <tr class="text-dark">
+                        <tr>
                             <th scope="col">نتیجه چالش انجام شده</th>
                             <th scope="col">نام محصول/ایده</th>
                             <th scope="col">وضعیت محصول/ایده</th>
@@ -111,9 +108,9 @@
                             {% endif %}
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-border-bottom-0">
                         <tr>
-                            <td><a href={% url "quiz:task-response-detail" object.road.uuid object.user.uuid %} class="badge badge-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
+                            <td><a href={% url "quiz:task-response-detail" object.road.uuid object.user.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
                             <td>{{object.user.user_of_plan.first.name}}</td>
                             <td>{{object.user.user_of_plan.first.get_status_display}}</td>
                             {% if object.user.user_of_plan.first.status == "m" %}
@@ -126,144 +123,133 @@
             </div>
         </div>
     </div>
+    <!--/ Striped Rows -->
 
     {% if object.team_or_individual in "ta" %}
-    <div class="col-lg-12">
+    <div class="col-lg-12 mt-4">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">اطلاعات اعضای تیم</h4>
-            </div>
-            <div class="card-body">
-                <div class="card-content">
-                    <table class="table table-responsive mb-0 text-dark">
-                        <thead>
-                            <tr class="">
-                                <th scope="col">نام و نام‌خانوادگی</th>
-                                <th scope="col">هماهنگ کننده؟</th>
-                                <th scope="col">آزمون تست شخصیت</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for member in object.team.team_of_team_member.all %}
-                            <tr>
-                                <td class="">{{member.user.get_full_name}}</td>
-                                <td>
-                                    {% if member.is_coordinator %}
-                                    <span class="badge badge-success"><i class="feather icon-check"></i></span>
-                                    {% else %}
-                                    <span class="text-secondary">***</span>
-                                    {% endif %}
-                                </td>
-                                <td><a href="" class="badge badge-info">مشاهده</i></a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <h4 class="card-header">اطلاعات اعضای تیم</h4>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="">
+                            <th scope="col">نام و نام‌خانوادگی</th>
+                            <th scope="col">هماهنگ کننده؟</th>
+                            <th scope="col">آزمون تست شخصیت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in object.team.team_of_team_member.all %}
+                        <tr>
+                            <td class="">{{member.user.get_full_name}}</td>
+                            <td>
+                                {% if member.is_coordinator %}
+                                <span class="badge bg-label-success"><i class="fa fa-check"></i></span>
+                                {% else %}
+                                <span class="text-secondary">***</span>
+                                {% endif %}
+                            </td>
+                            <td><a href="" class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     {% else %}
-    <div class="col-lg-12">
+    <div class="col-lg-12 mt-4">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">اطلاعات فرد</h4>
-            </div>
-            <div class="card-body">
-                <div class="card-content">
-                    <table class="table table-responsive mb-0 text-dark">
-                        <thead>
-                            <tr class="">
-                                <th scope="col">نام و نام‌خانوادگی</th>
-                                <th scope="col">شماره تماس</th>
-                                <th scope="col">تاریخ تولد</th>
-                                <th scope="col">مقطع تحصیلی</th>
-                                <th scope="col">محل تحصیل</th>
-                                {% comment %} <th scope="col">استان محل سکونت</th>
-                                <th scope="col">شهر محل سکونت</th> {% endcomment %}
-                                <th scope="col">فنی یا بیزسی</th>
+            <h4 class="card-header">اطلاعات فرد</h4>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="">
+                            <th scope="col">نام و نام‌خانوادگی</th>
+                            <th scope="col">شماره تماس</th>
+                            <th scope="col">تاریخ تولد</th>
+                            <th scope="col">مقطع تحصیلی</th>
+                            <th scope="col">محل تحصیل</th>
+                            {% comment %} <th scope="col">استان محل سکونت</th>
+                            <th scope="col">شهر محل سکونت</th> {% endcomment %}
+                            <th scope="col">فنی یا بیزسی</th>
 
-                                <th scope="col">فایل رزومه</th>
-                                <th scope="col">زبانه تخصصی</th>
-                                <th scope="col">زمینه تخصصی</th>
-                                <th scope="col">آزمون تست شخصیت</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="">{{object.user.get_full_name}}</td>
-                                <td class="">{{object.user.phone_number}}</td>
-                                <td class="">{{object.user.birthday|to_jalali}}</td>
-                                <td class="">{{object.user.get_degree_display}}</td>
-                                <td class="">{{object.user.college_name}}</td>
-                                {% comment %} <td class="">{{object.user.province}}</td>
-                                <td class="">{{object.user.city}}</td> {% endcomment %}
-                                <td class="">{{object.user.get_type_display}}</td>
+                            <th scope="col">فایل رزومه</th>
+                            <th scope="col">زبانه تخصصی</th>
+                            <th scope="col">زمینه تخصصی</th>
+                            <th scope="col">آزمون تست شخصیت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="">{{object.user.get_full_name}}</td>
+                            <td class="">{{object.user.phone_number}}</td>
+                            <td class="">{{object.user.birthday|to_jalali}}</td>
+                            <td class="">{{object.user.get_degree_display}}</td>
+                            <td class="">{{object.user.college_name}}</td>
+                            {% comment %} <td class="">{{object.user.province}}</td>
+                            <td class="">{{object.user.city}}</td> {% endcomment %}
+                            <td class="">{{object.user.get_type_display}}</td>
 
-                                <td>{% if object.user.resume_file %}<a class="badge badge-info" target="blank" href="{{object.user.resume_file.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                <td class="">{{object.user.programming_language}}</td>
-                                <td class="">{{object.user.specialty}}</td>
-                                <td><a href="" class="badge badge-info"><i class="fa fa-eye"></i> مشاهده</i></a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            <td>{% if object.user.resume_file %}<a class="badge bg-label-info" target="blank" href="{{object.user.resume_file.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            <td class="">{{object.user.programming_language}}</td>
+                            <td class="">{{object.user.specialty}}</td>
+                            <td><a href="" class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده</i></a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
     {% endif %}
 
-    <div class="col-lg-8">
+    <div class="col-lg-8 mt-4">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">اطلاعات ایده</h4>
-            </div>
-            <div class="card-body">
-                <div class="card-content">
-                    <table class="table table-responsive mb-0 text-dark">
-                        <thead>
-                            <tr>
-                                <th>نام ایده</th>
-                                <th>توضیحات</th>
-                                <th>دارای کمینه</th>
-                                <th>سطح محصول</th>
-                                <th>فیلم ارسال شده</th>
-                                <th>فایل pitch deck</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% if object.team_or_individual in "at" %}
-                                {% for idea in object.team.team_of_plan.all %}
-                                    <tr>
-                                        <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
-                                        <td>{{idea.description|truncatechars:25}}</td>
-                                        <td>{% if idea.status == "m" %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                        <td>{{idea.get_progress_status_display}}</td>
-                                        <td>{% if idea.video %}<a class="badge badge-info" target="blank" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                        <td>{% if idea.pitch_deck %}<a class="badge badge-info" target="blank" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% else %}
-                                {% for idea in object.user.user_of_plan.all %}
-                                    <tr>
-                                        <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
-                                        <td>{{idea.description|truncatechars:25}}</td>
-                                        <td>{% if idea.status == "m" %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                        <td>{{idea.get_progress_status_display}}</td>
-                                        <td>{% if idea.video %}<a class="badge badge-info" target="blank" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                        <td>{% if idea.pitch_deck %}<a class="badge badge-info" target="blank" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
+            <h4 class="card-header">اطلاعات ایده</h4>
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>نام ایده</th>
+                            <th>توضیحات</th>
+                            <th>دارای کمینه</th>
+                            <th>سطح محصول</th>
+                            <th>فیلم ارسال شده</th>
+                            <th>فایل pitch deck</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if object.team_or_individual in "at" %}
+                            {% for idea in object.team.team_of_plan.all %}
+                                <tr>
+                                    <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
+                                    <td>{{idea.description|truncatechars:25}}</td>
+                                    <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{{idea.get_progress_status_display}}</td>
+                                    <td>{% if idea.video %}<a class="badge bg-label-info" target="blank" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{% if idea.pitch_deck %}<a class="badge bg-label-info" target="blank" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            {% for idea in object.user.user_of_plan.all %}
+                                <tr>
+                                    <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
+                                    <td>{{idea.description|truncatechars:25}}</td>
+                                    <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{{idea.get_progress_status_display}}</td>
+                                    <td>{% if idea.video %}<a class="badge bg-label-info" target="blank" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{% if idea.pitch_deck %}<a class="badge bg-label-info" target="blank" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     {% if object.is_valid_registration_period < 2 %}
-    <div class="col-lg-4">
+    <div class="col-lg-4 mt-4">
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">اختصاص زمان بیشتر برای مهلت تکمیل اطلاعات</h4>
@@ -287,7 +273,7 @@
     </div>
     {% endif %}
 
-    <div class="col-12">
+    <div class="col-12 mt-4">
         {% if not object.status in "a" %}<a href={% url "team:approve_registration" object.uuid %} class="btn btn-success">تایید درخواست <i class="feather icon-check"></i></a>{% endif %}
         {% if not object.status in "r" %}<a href={% url "team:reject_registration" object.uuid %} class="btn btn-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
     </div>
@@ -295,8 +281,4 @@
 </div>
 {% endblock main %}
 
-{% block page_js %}
-<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/pages/faq-kb.js" %}></script>
-{% endblock page_js %}
+{% block page_js %}{% endblock page_js %}

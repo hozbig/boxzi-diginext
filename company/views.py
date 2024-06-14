@@ -154,7 +154,6 @@ class UpdateRoad(LoginRequiredMixin, View):
     success_message = "عملیات با موفقیت انجام شد"
     context = {"title": "ویرایش مسیرها"}
 
-
     def get(self, request, uuid):
         obj = self.model.objects.get(uuid=uuid)
         self.context["form"] = self.form_class(instance=obj)
@@ -180,9 +179,9 @@ class UpdateRoad(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             messages.success(request, self.success_message)
-        else:
-            messages.error(request, "مشکلی در فرم وجود دارد!")
+            return redirect(reverse('company:update-road', kwargs={'uuid': uuid}))
         
+        messages.error(request, "مشکلی در فرم وجود دارد!")
         return redirect(reverse('company:update-road', kwargs={'uuid': uuid}))
     
 
@@ -533,7 +532,7 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return context
 
     def get_success_url(self, **kwargs):         
-        return reverse_lazy('company:update-exam', args = (self.object.uuid,))
+        return reverse_lazy('company:update-task', args = (self.object.uuid,))
     
 
 class DeleteTask(LoginRequiredMixin, SuccessMessageMixin, DeleteView):

@@ -7,7 +7,7 @@
 {% block page_css %}
 <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/tables/datatable/datatables.min.css" %}>
 
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+<link href={% static "assets-vuexy/vendor/libs/select2/select2.css" %} rel="stylesheet"/>
 {% endblock page_css %}
 
 {% block extra_menu %}{% endblock extra_menu %}
@@ -20,127 +20,117 @@
 
     <div class="col-lg-8">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">مدیریت گام های فصل</h4>
-            </div>
-            <div class="card-type">
-                <div class="card-body">
+            <h5 class="card-header"><i class="fa fa-hashtag text-black-50"></i> مدیریت گام های فصل</h5>
+            <div class="card-body">
 
+                <div id="div_id_type" class="form-group">
+                    <label for="id_type" class=" requiredField">
+                        آزمون یا گام؟
+                    </label>
+                    <div>
+                        <select name="type" class="select form-control" required="" id="id_type">
+                            <option value="c">گام</option>
+                            <option value="e">آزمون</option>
+                            <option value="t">تسک</option>
+                        </select>
+                    </div>
+                </div>
+
+                <form method="POST" action={% url "company:save-content-order" object.uuid %} id="content_order_form">
+                    {% csrf_token %}
                     <div class="row">
-                        <div class="col-2">
-                            <div id="div_id_type" class="form-group">
-                                <label for="id_type" class=" requiredField">
-                                    آزمون یا گام؟
-                                </label>
-                                <div>
-                                    <select name="type" class="select form-control" required="" id="id_type">
-                                        <option value="c">گام</option>
-                                        <option value="e">آزمون</option>
-                                        <option value="t">تسک</option>
-                                    </select>
-                                </div>
+                        {% for field in content_order_form %}
+                            {% if not field.name == "collection" %}
+                            <div class="col-md-6 mt-3">
+                                {{ field|as_crispy_field }}
                             </div>
-                        </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
 
-                    <form method="POST" action={% url "company:save-content-order" object.uuid %} id="content_order_form">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for field in content_order_form %}
-                                {% if not field.name == "collection" %}
-                                <div class="col-md-6">
-                                    {{ field|as_crispy_field }}
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                    <button class="btn btn-label-success mt-3" type="submit">قراردهی گام</button>
+                </form>
 
-                        <button class="btn btn-success btn-block" type="submit">قراردهی گام</button>
-                    </form>
+                <form method="POST" action={% url "company:save-exam-order" object.uuid %} id="exam_order_form" style="display: none;">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for field in exam_order_form %}
+                            {% if not field.name == "collection" %}
+                            <div class="col-md-6 mt-3">
+                                {{ field|as_crispy_field }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
 
-                    <form method="POST" action={% url "company:save-exam-order" object.uuid %} id="exam_order_form" style="display: none;">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for field in exam_order_form %}
-                                {% if not field.name == "collection" %}
-                                <div class="col-md-6">
-                                    {{ field|as_crispy_field }}
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                    <button class="btn btn-label-success mt-3" type="submit">قراردهی آزمون</button>
+                </form>
 
-                        <button class="btn btn-success btn-block" type="submit">قراردهی آزمون</button>
-                    </form>
+                <form method="POST" action={% url "company:save-task-order" object.uuid %} id="task_order_form" style="display: none;">
+                    {% csrf_token %}
+                    <div class="row">
+                        {% for field in task_order_form %}
+                            {% if not field.name == "collection" %}
+                            <div class="col-md-6 mt-3">
+                                {{ field|as_crispy_field }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
 
-                    <form method="POST" action={% url "company:save-task-order" object.uuid %} id="task_order_form" style="display: none;">
-                        {% csrf_token %}
-                        <div class="row">
-                            {% for field in task_order_form %}
-                                {% if not field.name == "collection" %}
-                                <div class="col-md-6">
-                                    {{ field|as_crispy_field }}
-                                </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                    <button class="btn btn-label-success mt-3" type="submit">قراردهی تسک</button>
+                </form>
 
-                        <button class="btn btn-success btn-block" type="submit">قراردهی تسک</button>
-                    </form>
+                <div class="row mt-4">
 
-                    <div class="row mt-2">
-
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">ترتیب قرارگیری گام های این فصل</h4>
-                                </div>
-                                <div class="card-content">
-                                    <div class="card-body card-dashboard p-0">
-                                        <div class="table-responsive">
-                                            <table class="table zero-configuration">
-                                                <thead>
-                                                    <tr class="table-warning">
-                                                        <th>#</th>
-                                                        <th>نوع</th>
-                                                        <th>عنوان</th>
-                                                        <th>عملیات</th>
+                    <div class="col-12">
+                        <div class="card">
+                            <h5 class="card-header"><i class="fa fa-hashtag text-black-50"></i> ترتیب قرارگیری گام های این فصل</h5>
+                            <div class="card-content">
+                                <div class="card-body card-dashboard p-0">
+                                    <div class="table-responsive">
+                                        <table class="table zero-configuration">
+                                            <thead>
+                                                <tr class="table-warning">
+                                                    <th>#</th>
+                                                    <th>نوع</th>
+                                                    <th>عنوان</th>
+                                                    <th>عملیات</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for order in object.collection_of_content_order.all %}
+                                                    <tr>
+                                                        <th scope="row">{{order.row_number|default:"0"|stringformat:"02d"}}</th>
+                                                        <td><span class="badge badge-primary">گام</span></td>
+                                                        <td class="font-weight-bold"><a href={% url "company:update-content" order.content.uuid %} class="">{{order.content.title|truncatechars:25}}</a></td>
+                                                        <td><a href={% url "company:delete-content-order" order.id %} class="badge badge-danger">حذف</a></td>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for order in object.collection_of_content_order.all %}
-                                                        <tr>
-                                                            <th scope="row">{{order.row_number|default:"0"|stringformat:"02d"}}</th>
-                                                            <td><span class="badge badge-primary">گام</span></td>
-                                                            <td class="font-weight-bold"><a href={% url "company:update-content" order.content.uuid %} class="">{{order.content.title|truncatechars:25}}</a></td>
-                                                            <td><a href={% url "company:delete-content-order" order.id %} class="badge badge-danger">حذف</a></td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    {% for order in object.collection_of_exam_order.all %}
-                                                        <tr>
-                                                            <th scope="row">{{order.row_number|default:"0"|stringformat:"02d"}}</th>
-                                                            <td><span class="badge badge-warning">آزمون</span></td>
-                                                            <td class="font-weight-bold"><a href={% url "company:update-exam" order.exam.uuid %} class="">{{order.exam.name|truncatechars:20}}</a></td>
-                                                            <td><a href={% url "company:delete-exam-order" order.id %} class="badge badge-danger">حذف</a></td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    {% for order in object.collection_of_task_order.all %}
-                                                        <tr>
-                                                            <th scope="row">{{order.row_number|default:"0"|stringformat:"02d"}}</th>
-                                                            <td><span class="badge badge-info">تسک</span></td>
-                                                            <td class="font-weight-bold"><a href={% url "company:update-task" order.task.uuid %} class="">{{order.task.title|truncatechars:20}}</a></td>
-                                                            <td><a href={% url "company:delete-task-order" order.id %} class="badge badge-danger">حذف</a></td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                {% endfor %}
+                                                {% for order in object.collection_of_exam_order.all %}
+                                                    <tr>
+                                                        <th scope="row">{{order.row_number|default:"0"|stringformat:"02d"}}</th>
+                                                        <td><span class="badge badge-warning">آزمون</span></td>
+                                                        <td class="font-weight-bold"><a href={% url "company:update-exam" order.exam.uuid %} class="">{{order.exam.name|truncatechars:20}}</a></td>
+                                                        <td><a href={% url "company:delete-exam-order" order.id %} class="badge badge-danger">حذف</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                                {% for order in object.collection_of_task_order.all %}
+                                                    <tr>
+                                                        <th scope="row">{{order.row_number|default:"0"|stringformat:"02d"}}</th>
+                                                        <td><span class="badge badge-info">تسک</span></td>
+                                                        <td class="font-weight-bold"><a href={% url "company:update-task" order.task.uuid %} class="">{{order.task.title|truncatechars:20}}</a></td>
+                                                        <td><a href={% url "company:delete-task-order" order.id %} class="badge badge-danger">حذف</a></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
                 </div>
             </div>
         </div>
@@ -149,9 +139,7 @@
 
     <div class="col-lg-4">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">فصل «{{object.name}}»</h4>
-            </div>
+            <h5 class="card-header"><i class="fa fa-hashtag text-black-50"></i> فصل «{{object.name}}»</h5>
             <div class="card-content">
                 <div class="card-body">
                     <form method="POST">
@@ -161,14 +149,13 @@
                             {% for field in form %}
                                 {% if not field.name == "accelerator" %}
                                 <div class="col-12">
-                                    {% if field.name == "subjects" %}<a href={% url "company:new-subject" %} class="small badge badge-primary" target="popup"  onclick="window.open('{% url "company:new-subject" %}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><i class="feather icon-plus"></i> موضوع جدید</a>{% endif %}
                                     {{ field|as_crispy_field }}
                                 </div>
                                 {% endif %}
                             {% endfor %}
                         </div>
 
-                        <button class="btn btn-success btn-block" type="submit">ویراش فصل</button>
+                        <button class="btn btn-label-success mt-3" type="submit">ویراش فصل</button>
                     </form>
                 </div>
             </div>
@@ -183,8 +170,8 @@
 <script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js" %}></script>
 <script src={% static "admin-theme/app-assets/js/scripts/datatables/datatable.js" %}></script>
 
-<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/select2/select2.js" %}></script>
+<script src={% static "assets-vuexy/js/forms-selects.js" %}></script>
 
 <script>
     // Get the select element

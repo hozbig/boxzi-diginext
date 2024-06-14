@@ -5,7 +5,7 @@
 {% load tag_library %}
 
 {% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
+<link href={% static "assets-vuexy/vendor/libs/select2/select2.css" %} rel="stylesheet"/>
 {% endblock page_css %}
 
 {% block extra_menu %}{% endblock extra_menu %}
@@ -28,15 +28,15 @@
                         <div class="row">
                             {% for field in form %}
                                 {% if not field.name == "accelerator" %}
-                                <div class="col-md-4">
-                                    {% if field.name == "subjects" %}<a href={% url "company:new-subject" %} class="small badge badge-primary" target="popup"  onclick="window.open('{% url "company:new-subject" %}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><i class="feather icon-plus"></i> موضوع جدید</a>{% endif %}
+                                <div class="col-md-6">
                                     {{ field|as_crispy_field }}
+                                    {% if field.name == "subjects" %}<a href={% url "company:new-subject" %} class="small badge bg-label-primary mt-1" target="popup"  onclick="window.open('{% url "company:new-subject" %}','popup','width=600,height=600,scrollbars=no,resizable=no'); return false;"><i class="fa fa-plus"></i> موضوع جدید</a>{% endif %}
                                 </div>
                                 {% endif %}
                             {% endfor %}
                         </div>
 
-                        <button class="btn btn-success btn-block" type="submit">ایجاد فصل</button>
+                        <button class="btn btn-label-success btn-block" type="submit">ایجاد فصل</button>
                     </form>
 
                     <h4 class="mt-3">فصل های ایجاد شده</h4>
@@ -62,8 +62,8 @@
                                     <td>{{collection.collection_of_exam_order.count|default:"0"}} <span class="text-muted">آزمون</span></td>
                                     <td>{{collection.collection_of_task_order.count|default:"0"}} <span class="text-muted">تسک</span></td>
                                     <td>
-                                        <a href={% url "company:update-collection" collection.uuid %} class="badge badge-info">ویرایش <i class="feather icon-edit-2"></i></a>
-                                        <a href={% url "company:delete-collection" collection.uuid %} class="badge badge-danger">حذف <i class="feather icon-trash-2"></i></a>
+                                        <a href={% url "company:update-collection" collection.uuid %} class="badge bg-label-info">ویرایش <i class="fa fa-edit"></i></a>
+                                        <a href={% url "company:delete-collection" collection.uuid %} class="badge bg-label-danger">حذف <i class="fa fa-trash"></i></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -79,6 +79,6 @@
 {% endblock main %}
 
 {% block page_js %}
-<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/select2/select2.js" %}></script>
+<script src={% static "assets-vuexy/js/forms-selects.js" %}></script>
 {% endblock page_js %}

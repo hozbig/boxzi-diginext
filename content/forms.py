@@ -15,6 +15,11 @@ class RoadCreateForm(ModelForm):
         for field_name, field in self.fields.items():
             if isinstance(field, ModelMultipleChoiceField):
                 field.widget.attrs['class'] = 'select2'
+        self.fields["poster"].widget.attrs['class'] = "form-control"
+        self.fields["start_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["expiration_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["publish_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["registration_deadline"].widget.attrs['class'] = "flatpickr-date"
 
 
 class RoadUpdateForm(ModelForm):
@@ -27,6 +32,11 @@ class RoadUpdateForm(ModelForm):
         for field_name, field in self.fields.items():
             if isinstance(field, ModelMultipleChoiceField):
                 field.widget.attrs['class'] = 'select2'
+        self.fields["poster"].widget.attrs['class'] = "form-control"
+        self.fields["start_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["expiration_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["publish_date"].widget.attrs['class'] = "flatpickr-date"
+        self.fields["registration_deadline"].widget.attrs['class'] = "flatpickr-date"
 
 
 class CollectionCreateForm(ModelForm):

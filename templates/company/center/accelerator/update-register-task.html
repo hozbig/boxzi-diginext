@@ -5,7 +5,8 @@
 {% load tag_library %}
 
 {% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+<link href={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr.css" %} rel="stylesheet"/>
+<link href={% static "assets-vuexy/vendor/libs/pickr/pickr-themes.css" %} rel="stylesheet"/>
 
 {% include 'elements/django_quill/media.html' %}
 {% endblock page_css %}
@@ -34,21 +35,21 @@
                                         <div class="col-md-3">
                                             {{ form.title|as_crispy_field }}
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 mt-2">
                                             {{ form.type|as_crispy_field }}
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 mt-2">
                                             {{ form.start_date|as_crispy_field }}
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 mt-2">
                                             {{ form.expiration_date|as_crispy_field }}
                                         </div>
-                                        <div class="col-md-12">
+                                        <div class="col-md-12 mt-2">
                                             {{ form.text|as_crispy_field }}
                                         </div>
                                     </div>
             
-                                    <button class="btn btn-success btn-block" type="submit">ویرایش آزمون</button>
+                                    <button class="btn btn-label-success mt-3" type="submit">ویرایش آزمون</button>
                                 </form>
                             </div>
                         </div>
@@ -62,21 +63,9 @@
 {% endblock main %}
 
 {% block page_js %}
-<script src={% static "jalali-date-picker/persian-date.js" %}></script>
-<script src={% static "jalali-date-picker/persian-datepicker.js" %}></script>
-<script>
-    $("#id_start_date").persianDatepicker({
-        initialValue: false,
-        persianDigit: false,
-        format: 'YYYY-MM-DD',
-    }
-    ).attr("autocomplete", "off")
+<script src={% static "assets-vuexy/vendor/libs/jdate/jdate.min.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr-jdate.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/l10n/fa.js" %}></script>
 
-    $("#id_expiration_date").persianDatepicker({
-        initialValue: false,
-        persianDigit: false,
-        format: 'YYYY-MM-DD',
-    }
-    ).attr("autocomplete", "off")
-</script>
+<script src={% static "assets-vuexy/js/forms-pickers-jalali.js" %}></script>
 {% endblock page_js %}

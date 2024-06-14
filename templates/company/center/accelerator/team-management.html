@@ -13,85 +13,76 @@
 	{% include "elements/messages-section.html" %}
 
 	{% if request.user.is_center_staff %}
-	<div class="col-12">
-		<div class="row">
-			<div class="col-md-3">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{valid_requests_count}}</h2>
-							<p class="mt-25">درخواست های ارسالی تکمیل شده</p>
-						</div>
-						<div class="avatar bg-rgba-primary p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-package text-primary font-medium-5"></i>
-							</div>
+	<!-- Hour chart  -->
+	<div class="card bg-transparent shadow-none border-0">
+		<div class="card-body row p-0 pb-3">
+			<div class="col-12">
+				<h3>خوش آمدید، {{request.user.get_full_name}} 👋🏻</h3>
+				<div class="col-12 col-lg-7">
+					<p>برای شما لیستی از درخواست های تیم ها و افراد آماده کردیم، که میتونید از این صفحه خلاصه اون هارو مشاهده کنی. اگر نیاز به اطلاعات بیشتر داری وارد بخش جزئیات هرکدوم شو و اطلاعات بیشتری درباره هر درخواستی که میخوای پیدا کن.</p>
+				</div>
+				<div class="d-flex justify-content-between flex-wrap gap-3 me-5">
+					<div class="d-flex align-items-center gap-3 me-4 me-sm-0">
+						<span class="bg-label-primary p-2 rounded">
+							<i class="ti ti-list-check ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">درخواست تکمیل شده</p>
+							<h4 class="text-primary mb-0">{{valid_requests_count}}
+								<small class="text-muted">درخواست</small>
+							</h4>
 						</div>
 					</div>
-				</div>
-			</div>
-
-			<div class="col-md-3">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{approved_requests.count}}</h2>
-							<p class="mt-25">درخواست های تایید شده</p>
-						</div>
-						<div class="avatar bg-rgba-success p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-check-square text-success font-medium-5"></i>
-							</div>
+					<div class="d-flex align-items-center gap-3">
+						<span class="bg-label-success p-2 rounded">
+							<i class="ti ti-checks ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">درخواست تایید شده</p>
+							<h4 class="text-success mb-0">{{approved_requests.count}}
+								<small class="text-muted">درخواست</small>
+							</h4>
 						</div>
 					</div>
-				</div>
-			</div>
-
-            <div class="col-md-3">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{rejected_requests.count}}</h2>
-							<p class="mt-25">درخواست های رد شده</p>
-						</div>
-						<div class="avatar bg-rgba-danger p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-x-square text-danger font-medium-5"></i>
-							</div>
+					<div class="d-flex align-items-center gap-3">
+						<span class="bg-label-danger p-2 rounded">
+							<i class="ti ti-x ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">درخواست رد شده</p>
+							<h4 class="text-danger mb-0">{{rejected_requests.count}}
+								<small class="text-muted">درخواست</small>
+							</h4>
 						</div>
 					</div>
-				</div>
-			</div>
-
-			<div class="col-md-3">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{all_requests.count}}</h2>
-							<p class="mt-25">کل درخواست های موجود</p>
-						</div>
-						<div class="avatar bg-rgba-info p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-folder text-info font-medium-5"></i>
-							</div>
+					<div class="d-flex align-items-center gap-3">
+						<span class="bg-label-info p-2 rounded">
+							<i class="ti ti-list ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">کل درخواست موجود</p>
+							<h4 class="text-info mb-0">{{all_requests.count}}
+								<small class="text-muted">درخواست</small>
+							</h4>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<!-- Hour chart End  -->
 
-    <div class="col-12">
+    <div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"><i class="fa fa-hashtag text-black-50"></i> لیست درخواست های تکمیل شده ارسالی برای <span class="font-weight-bold">"{{acc_object.accelerator_of_road.first.name}}"</span></h4>
+                <h5 class="card-title"><i class="fa fa-hashtag text-black-50"></i> لیست درخواست های تکمیل شده ارسالی برای <span class="font-weight-bold">"{{acc_object.accelerator_of_road.first.name}}"</span></h5>
             </div>
             <div class="card-content">
                 <div class="card-body card-dashboard">
                     <div class="table-responsive">
                         <table class="table zero-configuration">
                             <thead>
-                                <tr class="table-light">
+                                <tr class="table-primary">
 									<th>نام و نام خانوادگی</th>
                                     <th>تیم</th>
                                     <th>تاریخ ارسال درخواست</th>
@@ -104,14 +95,14 @@
 								{% for item in valid_requests %}
 									<tr>
 										<td>{{item.user.get_full_name}}</td>
-										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge badge-primary">شخص</span>{% endif %}</td>
+										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge bg-label-warning">شخص</span>{% endif %}</td>
 										<td>{{item.client_last_response_date|to_jalali}}</td>
 										
 										<td class="{% if item.status == "w" %}table-info{% elif item.status == "p" %}table-primary{% elif item.status == "a" %}table-success{% elif item.status == "r" %}table-danger{% elif item.status == "c" %}table-warning{% endif %}">{{item.get_status_display}}</td>
 										
 										<td>50 امتیاز</td>
 										<td>
-											<a href={% url "team:registration-detail" item.uuid %} class="badge badge-info">مشاهده <i class="feather icon-eye"></i></a>
+											<a href={% url "team:registration-detail" item.uuid %} class="badge bg-label-info">مشاهده <i class="fa fa-eye"></i></a>
 										</td>
 									</tr>
 								{% endfor %}
@@ -123,17 +114,17 @@
         </div>
     </div>
 
-	<div class="col-12">
+	<div class="col-12 mt-4">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"><i class="fa fa-hashtag text-black-50"></i> لیست تمام درخواست ها برای <span class="font-weight-bold">"{{acc_object.accelerator_of_road.first.name}}"</span> (تکمیل شده و تکمیل نشده) </h4>
+                <h5 class="card-title"><i class="fa fa-hashtag text-black-50"></i> لیست تمام درخواست ها برای <span class="font-weight-bold">"{{acc_object.accelerator_of_road.first.name}}"</span> (تکمیل شده و تکمیل نشده) </h5>
             </div>
             <div class="card-content">
                 <div class="card-body card-dashboard">
                     <div class="table-responsive">
                         <table class="table zero-configuration">
                             <thead>
-                                <tr class="table-light">
+                                <tr class="table-primary">
 									<th>نام و نام خانوادگی</th>
                                     <th>تیم</th>
                                     <th>تاریخ ارسال درخواست</th>
@@ -146,35 +137,43 @@
 								{% for item in all_requests %}
 									<tr>
 										<td>{{item.user.get_full_name}}</td>
-										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge badge-primary">شخص</span>{% endif %}</td>
+										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge bg-label-primary">شخص</span>{% endif %}</td>
 										<td>{{item.client_last_response_date|to_jalali}}</td>
 										
 										
 										<td>
 											{% if item.team_or_individual == "t" %}
 												{% if item.is_complete_registration_for_coordinator %}
-												<span class="badge badge-success"><i class="feather icon-check"></i></span>
+												<span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
 												{% else %}
-												<span class="badge badge-danger"><i class="feather icon-x"></i></span>
+												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% elif item.team_or_individual == "a" %}
 												{% if item.is_complete_registration_for_team_member %}
-												<span class="badge badge-success"><i class="feather icon-check"></i></span>
+												<span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
 												{% else %}
-												<span class="badge badge-danger"><i class="feather icon-x"></i></span>
+												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% elif item.team_or_individual == "i" %}
 												{% if item.is_complete_registration_for_individual %}
-												<span class="badge badge-success"><i class="feather icon-check"></i></span>
+												<span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
 												{% else %}
-												<span class="badge badge-danger"><i class="feather icon-x"></i></span>
+												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% endif %}
 										</td>
 										
-										<td>{% if item.is_valid_registration_period > 1 %}<span class="badge badge-success">{{item.is_valid_registration_period}}</span>{% else %}<span class="badge badge-danger">{{item.is_valid_registration_period}}</span>{% endif %}</td>
 										<td>
-											<a href={% url "team:registration-detail" item.uuid %} class="badge badge-info">مشاهده <i class="feather icon-eye"></i></a>
+											{% if item.is_valid_registration_period > 3 %}
+											<span class="badge bg-label-success">{{item.is_valid_registration_period}}</span>
+											{% elif 0 < item.is_valid_registration_period < 3 %}
+											<span class="badge bg-label-warning"><i class="ti ti-xs ti-tada ti-exclamation-mark"></i> {{item.is_valid_registration_period}}</span>
+											{% else %}
+											<span class="badge bg-label-danger">{{item.is_valid_registration_period}}</span>
+											{% endif %}
+										</td>
+										<td>
+											<a href={% url "team:registration-detail" item.uuid %} class="badge bg-label-info">مشاهده <i class="fa fa-eye"></i></a>
 										</td>
 									</tr>
 								{% endfor %}

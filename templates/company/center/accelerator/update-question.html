@@ -4,9 +4,7 @@
 {% load crispy_forms_tags %}
 {% load tag_library %}
 
-{% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/forms/select/select2.min.css" %}>
-{% endblock page_css %}
+{% block page_css %}{% endblock page_css %}
 
 {% block extra_menu %}{% endblock extra_menu %}
 
@@ -17,9 +15,7 @@
 
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">گزینه های ساخته شده</h4>
-            </div>
+            <h5 class="card-header pb-1">گزینه های ساخته شده</h5>
             <div class="card-content">
                 <div class="card-body">
                     <table class="table table-responsive-md mb-0">
@@ -37,41 +33,26 @@
                                     <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
                                     <td class="font-weight-bold">{{answer.text}}</td>
                                     <td><i class="feather text-{{answer.is_valid|yesno:"success,danger"}} icon-{{answer.is_valid|yesno:"check,x"}}-circle"></i></td>
-                                    <td><a href={% url "company:delete-answer" answer.id %} class="badge badge-danger">حذف</a></td>
+                                    <td><a href={% url "company:delete-answer" answer.id %} class="badge bg-label-danger">حذف</a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-    
-                    <div class="accordion mt-2" id="accordionExample" data-toggle-hover="true">
-                        <div class="collapse-margin">
-                            <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                <span class="lead collapse-title collapsed">
-                                    <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">فرم ساخت گزینه</span>
-                                </span>
+                    
+                    <h5 class="mt-4">فرم ساخت گزینه</h5>
+                    <form method="POST" action={% url "company:new-answer" object.id %}>
+                        {% csrf_token %}
+                        <input name="accelerator" value="{{acc_object.id}}" hidden>
+                        {% for field in answer_form %}
+                            {% if not field.name == "accelerator" %}
+                            <div class="col-12 mt-2">
+                                {{ field|as_crispy_field }}
                             </div>
-    
-                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                <div class="card-body">
-                                    <form method="POST" action={% url "company:new-answer" object.id %}>
-                                        {% csrf_token %}
-                                        <input name="accelerator" value="{{acc_object.id}}" hidden>
-                                        <div class="row">
-                                            {% for field in answer_form %}
-                                                {% if not field.name == "accelerator" %}
-                                                <div class="col-md-6">
-                                                    {{ field|as_crispy_field }}
-                                                </div>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                
-                                        <button class="btn btn-success btn-block" type="submit">ثبت گزینه</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            {% endif %}
+                        {% endfor %}
+                        <button class="btn btn-label-success mt-3" type="submit">ثبت گزینه</button>
+                    </form>
+                    
                 </div>
             </div>
         </div>
@@ -79,9 +60,7 @@
 
     <div class="col-4">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">ویرایش «{{object.text}}»</h4>
-            </div>
+            <h5 class="card-header pb-1">ویرایش «{{object.text}}»</h5>
             <div class="card-content">
                 <div class="card-body">
                     <form method="POST">
@@ -90,14 +69,14 @@
                         <div class="row">
                             {% for field in form %}
                                 {% if not field.name == "accelerator" %}
-                                <div class="col-12">
+                                <div class="col-12 mt-3">
                                     {{ field|as_crispy_field }}
                                 </div>
                                 {% endif %}
                             {% endfor %}
                         </div>
 
-                        <button class="btn btn-success btn-block" type="submit">ویراش سوال</button>
+                        <button class="btn btn-label-success mt-3" type="submit">ویراش سوال</button>
                     </form>
                 </div>
             </div>
@@ -107,7 +86,4 @@
 </div>
 {% endblock main %}
 
-{% block page_js %}
-<script src={% static "admin-theme/app-assets/vendors/js/forms/select/select2.full.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/forms/select/form-select2.js" %}></script>
-{% endblock page_js %}
+{% block page_js %}{% endblock page_js %}

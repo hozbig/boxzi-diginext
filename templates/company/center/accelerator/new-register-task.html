@@ -5,7 +5,8 @@
 {% load tag_library %}
 
 {% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "jalali-date-picker/persian-datepicker.css" %}>
+<link href={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr.css" %} rel="stylesheet"/>
+<link href={% static "assets-vuexy/vendor/libs/pickr/pickr-themes.css" %} rel="stylesheet"/>
 
 {% include 'elements/django_quill/media.html' %}
 {% endblock page_css %}
@@ -22,58 +23,42 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card overflow-hidden">
-                        <div class="card-header">
-                            <h4 class="card-title">مدیریت آزمون های ورودی</h4>
-                        </div>
+                        <h5 class="card-header pb-1">مدیریت آزمون های ورودی</h5>
                         <div class="card-content">
                             <div class="card-body">
-                                <div class="accordion mb-3" id="accordionExample" data-toggle-hover="true">
-                                    <div class="collapse-margin">
-                                        <div class="card-header collapsed" id="headingOne" data-toggle="collapse" role="button" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            <span class="lead collapse-title collapsed">
-                                                <i class="feather icon-chevron-down mr-2"></i> <span class="font-weight-bold">فرم ساخت آزمون</span>
-                                            </span>
+                                <h5 class="mt-4">فرم ساخت آزمون</h5>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input name="accelerator" value="{{acc_object.id}}" hidden>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            {{ form.title|as_crispy_field }}
                                         </div>
-
-                                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                            <div class="card-body">
-                                                <form method="POST">
-                                                    {% csrf_token %}
-                                                    <input name="accelerator" value="{{acc_object.id}}" hidden>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            {{ form.title|as_crispy_field }}
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            {{ form.type|as_crispy_field }}
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            {{ form.start_date|as_crispy_field }}
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            {{ form.expiration_date|as_crispy_field }}
-                                                        </div>
-                                                        <div class="col-md-12">
-                                                            {{ form.text|as_crispy_field }}
-                                                        </div>
-                                                    </div>
-                            
-                                                    <button class="btn btn-success btn-block" type="submit">ایجاد آزمون</button>
-                                                </form>
-                                            </div>
+                                        <div class="col-md-3 mt-2">
+                                            {{ form.type|as_crispy_field }}
+                                        </div>
+                                        <div class="col-md-3 mt-2">
+                                            {{ form.start_date|as_crispy_field }}
+                                        </div>
+                                        <div class="col-md-3 mt-2">
+                                            {{ form.expiration_date|as_crispy_field }}
+                                        </div>
+                                        <div class="col-md-12 mt-2">
+                                            {{ form.text|as_crispy_field }}
                                         </div>
                                     </div>
-                                </div>
+                                    <button class="btn btn-label-success mt-3" type="submit">ایجاد آزمون</button>
+                                </form>
 
-                                <table class="table table-responsive-md mb-0 table-bordered">
+                                <table class="table table-responsive-md mt-4">
                                     <thead>
                                         <tr>
-                                            <th class="col-1">#</th>
+                                            <th>#</th>
                                             <th>نام آزمون</th>
-                                            <th class="col-1 text-center">نوع</th>
-                                            <th class="col-1 text-center">تاریخ شروع</th>
-                                            <th class="col-1 text-center">تاریخ پایان</th>
-                                            <th class="col-2 text-center">عملیات</th>
+                                            <th class="text-center">نوع</th>
+                                            <th class="text-center">تاریخ شروع</th>
+                                            <th class="text-center">تاریخ پایان</th>
+                                            <th class="text-center">عملیات</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -85,8 +70,8 @@
                                                 <td class="text-center">{{task.start_date|to_jalali}}</td>
                                                 <td class="text-center">{{task.expiration_date|to_jalali}}</td>
                                                 <td class="text-center">
-                                                    <a href={% url "company:update-register-task" task.uuid %} class="badge badge-info">ویرایش</a>
-                                                    <a href={% url "company:delete-register-task" task.uuid %} class="badge badge-danger">حذف <i class="feather icon-trash-2"></i></a>
+                                                    <a href={% url "company:update-register-task" task.uuid %} class="badge bg-label-info">ویرایش</a>
+                                                    <a href={% url "company:delete-register-task" task.uuid %} class="badge bg-label-danger">حذف <i class="feather icon-trash-2"></i></a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -105,21 +90,9 @@
 {% endblock main %}
 
 {% block page_js %}
-<script src={% static "jalali-date-picker/persian-date.js" %}></script>
-<script src={% static "jalali-date-picker/persian-datepicker.js" %}></script>
-<script>
-    $("#id_start_date").persianDatepicker({
-        initialValue: false,
-        persianDigit: false,
-        format: 'YYYY-MM-DD',
-    }
-    ).attr("autocomplete", "off")
+<script src={% static "assets-vuexy/vendor/libs/jdate/jdate.min.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr-jdate.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/l10n/fa.js" %}></script>
 
-    $("#id_expiration_date").persianDatepicker({
-        initialValue: false,
-        persianDigit: false,
-        format: 'YYYY-MM-DD',
-    }
-    ).attr("autocomplete", "off")
-</script>
+<script src={% static "assets-vuexy/js/forms-pickers-jalali.js" %}></script>
 {% endblock page_js %}
