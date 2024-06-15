@@ -1,159 +1,139 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html class="loading" lang="fa" data-textdirection="rtl">
-<!-- BEGIN: Head-->
+<html class="light-style layout-wide customizer-hide" data-assets-path="assets-vuexy/" data-template="vertical-menu-template" data-theme="theme-default" dir="rtl" lang="fa">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="author" content="HozBig">
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport"/>
     <title>Boxzi | ورود</title>
-    <link rel="apple-touch-icon" href={% static "admin-theme/app-assets/images/ico/apple-icon-120.png" %}>
-    <link rel="shortcut icon" type="image/x-icon" href={% static "admin-theme/app-assets/images/ico/favicon.ico" %}>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600" rel="stylesheet">
+    <meta content="" name="description"/>
+    <!-- Favicon -->
+    <link href={% static "assets-vuexy/img/favicon/favicon.ico" %} rel="icon" type="image/x-icon"/>
 
-    <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/vendors-rtl.min.css" %}>
-    <!-- END: Vendor CSS-->
-
-    <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/bootstrap.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/bootstrap-extended.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/colors.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/components.css" %}>
-    <!-- END: Theme CSS-->
-
-    <!-- BEGIN: Page CSS-->
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/core/menu/menu-types/vertical-menu.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/core/colors/palette-gradient.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/authentication.css" %}>
-    <!-- END: Page CSS-->
-
-    <!-- BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/custom-rtl.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "admin-theme/assets/css/style-rtl.css" %}>
-    <!-- END: Custom CSS-->
-
+    <!-- Icons -->
+    <link href={% static "assets-vuexy/vendor/fonts/fontawesome.css" %} rel="stylesheet"/>
+    <link href={% static "assets-vuexy/vendor/fonts/tabler-icons.css" %} rel="stylesheet"/>
+    <link href={% static "assets-vuexy/vendor/fonts/flag-icons.css" %} rel="stylesheet"/>
+    <!-- Core CSS -->
+    <link class="template-customizer-core-css" href={% static "assets-vuexy/vendor/css/rtl/core.css" %} rel="stylesheet"/>
+    <link class="template-customizer-theme-css" href={% static "assets-vuexy/vendor/css/rtl/theme-default.css" %} rel="stylesheet"/>
+    <link href={% static "assets-vuexy/css/demo.css" %} rel="stylesheet"/>
+    <!-- Vendors CSS -->
+    <link href={% static "assets-vuexy/vendor/libs/node-waves/node-waves.css" %} rel="stylesheet"/>
+    <link href={% static "assets-vuexy/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" %} rel="stylesheet"/>
+    <link href={% static "assets-vuexy/vendor/libs/typeahead-js/typeahead.css" %} rel="stylesheet"/>
+    <!-- Vendor -->
+    <link href={% static "assets-vuexy/vendor/libs/@form-validation/umd/styles/index.min.css" %} rel="stylesheet"/>
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link href={% static "assets-vuexy/vendor/css/pages/page-auth.css" %} rel="stylesheet"/>
+    <!-- Helpers -->
+    <script src={% static "assets-vuexy/vendor/js/helpers.js" %}></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+    <!-- <script src=static-vuexy "assets-vuexy/vendor/js/template-customizer.js"></script> -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src={% static "assets-vuexy/js/config.js" %}></script>
+    <!-- Better experience of RTL -->
+    <link href={% static "assets-vuexy/vendor/css/rtl/rtl.css" %} rel="stylesheet"/>
 </head>
-<!-- END: Head-->
 
-<!-- BEGIN: Body-->
-
-<body class="vertical-layout vertical-menu-modern semi-dark-layout 1-column  navbar-floating footer-static bg-full-screen-image  blank-page blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column" data-layout="semi-dark-layout">
-    <!-- BEGIN: Content-->
-    <div class="app-content content">
-        <div class="content-overlay"></div>
-        <div class="header-navbar-shadow"></div>
-        <div class="content-wrapper">
-            <div class="content-header row">
-            </div>
-            <div class="content-body">
-                <section class="row flexbox-container">
-                    <div class="col-xl-8 col-11 d-flex justify-content-center">
-                        <div class="card bg-authentication rounded-0 mb-0">
-                            <div class="row m-0">
-                                <div class="col-lg-6 d-lg-block d-none text-center align-self-center px-1 py-0">
-                                    <img src={% static "admin-theme/app-assets/images/pages/login.png" %} alt="branding logo">
-                                </div>
-                                <div class="col-lg-6 col-12 p-0">
-                                    <div class="card rounded-0 mb-0 px-2">
-                                        <div class="card-header pb-1">
-                                            <div class="card-title">
-                                                <h4 class="mb-0">ورود</h4>
-                                            </div>
-                                        </div>
-                                        <p class="px-2">خوش آمدید، برای ورود به داشبورد خود فرم ورود را پرکنید.</p>
-
-
-                                        {% if form.non_field_errors %}
-                                        <div class="col-12">
-                                            {% for error in form.non_field_errors %}
-                                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    <p class="mb-0">
-                                                        {{error|escape}}
-                                                    </p>
-                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">×</span>
-                                                    </button>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                        {% endif %}
-
-                                        {% include "elements/messages-section.html" %}
-
-                                        <div class="card-content">
-                                            <div class="card-body pt-1">
-                                                <form action="" method="POST">
-                                                    {% csrf_token %}
-                                                    <fieldset class="form-label-group form-group position-relative has-icon-left">
-                                                        <input type="text" name="phone_number" class="form-control" id="phone-number" placeholder="شماره تماس" maxlength="11" required>
-                                                        <div class="form-control-position">
-                                                            <i class="feather icon-user"></i>
-                                                        </div>
-                                                        <label for="phone-number">شماره تماس</label>
-                                                    </fieldset>
-
-                                                    <fieldset class="form-label-group position-relative has-icon-left">
-                                                        <input type="password" name="password" class="form-control" id="user-password" placeholder="پسورد" required>
-                                                        <div class="form-control-position">
-                                                            <i class="feather icon-lock"></i>
-                                                        </div>
-                                                        <label for="user-password">پسورد</label>
-                                                    </fieldset>
-                                                    {% comment %} <div class="form-group d-flex justify-content-between align-items-center">
-                                                        <div class="text-right"><a href="" class="card-link">رمزتو فراموش کردی؟</a></div>
-                                                    </div> {% endcomment %}
-                                                    <button type="submit" class="btn btn-primary btn-inline">ورود</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
+<body>
+<!-- Content -->
+<div class="authentication-wrapper authentication-cover authentication-bg">
+    <div class="authentication-inner row">
+        <!-- /Left Text -->
+        <div class="d-none d-lg-flex col-lg-7 p-0">
+            <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
+                <img alt="auth-login-vuexy-cover" class="img-fluid my-5 auth-illustration" src={% static "assets-vuexy/img/illustrations/auth-login-illustration-light.png" %}/>
+                <img alt="auth-login-vuexy-cover" class="platform-bg" src={% static "assets-vuexy/img/illustrations/bg-shape-image-light.png" %}/>
             </div>
         </div>
+        <!-- /Left Text -->
+        <!-- Login -->
+        <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4">
+            <div class="w-px-400 mx-auto">
+                <!-- Logo -->
+                <div class="app-brand mb-4">
+                    <a class="app-brand-link gap-2" href="index.html">
+                        <span class="app-brand-logo demo">
+                            <svg fill="none" height="22" viewBox="0 0 32 22" width="32" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z" fill="#7367F0" fill-rule="evenodd"/>
+                                <path clip-rule="evenodd" d="M7.69824 16.4364L12.5199 3.23696L16.5541 7.25596L7.69824 16.4364Z" fill="#161616" fill-rule="evenodd" opacity="0.06"/>
+                                <path clip-rule="evenodd" d="M8.07751 15.9175L13.9419 4.63989L16.5849 7.28475L8.07751 15.9175Z" fill="#161616" fill-rule="evenodd" opacity="0.06"/>
+                                <path clip-rule="evenodd" d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z" fill="#7367F0" fill-rule="evenodd"/>
+                            </svg>
+                        </span>
+                    </a>
+                </div>
+                <!-- /Logo -->
+                <h3 class="mb-1">با باکس‌زی خوش آمدید! 👋</h3>
+                <p class="mb-4">لطفا به حساب کاربری خود وارد شوید تا از امکانات پلتفرم استفاده کنید.</p>
+                <form class="mb-3" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label" for="phone-number">شماره موبایل</label>
+                        <input autofocus class="form-control" id="phone-number" name="phone_number" maxlength="11" placeholder="جهت ورود شماره موبایل خودرا وارد کنید" type="text"/>
+                    </div>
+                    <div class="mb-3 form-password-toggle">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label" for="password">رمز عبور</label>
+                            <a href="auth-forgot-password-cover.html">
+                                <small>رمز عبور را فراموش کرده اید؟</small>
+                            </a>
+                        </div>
+                        <div class="input-group input-group-merge">
+                            <input aria-describedby="password" class="form-control" id="password" name="password" placeholder="············" type="password"/>
+                            <span class="input-group-text cursor-pointer">
+                                <i class="ti ti-eye-off"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary d-grid w-100">ورود</button>
+                </form>
+            </div>
+        </div>
+        <!-- /Login -->
     </div>
-    <!-- END: Content-->
+</div>
+<!-- / Content -->
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+<script src={% static "assets-vuexy/vendor/libs/jquery/jquery.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/popper/popper.js" %}></script>
+<script src={% static "assets-vuexy/vendor/js/bootstrap.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/node-waves/node-waves.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/perfect-scrollbar/perfect-scrollbar.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/hammer/hammer.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/i18n/i18n.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/typeahead-js/typeahead.js" %}></script>
+<script src={% static "assets-vuexy/vendor/js/menu.js" %}></script>
+<!-- endbuild -->
+<!-- Vendors JS -->
+<script src={% static "assets-vuexy/vendor/libs/@form-validation/umd/bundle/popular.min.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/@form-validation/umd/plugin-bootstrap5/index.min.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/@form-validation/umd/plugin-auto-focus/index.min.js" %}></script>
+<!-- Main JS -->
+<script src={% static "assets-vuexy/js/main.js" %}></script>
+<!-- Page JS -->
+<script src={% static "assets-vuexy/js/pages-auth.js" %}></script>
 
+<script>
+    // Function to get query parameter by name
+    function getQueryParameter(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
 
-    <!-- BEGIN: Vendor JS-->
-    <script src={% static "admin-theme/app-assets/vendors/js/vendors.min.js" %}></script>
-    <!-- BEGIN Vendor JS-->
+    // Get the phone_number query parameter
+    var phoneNumber = getQueryParameter('phone_number');
 
-    <!-- BEGIN: Page Vendor JS-->
-    <!-- END: Page Vendor JS-->
-
-    <!-- BEGIN: Theme JS-->
-    <script src={% static "admin-theme/app-assets/js/core/app-menu.js" %}></script>
-    <script src={% static "admin-theme/app-assets/js/core/app.js" %}></script>
-    <script src={% static "admin-theme/app-assets/js/scripts/components.js" %}></script>
-    <!-- END: Theme JS-->
-
-    <!-- BEGIN: Page JS-->
-    <!-- END: Page JS-->
-    <script>
-        // Function to get query parameter by name
-        function getQueryParameter(name) {
-            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        }
-
-        // Get the phone_number query parameter
-        var phoneNumber = getQueryParameter('phone_number');
-
-        // Set the phone_number input value
-        document.getElementById('phone-number').value = phoneNumber;
-    </script>
+    // Set the phone_number input value
+    document.getElementById('phone-number').value = phoneNumber;
+</script>
 </body>
-<!-- END: Body-->
 
 </html>
