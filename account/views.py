@@ -241,6 +241,17 @@ class RegisterLevel4(LoginRequiredMixin, View):
         messages.error(request, "اطلاعات وارد شده صحیح نمی‌باشد!")
         self.context["form"] = form 
         return render(request, self.template_name, self.context)
+
+
+class UserProfile(LoginRequiredMixin, View):
+    template_name = "account/user-profile.html"
+    success_message = "پروفایل شما با موفقیت ویرایش شد."
+    context = {"title": "پروفایل کاربر"}
+
+    def get(self, request, uuid):
+        user = User.objects.get(uuid=uuid)
+        self.context["object"] = user
+        return render(request, self.template_name, self.context)
     
 
 class ChangeUser(LoginRequiredMixin, ChangeUserAccessMixin, View):
