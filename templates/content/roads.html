@@ -10,233 +10,179 @@
 
     {% include "elements/messages-section.html" %}
 
-    <div class="col-12 card">
-        <div class="row">
-            <div class="col">
-                <img src="{% if object.poster %}{{object.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}" alt="{{object.name}}" class="img-fluid">
-            </div>
-            <div class="col-lg-5">
-                <div class="pt-3">
-                    <h2 class="font-weight-bold">{{object.name}}</h2>
-                    <div class="row mb-2" style="width: 100%;">
-                        <div class="col-6">
-                            <li class="list-group mt-1">
-                                <i class="text-black-50 mt-50"><i class="feather icon-tag"></i> هزینه شرکت در این دوره: <span class="{% if object.price <= 0 %}text-warning{% endif %}">{{object.price|not_zero}}</span></i>
-                                <i class="text-black-50 mt-50"><i class="feather icon-map-pin"></i> محل برگزاری: {{object.location}}</i>
-                                <i class="text-black-50 mt-50">برگزار کننده این برنامه: <img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></i>
-                            </li>
-                        </div>
-                        <div class="col-6 pl-5">
-                            <li class="list-group mt-1">
-                                <i class="text-black-50 mt-50"><i class="fa fa-circle-o"></i> شروع: {{object.start_date|to_jalali}}</i>
-                                <i class="text-black-50 mt-50"><i class="fa fa-circle-o"></i> پایان مسیر: {{object.start_date|to_jalali}}</i>
-                                <i class="text-black-50 mt-50"><i class="fa fa-circle-o"></i> مهلت ثبت‌نام: {{object.start_date|to_jalali}}</i>
-                                <i class="text-black-50 mt-50"><i class="fa fa-circle-o"></i> شروع برنامه: {{object.start_date|to_jalali}}</i>
-                            </li>
-                        </div>
-                    </div>
-
-                    <!-- <table class="table table-responsive-md mt-1 table-bordered">
-                        <thead>
-                            <tr class="text-center text-dark">
-                                <th>هزینه</th>
-                                <th>محل برگزاری</th>
-                                <th>برگزار کننده</th>
-                                <th>آغاز ثبت‌نام</th>
-                                <th>پایان مسیر</th>
-                                <th>مهلت ثبت‌نام</th>
-                                <th>شروع برنامه</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="text-center">
-                                <td>{{object.price|not_zero}}</td>
-                                <td>{{object.location}}</td>
-                                <td><img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="75"></td>
-                                <td>{{object.start_date|to_jalali}}</td>
-                                <td>{{object.start_date|to_jalali}}</td>
-                                <td>{{object.start_date|to_jalali}}</td>
-                                <td>{{object.start_date|to_jalali}}</td>
-                            </tr>
-                        </tbody>
-                    </table> -->
-
+    <div class="col-md">
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-lg-5">
+                    <img alt="{{object.name}}" class="card-img card-img-left" src="{% if object.poster %}{{object.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}"/>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12">
-        <!-- Detail and registration button -->
-        <div class="card">
-            <div class="card-header">
-                <h4 class="card-title"><i class="fa fa-hashtag"></i> وضعیت تکمیل درخواست ثبت‌نام در مسیر</h4>
-            </div>
-            <div class="card-body">
-                <div class="card-content">
-                    <div class="text-right">
-                        {% if registration_obj.status != "n" %}
-                        <a class="btn btn-gradient-bg bg-gradient-info text-white mb-2">{{registration_obj.get_status_display}}</a>
-                        {% else %}
-                            {% if registration_obj.is_valid_registration_period %}
-                            <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-gradient-bg bg-gradient-success mb-2">ادامه تکمیل درخواست!</a>
-                            {% else %}
-                            <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-gradient-bg bg-gradient-danger mb-2">ادامه تکمیل درخواست!</a>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-
-                    <table class="table table-responsive-md mb-0 border">
-                        <thead>
-                            <tr class="table-secondary text-center text-dark">
-                                
-                                <th class="col-4">آخرین وضعیت درخواست شما</th>
-                                <th>تکمیل پروفایل شخصی</th>
-                                <th>انجام آزمون شخصیت</th>
-
-                                {% if registration_obj.team_or_individual != "i" %}
-                                <th>تکمیل اطلاعات تیم توسط سرپرست‌تیم</th>
-                                <th>ثبت اطلاعات اعضای تیم</th>
-                                {% else %}
-                                <th>انجام چالش ورودی</th>
-                                {% endif %}
-
-                                <th>ثبت اطلاعات و دموی ایده/محصول</th>
-
-                                {% if registration_obj.team_or_individual != "i" %}
-                                <th>تکمیل مراحل توسط اعضای تیم</th>
-                                {% endif %}
-
-                                {% if registration_obj.status != "n" %}
-                                <th>تاریخ تکمیل فرایند ثبت نام</th>
-                                {% else %}
-                                <th>تاریخ شروع فرایند ثبت‌نام</th>
-                                {% endif %}
-
-                                <th>مهلت باقی مانده برای ثبت درخواست</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="text-center">
-                                <!-- وضعیت درخواست -->
-                                <td class="border table-light">{{registration_obj.get_status_display}}</td>
-                                <!-- تکمیل بودن پروفایل -->
-                                <td class="border ">{% if request.user.is_profile_complete %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                <!-- انجام آزمون شخصیت -->
-                                <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-
-                                {% if registration_obj.team_or_individual != "i" %}
-                                <!-- تیم؟ -->
-                                <td class="border ">{% if request.user.user_of_team_member.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                <!-- تعداد اعضای تیم؟ -->
-                                <td class="border ">{% if request.user.user_of_team_member.first.team.team_member_count > 1 %}<span class="badge badge-success">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-times"></i></span>{% endif %}</td>
-                                {% else %}
-                                <!-- چالش ورودی -->
-                                <td class="border ">{% if request.user.user_of_pre_register_task_response.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                {% endif %}
-
-                                <!-- ایده یا محصول -->
-                                {% if registration_obj.team_or_individual != "i" %}
-                                <td class="border ">{% if request.user.user_of_team_member.first.team.team_of_plan.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                {% else %}
-                                <td class="border ">{% if request.user.user_of_plan.first %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                {% endif %}
-
-                                <!-- تکمیل پروفایل تمام اعضای تیم -->
-                                {% if registration_obj.team_or_individual != "i" %}
-                                <td class="border ">{% if request.user.user_of_team_member.first.team.all_users_completed_registration %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                {% endif %}
-
-                                {% if registration_obj.status != "n" %}
-                                <!-- تاریخ اخرین تغییر کاربر -->
-                                <td class="border ">{{registration_obj.client_last_response_date|to_jalali}}</th>
-                                <!-- وضعیت ارسال شده درخواست -->
-                                <td class="border">ارسال شد<i class="fa fa-check text-success"></i></th>
-                                {% else %}
-                                <!-- زمان تکمیل درخواست -->
-                                <td class="border ">{{registration_obj.complete_registration_date|to_jalali}}</th>
-                                <!-- زمان باقی مانده برای تکمیل درخواست -->
-                                <td class="border">{% if registration_obj.is_valid_registration_period %}{{registration_obj.is_valid_registration_period}} روز{% else %}<span class="badge badge-danger"><i class="fa fa-clock-o"></i></span>{% endif %}</th>
-                                {% endif %}
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-12">
-        <div class="row">
-            <div class="col-lg-6">
-                <!-- FAQ -->
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"><i class="fa fa-question-circle"></i> سوالات متداول</h4>
-                    </div>
+                <div class="col-lg-7">
                     <div class="card-body">
-                        <div class="card-content">
-                            <div class="accordion search-content-info" id="accordionExample">
-                                <div class="collapse-margin search-content mt-0">
-                                    <div class="card-header" id="headingOne" role="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                        <span class="lead collapse-title">آیا می‌توانیم در این برنامه به صورت آنلاین شرکت کنیم؟</span>
-                                    </div>
-                                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            این متن باید توسط برگزارکننده برنامه آماده شود .
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="collapse-margin">
-                                    <div class="card-header" id="headingTwo" role="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                        <span class="lead collapse-title collapsed">
-                                            گام‌ها و آزمون های دیجی‌نکست دارای مدال هستند؟
-                                        </span>
-                                    </div>
-                                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            این متن باید توسط برگزارکننده برنامه آماده شود .
-                                            این متن باید توسط برگزارکننده برنامه آماده شود .
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="collapse-margin search-content">
-                                    <div class="card-header" id="headingThree" role="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                        <span class="lead collapse-title collapsed">
-                                            چجوری به دریافت سرمایه برسم؟
-                                        </span>
-                                    </div>
-                                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            این متن باید توسط برگزارکننده برنامه آماده شود .
-                                        </div>
-                                    </div>
-                                </div>
+                        <h5 class="card-title">{{object.name}}</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled mb-4 mt-3">
+                                    <li class="d-flex align-items-center mb-3"> <i class="ti ti-currency-dollar text-heading"></i><span class="fw-medium mx-2 text-heading">هزینه:</span> <span>{{object.price|not_zero}}</span></li>
+                                    <li class="d-flex align-items-center mb-3"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">محل برگزاری:</span> <span>{{object.location}}</span></li>
+                                    <li class="d-flex align-items-center mb-3"> <i class="ti ti-rubber-stamp text-heading"></i><span class="fw-medium mx-2 text-heading">برگزار کننده:</span> <span><img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled mb-4 mt-3">
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع:</span> <span><bdi>0913 000 0000</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان:</span> <span><bdi>0913 000 0000</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-clock-2"></i><span class="fw-medium mx-2 text-heading">مهلت ثبت نام:</span> <span><bdi>0913 000 0000</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-plus"></i><span class="fw-medium mx-2 text-heading">شروع دوره:</span> <span><bdi>0913 000 0000</bdi></span></li>
+                            </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- About accelerator -->
-                <!-- <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title"><i class="fa fa-question-circle"></i> میزبان این برنامه:</h4>
-                    </div>
-                    <div class="card-body pb-1">
-                        <div class="card-content text-dark">
-                            <ul class="list-inline row justify-content-center">
-                                <li><img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></li>
-                                <li class="ml-2">{{object.accelerator.name}}</li>
-                                <li class="ml-2"><span class="badge badge-danger">{{object.accelerator.get_type_display}}</span></li>
-                            </ul>
-
-                            <p class="mt-3">{{object.accelerator.short_description}}</p>
-                        </div>
-                    </div>
-                </div> -->
             </div>
-
         </div>
+    </div>
+
+    <div class="col-12 mt-2">
+        <div class="card">
+            <h5 class="card-header">وضعیت تکمیل درخواست ثبت‌نام در مسیر</h5>
+            <div class="table-responsive">
+                <div class="px-3 mb-3">
+                    {% if registration_obj.status != "n" %}
+                    <a class="btn btn-success waves-effect mb-2">{{registration_obj.get_status_display}}</a>
+                    {% else %}
+                        {% if registration_obj.is_valid_registration_period %}
+                        <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-success waves-effect">ادامه تکمیل درخواست!</a>
+                        {% else %}
+                        <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-success waves-effect">ادامه تکمیل درخواست!</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="table-primary text-center text-dark">
+                            <th class="col-4">آخرین وضعیت درخواست شما</th>
+                            <th>تکمیل پروفایل شخصی</th>
+                            <th>انجام آزمون شخصیت</th>
+
+                            {% if registration_obj.team_or_individual != "i" %}
+                            <th>تکمیل اطلاعات تیم توسط سرپرست‌تیم</th>
+                            <th>ثبت اطلاعات اعضای تیم</th>
+                            {% else %}
+                            <th>انجام چالش ورودی</th>
+                            {% endif %}
+
+                            <th>ثبت اطلاعات و دموی ایده/محصول</th>
+
+                            {% if registration_obj.team_or_individual != "i" %}
+                            <th>تکمیل مراحل توسط اعضای تیم</th>
+                            {% endif %}
+
+                            {% if registration_obj.status != "n" %}
+                            <th>تاریخ تکمیل فرایند ثبت نام</th>
+                            {% else %}
+                            <th>تاریخ شروع فرایند ثبت‌نام</th>
+                            {% endif %}
+
+                            <th>مهلت باقی مانده برای ثبت درخواست</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        <tr class="text-center">
+                            <!-- وضعیت درخواست -->
+                            <td class="border table-primary">{{registration_obj.get_status_display}}</td>
+                            <!-- تکمیل بودن پروفایل -->
+                            <td class="border ">{% if request.user.is_profile_complete %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            <!-- انجام آزمون شخصیت -->
+                            <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+
+                            {% if registration_obj.team_or_individual != "i" %}
+                            <!-- تیم؟ -->
+                            <td class="border ">{% if request.user.user_of_team_member.first %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            <!-- تعداد اعضای تیم؟ -->
+                            <td class="border ">{% if request.user.user_of_team_member.first.team.team_member_count > 1 %}<span class="badge bg-label-success">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-times"></i></span>{% endif %}</td>
+                            {% else %}
+                            <!-- چالش ورودی -->
+                            <td class="border ">{% if request.user.user_of_pre_register_task_response.first %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            {% endif %}
+
+                            <!-- ایده یا محصول -->
+                            {% if registration_obj.team_or_individual != "i" %}
+                            <td class="border ">{% if request.user.user_of_team_member.first.team.team_of_plan.first %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            {% else %}
+                            <td class="border ">{% if request.user.user_of_plan.first %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            {% endif %}
+
+                            <!-- تکمیل پروفایل تمام اعضای تیم -->
+                            {% if registration_obj.team_or_individual != "i" %}
+                            <td class="border ">{% if request.user.user_of_team_member.first.team.all_users_completed_registration %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            {% endif %}
+
+                            {% if registration_obj.status != "n" %}
+                            <!-- تاریخ اخرین تغییر کاربر -->
+                            <td class="border ">{{registration_obj.client_last_response_date|to_jalali}}</th>
+                            <!-- وضعیت ارسال شده درخواست -->
+                            <td class="border">ارسال شد<i class="fa fa-check text-success"></i></th>
+                            {% else %}
+                            <!-- زمان تکمیل درخواست -->
+                            <td class="border ">{{registration_obj.complete_registration_date|to_jalali}}</th>
+                            <!-- زمان باقی مانده برای تکمیل درخواست -->
+                            <td class="border">{% if registration_obj.is_valid_registration_period %}{{registration_obj.is_valid_registration_period}} روز{% else %}<span class="badge bg-label-danger"><i class="fa fa-clock-o"></i></span>{% endif %}</th>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 mt-4">
+        <!-- FAQ -->
+        <h5 class="card-header pb-3"><i class="fa fa-question-circle"></i> سوالات متداول</h5>
+        <div class="accordion" id="accordionPayment">
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-2" class="accordion-button collapsed" data-bs-target="#accordionPayment-2" data-bs-toggle="collapse" type="button"> آیا می‌توانیم در این برنامه به صورت آنلاین شرکت کنیم؟</button>
+                </h2>
+                <div class="accordion-collapse collapse" id="accordionPayment-2">
+                    <div class="accordion-body"> ما کارت‌های Visa®، MasterCard®، American Express® و PayPal® را قبول می‌کنیم. تمام اطلاعاتی که به سرورهای ما ارسال می‌شوند، به صورت رمز شده است؛ بنابراین می‌توانید با اطمینان کامل به اینکه اطلاعات کارت اعتباری شما در امان و ایمن نگه داشته می‌شود، اعتماد کنید.</div>
+                </div>
+            </div>
+            <div class="card accordion-item active">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-1" aria-expanded="true" class="accordion-button" data-bs-target="#accordionPayment-1" data-bs-toggle="collapse" type="button"> گام‌ها و آزمون های دیجی‌نکست دارای مدال هستند؟</button>
+                </h2>
+                <div class="accordion-collapse collapse show" id="accordionPayment-1">
+                    <div class="accordion-body"> پرداخت در طول فرآیند تسویه حساب انجام می‌شود زمانی که برای سفارش خود پرداخت می‌کنید. شماره سفارشی که در صفحه تأیید نمایش داده می‌شود نشان‌دهنده این است که پرداخت با موفقیت انجام شده است.</div>
+                </div>
+            </div>
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-3" class="accordion-button collapsed" data-bs-target="#accordionPayment-3" data-bs-toggle="collapse" type="button"> اگر سوال دیگری داشتم چکاری انجام بدم؟</button>
+                </h2>
+                <div class="accordion-collapse collapse" id="accordionPayment-3">
+                    <div class="accordion-body"> برای هر مشکل فنی که با وب‌سایت ما روبرو می‌شوید، لطفاً با ما تماس بگیرید. شما می‌توانید با مراجعه به
+                        <a href="javascript:void(0);">پورتال پشتیبانی ما</a>
+                        با ما تماس بگیرید، یا می‌توانید با شماره تلفن رایگان
+                        <span class="fw-medium">
+                            <bdi>1-000-000-000</bdi>
+                        </span>
+                        تماس بگیرید، یا ایمیل بزنید به
+                        <a href="javascript:void(0);">
+                            <bdi><span class="__cf_email__" data-cfemail="224d5046475062414d4f52434c5b4f434b4e0c414d4f">[email&#160;protected]</span></bdi>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-5" class="accordion-button collapsed" data-bs-target="#accordionPayment-5" data-bs-toggle="collapse" type="button"> چجوری به دریافت سرمایه برسم؟</button>
+                </h2>
+                <div class="accordion-collapse collapse" id="accordionPayment-5">
+                    <div class="accordion-body"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد</div>
+                </div>
+            </div>
+        </div>
+        <!-- End FAQ -->
     </div>
 
 </div>

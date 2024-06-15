@@ -4,8 +4,6 @@
 {% load tag_library %}
 
 {% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/dashboard-analytics.css" %}>
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/css-rtl/pages/card-analytics.css" %}>
 {% endblock page_css %}
 
 {% block main %}
@@ -13,431 +11,66 @@
 
 	{% include "elements/messages-section.html" %}
 
-	{% if false %}
-	<div class="col-12">
-		<div class="row">
-			<div class="col-md-4">
-				<div class="card bg-gradient-danger">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0 text-white">{{request.user.members_of_team.first.name}} </h2>
-							<p class="mt-25 text-secondary">تیم شما</p>
-						</div>
-						<div class="avatar bg-rgba-white p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-users text-white font-medium-5"></i>
-							</div>
-						</div>
+	<div class="col-xl-4 mb-4 col-lg-5 col-12">
+		<div class="card">
+			<div class="d-flex align-items-end row">
+				<div class="col-7">
+					<div class="card-body text-nowrap">
+						<h5 class="card-title mb-0">تبریک {{request.user.first_name}}! 🎉</h5>
+						<p class="mb-2">ثبت نامت با موفقیت انجام شد.</p>
+						<a class="btn btn-success" href={% url "content:roads" %}>مسیر رشد</a>
 					</div>
 				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{request.user.members_of_team.first.team_of_plan.first.name}} </h2>
-							<p class="mt-25">محصول درحال انجام</p>
-						</div>
-						<div class="avatar bg-rgba-success p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-clipboard text-success font-medium-5"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-md-4">
-				<div class="card">
-					<div class="card-header d-flex align-items-start pb-0">
-						<div>
-							<h2 class="text-bold-700 mb-0">{{request.user.members_of_team.first.team_of_plan.first.get_status_display}} </h2>
-							<p class="mt-25">وضعیت محصول تیم</p>
-						</div>
-						<div class="avatar bg-rgba-success p-50 m-0">
-							<div class="avatar-content">
-								<i class="feather icon-alert-circle text-success font-medium-5"></i>
-							</div>
-						</div>
+				<div class="col-5 text-center text-sm-left">
+					<div class="card-body pb-0 px-0 px-md-4">
+						<img alt="مشاهده فروش" height="140" src={% static "assets-vuexy/img/illustrations/card-advance-sale.png" %} />
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="col-12 mb-3">
-		<div class="row">
-
-			<div class="col-lg-4 mb-3 mb-lg-0">
-				<div class="row">
-					<div class="col-12 mb-2">
-						<div class="card">
-							<div class="card-header d-flex flex-column align-items-start pb-0">
-								<div class="avatar bg-rgba-primary p-50 m-0">
-									<div class="avatar-content">
-										<i class="feather icon-users text-primary font-medium-5"></i>
-									</div>
-								</div>
-								<h2 class="text-bold-700 mt-1 mb-25"><span id="random_hour"></span>
-									ساعت</h2>
-								<p class="mb-0">تعامل شما با مسیرآموزشی</p>
-							</div>
-							<div class="card-content">
-								<div id="subscribe-gain-chart"></div>
-							</div>
-						</div>
-					</div>
-
+	<div class="col-xl-8 mb-4 col-lg-7 col-12">
+		<div class="card bg-transparent shadow-none border-0">
+			<div class="card-body row p-0 pb-3">
+				<div class="col-12">
+					<h3>به باکسی‌زی خوش آمدید</h3>
 					<div class="col-12">
-						<div class="card">
-							<div class="card-header d-flex align-items-start pb-0">
-								<div>
-									<h2 class="text-bold-700 mb-0">{{watched_count}}</h2>
-									<p>مراحل طی شده</p>
-								</div>
-								<div class="avatar bg-rgba-success p-50 m-0">
-									<div class="avatar-content">
-										<i class="feather icon-eye text-success font-medium-5"></i>
-									</div>
-								</div>
+						<p>باکس‌زی سکوی مدیریت هوشمند نوآوری و رشد استارتاپ هست که داخل اون به اعضای اکوسیستم نوآوری و کسب و کار کمک می‌کنیم تا در مسیر رشد هوشمندانه حرکت کنند و این سری ما میزبان <b>"{{request.user.user_of_road_registration.first.road.accelerator.name}}"</b> هستیم.</p>
+					</div>
+					<div class="d-flex justify-content-between flex-wrap gap-3 me-5">
+						<div class="d-flex align-items-center gap-3">
+							<span class="bg-label-primary p-2 rounded">
+								<i class="ti ti-urgent ti-xl"></i>
+							</span>
+							<div class="content-right">
+								<p class="mb-0">معرفی محصولات</p>
 							</div>
 						</div>
-
-						<div class="card">
-							<div class="card-header d-flex align-items-start pb-0">
-								<div>
-									<h2
-										class="text-bold-700 mb-0">{{watched_count|remain_content_count:request.user}}</h2>
-									<p>مراحل باقی مانده</p>
-								</div>
-								<div class="avatar bg-rgba-danger p-50 m-0">
-									<div class="avatar-content">
-										<i class="feather icon-eye-off text-danger font-medium-5"></i>
-									</div>
-								</div>
+						<div class="d-flex align-items-center gap-3">
+							<span class="bg-label-success p-2 rounded">
+								<i class="ti ti-trending-up ti-xl"></i>
+							</span>
+							<div class="content-right">
+								<p class="mb-0">پیشرفت فردی و تیمی</p>
 							</div>
 						</div>
-
-						<div class="card">
-							<div class="card-header d-flex align-items-start pb-0">
-								<div>
-									<h2 class="text-bold-700 mb-0">{{request.user.received_medals}}</h2>
-									<p>مدال های دریافتی</p>
-								</div>
-								<div class="avatar bg-rgba-warning p-50 m-0">
-									<div class="avatar-content">
-										<i class="feather icon-award text-warning font-medium-5"></i>
-									</div>
-								</div>
+						<div class="d-flex align-items-center gap-3">
+							<span class="bg-label-warning p-2 rounded">
+								<i class="ti ti-brand-cashapp ti-xl"></i>
+							</span>
+							<div class="content-right">
+								<p class="mb-0">جذب سرمایه</p>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-4 mb-3 mb-lg-0">
-				<div class="card h-100">
-					<div class="card-header d-flex justify-content-between align-items-start">
-						<div>
-							<h4 class="card-title">آمار شخصیتی</h4>
-						</div>
-					</div>
-					<div class="card-content my-auto">
-						<div class="card-body px-0">
-							<div id="sales-chart"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-lg-4 mb-3 mb-lg-0">
-				<div class="card h-100">
-					<div class="card-header">
-						<h4 class="card-title">دستاورد های شما</h4>
-					</div>
-					<div class="card-content">
-						<div class="card-body">
-							<ul class="activity-timeline timeline-left list-unstyled">
-								<li>
-									<div class="timeline-icon bg-primary">
-										<i class="fa fa-pencil font-medium-2 align-middle"></i>
-									</div>
-									<div class="timeline-info">
-										<p class="font-weight-bold mb-0">ثبت نام و تکمیل پروفایل کاربری</p>
-									</div>
-									<small class="font-weight-bold text-warning">25 مدال <i
-											class="feather icon-award text-warning font-weight-bold"></i></small>
-								</li>
-								<li>
-									<div class="timeline-icon bg-primary">
-										<i class="fa fa-eye font-medium-2 align-middle"></i>
-									</div>
-									<div class="timeline-info">
-										<p class="font-weight-bold mb-0">گذراندن اولین مرحله از مسیر آموزشی
-											خود</p>
-										<span class="font-small-3">یک مرحله کامل همراه با آزمون نهایی آن به
-											اتمام برسانید</span>
-									</div>
-									<small class="font-weight-bold text-warning">50 مدال <i
-											class="feather icon-award text-warning font-weight-bold"></i></small>
-								</li>
-								<li>
-									<div class="timeline-icon bg-danger">
-										<i class="fa fa-heart font-medium-2 align-middle"></i>
-									</div>
-									<div class="timeline-info">
-										<p class="font-weight-bold mb-0">رسیدن به ۱۰۰۰ مدال</p>
-										<span class="font-small-3">با گذراندن گام ها و آزمون ها به هزار مدال
-											برسید و هزار مدال هم جاییزه بگیرید!</span>
-									</div>
-									<small class="font-weight-bold text-warning">1000 مدال <i
-											class="feather icon-award text-warning font-weight-bold"></i></small>
-								</li>
-								<li>
-									<div class="timeline-icon bg-success">
-										<i class="fa fa-check font-medium-2 align-middle"></i>
-									</div>
-									<div class="timeline-info">
-										<p class="font-weight-bold mb-0">اتمام مسیر آموزش</p>
-									</div>
-									<small class="font-weight-bold text-warning">250 مدال <i
-											class="feather icon-award text-warning font-weight-bold"></i></small>
-								</li>
-								<li>
-									<div class="timeline-icon bg-warning">
-										<i class="fa fa-search font-medium-2 align-middle"></i>
-									</div>
-									<div class="timeline-info">
-										<p class="font-weight-bold mb-0">اولین محصول خود را برای جذب سرمایه برای
-											ما ارسال کنید</p>
-									</div>
-									<small class="font-weight-bold text-warning">500 مدال <i
-											class="feather icon-award text-warning font-weight-bold"></i></small>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-	</div>
-
-	<div class="col-12">
-		<div class="card">
-			<div class="card-header">
-				<h4 class="card-title">میزان فعالیت شما</h4>
-			</div>
-			<div class="card-content">
-				<div class="card-body pl-0">
-					<div class="height-300"><div class="chartjs-size-monitor"><div
-								class="chartjs-size-monitor-expand"><div class></div></div><div
-								class="chartjs-size-monitor-shrink"><div class></div></div></div>
-						<canvas id="line-chart-custom"
-							style="display: block; width: 480px; height: 300px;" width="480"
-							height="300" class="chartjs-render-monitor"></canvas>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	{% else %}
-	<div class="col-12">
-		<div class="card bg-gradient-info">
-			<div class="card-header d-flex align-items-start pb-0">
-				<div class="mx-auto">
-					<h2 class="text-bold-700 mb-1 text-white">به باکس زی خوش آمدید :)</h2>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-12">
-		<div class="card">
-			<div class="card-header">
-				<h4 class="card-title">پیشروی کنید... ({{registration_obj.is_valid_registration_period}} روز تا اتمام مهلت تکمیل ثبت نام)</h4>
-			</div>
-			<div class="card-content">
-				<div class="card-body">
-					<ul class="activity-timeline timeline-left list-unstyled">
-						<li>
-							<div class="timeline-icon bg-success">
-								<i class="feather icon-check font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">ثبت نام</p>
-								<span class="font-small-3">ثبت نام اولیه و ورود به باکس زی</span>
-							</div>
-						</li>
-						<li>
-							<div class="timeline-icon bg-success">
-								<i class="feather icon-check font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">تکمیل اطلاعات اولیه</p>
-								<span class="font-small-3">شما اطلاعات اولیه مانند نام و نام‌خانوادگی، شماره موبایل و ... وارد کرده اید</span>
-							</div>
-						</li>
-
-						{% if not request.user.user_of_road_registration.first.status_user_state == "f" %}
-						<li>
-							<div class="timeline-icon bg-secondary">
-								<i class="feather icon-x font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">تکمیل اطلاعات برای مسیررشد: <span class="text-dark">{{request.user.user_of_road_registration.first.road.name}}</span></p>
-								<span class="font-small-3">تکمیل اطلاعات لازم برای {{request.user.user_of_road_registration.first.road.name}} <a href={% url "content:roads" %} class="font-weight-bold">را انجام دهید</a></span></span>
-							</div>
-						</li>
-						{% else %}
-						<li>
-							<div class="timeline-icon bg-success">
-								<i class="feather icon-check font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">ثبت نام در یک مسیرآموزشی</p>
-								<span class="font-small-3">برای شروع ماجراجویی خود در باکس زی از طریق منو مسیر رشد در یک مسیرآموزشی ثبت نام کنید</span>
-							</div>
-						</li>
-						{% endif %}
-
-						{% if not request.user.is_profile_complete_level2 and request.user.user_of_road_registration.first.status_user_state == "f" %}
-						<li>
-							<div class="timeline-icon bg-primary">
-								<i class="feather icon-target font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
-								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات <a href={% url "account:update" request.user.uuid %} class="font-weight-bold">پروفایل خود را کامل کنید</a></span>
-							</div>
-						</li>
-						{% else %}
-						<li>
-							<div class="timeline-icon bg-success">
-								<i class="feather icon-check font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">بهبود نتایج و تجربه کاربری خود</p>
-								<span class="font-small-3">برای تجربه بهتر و دریافت آمار و نتایج بهتر اطلاعات پروفایل خود را کامل کنید</span>
-							</div>
-						</li>
-						{% endif %}
-
-						{% if request.user.is_profile_complete_level2 and request.user.user_of_road_registration.exists %}
-						<li>
-							<div class="timeline-icon bg-primary">
-								<i class="feather icon-more-horizontal font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">ادامه دهید...</p>
-								<span class="font-small-3">تیم سازی و جذب سرمایه هدفمند و آسان در زیست بوم باکس زی</span>
-							</div>
-						</li>
-						{% else %}
-						<li>
-							<div class="timeline-icon bg-secondary">
-								<i class="feather icon-x font-medium-2 align-middle"></i>
-							</div>
-							<div class="timeline-info">
-								<p class="font-weight-bold mb-0">ادامه دهید...</p>
-								<span class="font-small-3">تیم سازی و جذب سرمایه هدفمند و آسان در زیست بوم باکس زی</span>
-							</div>
-						</li>
-						{% endif %}
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	{% endif %}
 
 </div>
 {% endblock main %}
 
 {% block page_js %}
-<script src={% static "admin-theme/app-assets/vendors/js/charts/chart.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/vendors/js/charts/apexcharts.min.js" %}></script>
-
-<script src={% static "admin-theme/app-assets/js/scripts/pages/dashboard-analytics.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/charts/chart-chartjs.js" %}></script>
-
-<script>
-  window.onload = function() {
-    var x = Math.floor(Math.random() * 20) + 2;
-    document.getElementById("random_hour").innerHTML = x;
-  };
-
-
-  function generateRandomList(length) {
-    const randomList = [];
-    for (let i = 0; i < length; i++) {
-        const randomValue = Math.floor(Math.random() * 10); // Generates a random integer from 0 to 9
-        randomList.push(randomValue);
-    }
-    return randomList;
-  }
-
-  var lineChartctx = $("#line-chart-custom");
-
-  // Chart Options
-  var linechartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    legend: {
-      position: 'top',
-    },
-    hover: {
-      mode: 'label'
-    },
-    scales: {
-      xAxes: [{
-        display: true,
-        gridLines: {
-          color: '#dae1e7',
-        },
-        scaleLabel: {
-          display: false,
-        }
-      }],
-      yAxes: [{
-        display: true,
-        gridLines: {
-          color: '#dae1e7',
-        },
-        scaleLabel: {
-          display: false,
-        }
-      }]
-    },
-    title: {
-      display: false,
-      text: 'World population per region (in millions)'
-    }
-  };
-
-  // Chart Data
-  var linechartData = {
-    labels: ["1402-12-6", "1402-12-7", "1402-12-8", "1402-12-9", "1402-12-10", "1402-12-11", "1402-12-12", "1402-12-13", "1402-12-14", "1402-12-15"],
-    datasets: [{
-      label: "{% if request.user.get_full_name %}{{request.user.get_full_name}}{% else %}کاربر{% endif %}",
-      data: generateRandomList(10),
-      borderColor: '#7367F0',
-      fill: true
-    }]
-  };
-
-  var lineChartconfig = {
-    type: 'line',
-
-    // Chart Options
-    options: linechartOptions,
-
-    data: linechartData
-  };
-
-  // Create the chart
-  var lineChart = new Chart(lineChartctx, lineChartconfig);
-</script>
 {% endblock page_js %}

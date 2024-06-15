@@ -18,26 +18,24 @@
     {% if not request.user.user_of_team_member.first %}
     <div class="col-12">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">ساخت تیم</h4>
-            </div>
+            <h5 class="card-header pb-1">ساخت تیم</h5>
             <div class="card-content">
                 <div class="card-body">
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 mt-2">
                                 {{ form.name|as_crispy_field }}
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 mt-2">
                                 {{ form.category|as_crispy_field }}
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-12 mt-2">
                                 {{ form.description|as_crispy_field }}
                             </div>
                         </div>
 
-                        <button class="btn btn-success btn-block" type="submit">تائید و ایجاد تیم</button>
+                        <button class="btn btn-label-success mt-3" type="submit">تائید و ایجاد تیم</button>
                     </form>
                 </div>
             </div>

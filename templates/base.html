@@ -84,13 +84,19 @@
                 {% if request.user.is_team_member %}
                     {% comment %} <li class="navigation-header"><span>برای شما</span></li> {% endcomment %}
                     
-                    <li class="{% if request.path == "/content/roads/" %}active{% endif %} menu-item">
-                        <a class="menu-link" href="{% url "content:roads" %}" class="text-success"><i class="fa fa-graduation-cap text-success"></i><span class="menu-title">مسیر رشد</span></a>
+                    <li class="menu-item {% if request.path == "/content/roads/" %}active{% endif %}">
+                        <a class="menu-link text-success" href={% url "content:roads" %}>
+                            <i class="menu-icon tf-icons ti ti-school"></i>
+                            <div>مسیر رشد</div>
+                        </a>
                     </li>
 
                     {% if request.user.user_of_team_member.first.is_owner %}
-                    <li class="{% if request.path == "/team/manage-teams/" %}active{% endif %} menu-item">
-                        <a class="menu-link" href="{% url "team:manage-teams" %}"><i class="feather icon-users"></i><span class="menu-title">مدیریت تیم</span></a>
+                    <li class="menu-item {% if request.path == "/team/manage-teams/" %}active{% endif %}">
+                        <a class="menu-link" href={% url "team:manage-teams" %}>
+                            <i class="menu-icon tf-icons ti ti-users"></i>
+                            <div>مدیریت تیم</div>
+                        </a>
                     </li>
                     {% endif %}
                 {% endif %}
