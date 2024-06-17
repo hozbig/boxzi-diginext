@@ -15,7 +15,6 @@ class StartUpTeamAdmin(admin.ModelAdmin):
     list_display = ["name", "status", "team_member_count", "description", "category"]
     list_filter = ["status", "category", "created_time", "last_update_time"]
     search_fields = ["name"]
-    filter_horizontal = ["team_members", "team_mentors"]
     inlines = (PlanInline,)
 
 

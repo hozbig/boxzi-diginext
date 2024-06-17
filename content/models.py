@@ -160,7 +160,7 @@ class Road(models.Model):
         verbose_name_plural = "مسیر ها"
 
     def __str__(self) -> str:
-        return f"مسیر {self.name} از برگزارکننده {self.accelerator}"
+        return f"مسیر {self.name} - برگزارکننده {self.accelerator}"
     
     def save(self) -> None:
         super().save()

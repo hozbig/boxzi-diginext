@@ -52,19 +52,19 @@
                     <div class="table-responsive">
                         <table class="table zero-configuration">
                             <thead>
-                                <tr class="table-secondary">
-                                    <th class="border">نام تیم</th>
-                                    <th class="border">تعداد اعضا</th>
-                                    <th class="border">دسترسی شما</th>
-                                    <th class="border">عملیات</th>
+                                <tr class="">
+                                    <th>نام تیم</th>
+                                    <th>تعداد اعضا</th>
+                                    <th>دسترسی شما</th>
+                                    <th>عملیات</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="border">{{teams.first.team.name}}</td>
-                                    <td class="border">{{teams.first.team.team_of_team_member.count}}</td>
-                                    <td class="border">{% if teams.first.is_owner %}<span class="badge badge-warning">سازنده</span>{% else %}***{% endif %}</td>
-                                    <td class="border">{% if teams.first.is_owner %}<a href={% url "team:update-team" teams.first.team.uuid %} class="badge badge-info">ویرایش</a>{% else %}***{% endif %}</td>
+                                    <td>{{teams.first.team.name}}</td>
+                                    <td>{{teams.first.team.team_of_team_member.count}}</td>
+                                    <td>{% if teams.first.is_owner %}<span class="badge bg-label-warning">سازنده</span>{% else %}***{% endif %}</td>
+                                    <td>{% if teams.first.is_owner %}<a href={% url "team:update-team" teams.first.team.uuid %} class="badge bg-label-info">ویرایش</a>{% else %}***{% endif %}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -80,7 +80,7 @@
                     <div class="table-responsive">
                         <table class="table zero-configuration">
                             <thead>
-                                <tr class="table-primary">
+                                <tr class="">
                                     <th>#</th>
                                     <th>نام هم تیمی</th>
                                     <th>شماره تماس</th>
@@ -92,12 +92,12 @@
                             <tbody>
                                 {% for tmember in teams.first.team.team_of_team_member.all %}
                                     <tr>
-                                        <td class="border">{{forloop.counter|default:"0"|stringformat:"02d"}}</td>
-                                        <td class="border">{{tmember.user.get_full_name}}</td>
-                                        <td class="border">{{tmember.user.phone_number}}</td>
-                                        <td class="border">{% if tmember.user.is_profile_complete %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                        <td class="border">{% if tmember.user.user_of_personal_test.exists %}<span class="badge badge-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge badge-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                        <td class="border">{{tmember.user.user_of_road_registration.first.complete_registration_date|to_jalali}}</th>
+                                        <td>{{forloop.counter|default:"0"|stringformat:"02d"}}</td>
+                                        <td>{{tmember.user.get_full_name}}</td>
+                                        <td>{{tmember.user.phone_number}}</td>
+                                        <td>{% if tmember.user.is_profile_complete %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                        <td>{% if tmember.user.user_of_personal_test.exists %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                        <td>{{tmember.user.user_of_road_registration.first.complete_registration_date|to_jalali}}</th>
                                     </tr>
                                 {% endfor %}
                             </tbody>

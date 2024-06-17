@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+    
+    <div class="col-12">
+        <div class="row">
+            <div class="card">
+                <h5 class="card-header">اطلاعات کامل ایده</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-md-2 mb-2">
+                            <ul class="list-unstyled mb-4 mt-2">
+                                <!-- TODO: add education status field -->
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-sticker text-heading"></i><span class="fw-medium mx-2 text-heading"> نام محصول:</span> <span>{{plan.name}}</span></li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-bulb text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت:</span> {% if plan.status == "i" %}<span class="badge bg-label-success">ایده</span>{% else %}<span class="badge bg-label-success">محصول</span>{% endif %}</li>
+                                {% if plan.status == "m" %}
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-chart-arrows-vertical"></i><span class="fw-medium mx-2 text-heading">سطح محصول:</span> <span>{{plan.get_progress_status_display}}</span></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-md-2 mb-2">
+                            <ul class="list-unstyled mb-4 mt-2">
+                                <!-- TODO: add education status field -->
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-align-justified text-heading"></i><span class="fw-medium mx-2 text-heading"> توضیحات:</span></li>
+                                {{plan.description}}
+                            </ul>
+                        </div>
+
+                        <a {% if plan.video %}href="{{plan.video.url}}"{% endif %} target="blank" class="col-6 mb-md-0 mb-2">
+                            <div class="form-check custom-option custom-option-icon">
+                                <span class="form-check-label custom-option-content" for="customCheckboxIcon1">
+                                    <span class="custom-option-body">
+                                        <i class="ti ti-video"></i>
+                                        <span class="custom-option-title">فیلم محصول</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </a>
+
+                        <a {% if plan.pitch_deck %}href="{{plan.pitch_deck.url}}"{% endif %} target="blank" class="col-6 mb-md-0 mb-2">
+                            <div class="form-check custom-option custom-option-icon">
+                                <span class="form-check-label custom-option-content" for="customCheckboxIcon1">
+                                    <span class="custom-option-body">
+                                        <i class="ti ti-file-info"></i>
+                                        <span class="custom-option-title">فایل pitch deck</span>
+                                    </span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if team %}
+    <div class="col-12 mt-4">
+        <div class="row">
+            <div class="card">
+                <h5 class="card-header">اطلاعات کامل تیم</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-md-2 mb-2">
+                            <ul class="list-unstyled mb-4 mt-2">
+                                <!-- TODO: add education status field -->
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-help-hexagon text-heading"></i><span class="fw-medium mx-2 text-heading"> نام تیم:</span> <span>{{team.name}}</span></li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-category text-heading"></i><span class="fw-medium mx-2 text-heading"> دسته بندی:</span> {{team.category}}</li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-users text-heading"></i><span class="fw-medium mx-2 text-heading"> تعداد اعضا:</span> {{team.team_member_count}} نفر</li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-align-justified text-heading"></i><span class="fw-medium mx-2 text-heading"> توضیحات:</span></li>
+                                {{team.description}}
+                            </ul>
+                        </div>
+                        <div class="col-md-6 mb-md-2 mb-2">
+                            <ul class="list-unstyled mb-4 mt-2">
+                                <!-- TODO: add education status field -->
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-users text-heading"></i><span class="fw-medium mx-2 text-heading"> اعضای تیم:</span></li>
+                            </ul>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr class="">
+                                        <th scope="col">نام و نام‌خانوادگی</th>
+                                        <th scope="col">هماهنگ کننده؟</th>
+                                        <th scope="col">نقش</th>
+                                        <th scope="col">آزمون تست شخصیت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in team.team_of_team_member.all %}
+                                    <tr>
+                                        <td class=""><a {% if not member.user.uuid == user_object.uuid %}href={% url "account:profile" member.user.uuid %}{% endif %} class="">{{member.user.get_full_name}}</a></td>
+                                        <td>
+                                            {% if member.is_coordinator %}
+                                            <span class="badge bg-label-success"><i class="fa fa-check"></i></span>
+                                            {% else %}
+                                            <span class="text-secondary">***</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="">{{member.user.get_type_display}}</td>
+                                        <td><a href="" class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+</div>
+<!--/ User Profile Content -->
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

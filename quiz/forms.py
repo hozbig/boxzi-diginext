@@ -102,6 +102,10 @@ class PreRegisterTaskResponseCreateForm(ModelForm):
         model = PreRegisterTaskResponse
         text = QuillFormField()
         exclude = ("created_time", "last_update_time")
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["file"].widget.attrs['class'] = "form-control"
 
 
 class PreRegisterTaskResponseUpdateForm(ModelForm):

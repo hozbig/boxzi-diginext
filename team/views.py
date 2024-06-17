@@ -429,6 +429,32 @@ def save_extra_day_for_complete_registration(request):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
+class PlanAndTeamProfile(LoginRequiredMixin, View):
+    template_name = "team/plan_team_profile.html"
+    model = Plan
+    form_class = PlanCreateForm
+    context = {}
+
+    def get(self, request, user_uuid):
+        user = User.objects.get(uuid=user_uuid)
+        if user.user_of_team_member.exists():
+            team = user.user_of_team_member.first().team
+            plan = team.team_of_plan.first()
+            self.context["user_object"] = user
+            self.context["object"] = f"تیم {team}"
+            self.context["team"] = team
+            self.context["plan"] = plan
+        else:
+            plan = user.user_of_plan.first()
+            self.context["user_object"] = user
+            self.context["object"] = user.last_name
+            self.context["team"] = None
+            self.context["plan"] = plan
+            
+        self.context["title"] = "پروفایل ایده و تیم"
+        return render(request, self.template_name, self.context)
+
+
 # This functions dont need any authentication
 # searchzi: search + boxzi
 # this is a outside template of another function

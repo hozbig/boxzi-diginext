@@ -29,10 +29,10 @@
                             </div>
                             <div class="col-md-6">
                                 <ul class="list-unstyled mb-4 mt-3">
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع:</span> <span><bdi>0913 000 0000</bdi></span></li>
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان:</span> <span><bdi>0913 000 0000</bdi></span></li>
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-clock-2"></i><span class="fw-medium mx-2 text-heading">مهلت ثبت نام:</span> <span><bdi>0913 000 0000</bdi></span></li>
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-plus"></i><span class="fw-medium mx-2 text-heading">شروع دوره:</span> <span><bdi>0913 000 0000</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع:</span> <span><bdi>{{object.start_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان:</span> <span><bdi>{{object.expiration_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-clock-2"></i><span class="fw-medium mx-2 text-heading">مهلت ثبت نام:</span> <span><bdi>{{object.publish_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-plus"></i><span class="fw-medium mx-2 text-heading">شروع دوره:</span> <span><bdi>{{object.registration_deadline|to_jalali}}</bdi></span></li>
                             </ul>
                             </div>
                         </div>

@@ -33,27 +33,27 @@
                     {% csrf_token %}
                     <input name="team" value="{{object.id}}" hidden>
                     <div class="row">
-                        <div class="col-12 level active" id="level1">
+                        <div class="col-12 level mt-2 active" id="level1">
                             <h4 class="mb-1"><span class="text-danger font-weight-bold">مرحله اول: </span>اطلاعات کلی ایده/محصول خود را وارد کنید</h4>
-                            {{ add_product_form.name|as_crispy_field }}
-                            {{ add_product_form.description|as_crispy_field }}
+                            {{ form.name|as_crispy_field }}
+                            {{ form.description|as_crispy_field }}
                         </div>
 
-                        <div class="col-12 level active" id="level2">
+                        <div class="col-12 level mt-2" id="level2">
                             <h4 class="mb-1"><span class="text-danger font-weight-bold">مرحله دوم: </span>آپلود فایل پیچ دک</h4>
-                            {{ add_product_form.pitch_deck|as_crispy_field }}
+                            {{ form.pitch_deck|as_crispy_field }}
                         </div>
 
-                        <div class="col-12 level active" id="level3">
+                        <div class="col-12 level mt-2" id="level3">
                             <h4 class="mb-1"><span class="text-danger font-weight-bold">مرحله سوم: </span>مشخص کردن سطح رشدی ایده/محصول</h4>
-                            {{ add_product_form.status|as_crispy_field }}
-                            {{ add_product_form.progress_status|as_crispy_field }}
-                            {{ add_product_form.video|as_crispy_field }}
+                            {{ form.status|as_crispy_field }}
+                            {{ form.progress_status|as_crispy_field }}
+                            {{ form.video|as_crispy_field }}
                         </div>
 
-                        <div class="col-12">
-                            <span class="btn text-dark gradient-light-success" id="next">تایید</span>
-                            <button type="submit" class="btn text-dark gradient-light-success" id="submit" style="display: none;">ثبت</button>
+                        <div class="col-12 mt-3">
+                            <span class="btn text-dark btn-label-success" id="next">تایید</span>
+                            <button type="submit" class="btn text-dark btn-label-success" id="submit" style="display: none;">ثبت</button>
                         </div>
                     </div>
 

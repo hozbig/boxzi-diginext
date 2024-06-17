@@ -54,9 +54,6 @@ class StartUpTeam(models.Model):
     status = models.CharField(choices=STATUS, max_length=1, default="a", verbose_name="وضعیت", null=True, blank=True)
     description = models.TextField(verbose_name="بیوگرافی تیم")
     category = models.CharField(verbose_name="دسته بندی زمینه فعالیت", max_length=255)
-    # TODO: team_members and team_mentors need to delete. our solutions for specify the members and mentors are changed.
-    team_members = models.ManyToManyField("account.User", verbose_name="اعضای تیم", related_name="members_of_team", blank=True)
-    team_mentors = models.ManyToManyField("account.User", verbose_name="مربی های تیم", related_name="mentors_of_team", blank=True)
 
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
@@ -207,7 +204,7 @@ class RoadRegistration(models.Model):
         verbose_name_plural = "ثبت نام مسیرهای آموزشی"
 
     def __str__(self) -> str:
-        return f"{self.user.get_full_name()} - {self.user} - مسیر {self.road.name}"
+        return f"{self.user.get_full_name()} - مسیر {self.road.name}"
     
     def is_valid_registration_period(self):
         try:

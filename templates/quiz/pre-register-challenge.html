@@ -14,87 +14,52 @@
     {% include "elements/messages-section.html" %}
 
     <div class="col-12">
-        <section id="accordion-with-border">
-            <div class="row">
-                <div class="col-12">
-                    <div id="accordionWrapa50" role="tablist" aria-multiselectable="true">
-                        <div class="card collapse-icon accordion-icon-rotate">
-                            <div class="card-header">
-                                <h4 class="card-title">Border</h4>
-                            </div>
-                            <div class="card-content">
-                                <div class="card-body">
-                                    <div class="accordion" id="accordionExample0">
-                                        <div class="collapse-border-item collapse-header card collapse-bordered">
-                                            <div class="card-header" id="heading200" data-toggle="collapse" role="button" data-target="#collapse200" aria-expanded="false" aria-controls="collapse200">
-                                                <span class="lead collapse-title">
-                                                    محتوای چالش
-                                                </span>
-                                            </div>
-    
-                                            <div id="collapse200" class="collapse" aria-labelledby="heading200" data-parent="#accordionExample0">
-                                                <div class="card-body">
-                                                    <div class="card-header">
-                                                        <h4 class="card-title">{{task.title}}</h4>
-                                                    </div>
-                                                    <div class="card-content">
-                                                        <div class="card-body">
-                                                            
-                                                            {{task.text.html|safe}}
-                                                            
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+        <h5 class="mt-4">آکاردئون</h5>
+        <div class="row">
+            <div class="col-md mb-4 mb-md-2">
+                <small class="text-light fw-medium">آکاردئون پایه</small>
+                <div class="accordion mt-3" id="accordionExample">
+                    <div class="card accordion-item active">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button aria-controls="accordionOne" aria-expanded="true" class="accordion-button" data-bs-target="#accordionOne" data-bs-toggle="collapse" type="button"> محتوای چالش</button>
+                        </h2>
+                        <div class="accordion-collapse collapse show" data-bs-parent="#accordionExample" id="accordionOne">
+                            <div class="accordion-body">{{task.text.html|safe}}</div>
+                        </div>
+                    </div>
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button aria-controls="accordionTwo" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionTwo" data-bs-toggle="collapse" type="button"> فرم ثبت پاسخ</button>
+                        </h2>
+                        <div aria-labelledby="headingTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample" id="accordionTwo">
+                            <div class="accordion-body">
+                                <form method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <input name="user" value="{{request.user.id}}" hidden>
+                                    <input name="accelerator" value="{{task.id}}" hidden>
+                                    <input name="accelerator" value="{{road.id}}" hidden>
+                                    <input name="status" value="w" hidden>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            {{ exam_form.title|as_crispy_field }}
                                         </div>
-                                        <div class="collapse-border-item card collapse-header">
-                                            <div class="card-header" id="heading210" data-toggle="collapse" role="button" data-target="#collapse210" aria-expanded="false" aria-controls="collapse210">
-                                                <span class="lead collapse-title">
-                                                    فرم ثبت پاسخ
-                                                </span>
-                                            </div>
-                                            <div id="collapse210" class="collapse" aria-labelledby="heading210" data-parent="#accordionExample0">
-                                                <div class="card-body">
-                                                    <div class="card-header">
-                                                        <h4 class="card-title">پاسخ شما</h4>
-                                                    </div>
-                                                    <div class="card-content">
-                                                        <div class="card-body">
-                                                            
-                                                            <form method="POST" enctype="multipart/form-data">
-                                                                {% csrf_token %}
-                                                                <input name="user" value="{{request.user.id}}" hidden>
-                                                                <input name="accelerator" value="{{task.id}}" hidden>
-                                                                <input name="accelerator" value="{{road.id}}" hidden>
-                                                                <input name="status" value="w" hidden>
-                                                                <div class="row">
-                                                                    <div class="col-md-8">
-                                                                        {{ exam_form.title|as_crispy_field }}
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        {{ exam_form.file|as_crispy_field }}
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        {{ exam_form.text|as_crispy_field }}
-                                                                    </div>
-                                                                </div>
-                                        
-                                                                <button class="btn btn-success btn-block" type="submit">ثبت پاسخ</button>
-                                                            </form>
-                                                            
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        <div class="col-md-4">
+                                            {{ exam_form.file|as_crispy_field }}
+                                        </div>
+                                        <div class="col-12">
+                                            {{ exam_form.text|as_crispy_field }}
                                         </div>
                                     </div>
-                                </div>
+            
+                                    <button class="btn btn-label-success btn-block" type="submit">ثبت پاسخ</button>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+        <!--/ Accordion -->
     </div>
 
 </div>

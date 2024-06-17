@@ -114,7 +114,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.phone_number
+        return self.get_full_name()
 
     def is_profile_complete(self):
         if self.is_team_member or self.is_mentor:
