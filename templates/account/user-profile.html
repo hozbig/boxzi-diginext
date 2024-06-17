@@ -172,22 +172,25 @@
                         <div class="card-body">
                             {% for team in object.user_of_team_member.all %}
                             <div class="table-responsive text-nowrap">
-                                <table class="table">
-                                    <tr>
-                                        <th>نام:</th>
-                                        <td>{{team.team.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>موضوع:</th>
-                                        <td>{{team.team.category|default_if_none:"ثبت نشده"}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>تعداد اعضا:</th>
-                                        <td><span class="badge bg-danger">{{team.team.team_member_count}}</span></td>
-                                    </tr>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>نام:</th>
+                                            <th>موضوع:</th>
+                                            <th>تعداد اعضا:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        <tr>
+                                            <td>{{team.team.name}}</td>
+                                            <td>{{team.team.category|default_if_none:"ثبت نشده"}}</td>
+                                            <td><span class="badge bg-danger">{{team.team.team_member_count}}</span></td>    
+                                        </tr>
+                                    </tbody>
                                 </table>
-                                <div class="text-center">
-                                    <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md my-3">اطلاعات کامل</a>
+
+                                <div class="text-center my-3">
+                                    <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md">اطلاعات کامل</a>
                                 </div>
                             </div>
                             {% endfor %}
@@ -207,28 +210,29 @@
                         <div class="card-body">
                             {% for plan in object.user_of_plan.all %}
                             <div class="table-responsive text-nowrap">
-                                <table class="table">
-                                    <tr>
-                                        <th>نام:</th>
-                                        <td>{{plan.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>موضوع:</th>
-                                        <td>{{plan.industry|default_if_none:"ثبت نشده"}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>وضعیت:</th>
-                                        <td>{% if plan.status == "i" %}<span class="badge bg-label-success">ایده</span>{% else %}<span class="badge bg-label-success">محصول</span>{% endif %}</td>
-                                    </tr>
-                                    {% if plan.status == "m" %}
-                                    <tr>
-                                        <th>سطح محصول:</th>
-                                        <td>{{plan.get_progress_status_display}}</td>
-                                    </tr>
-                                    {% endif %}
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>نام:</th>
+                                            <th>موضوع:</th>
+                                            <th>وضعیت:</th>
+                                            <th>سطح محصول:</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-border-bottom-0">
+                                        <tr>
+                                            <td>{{plan.name}}</td>
+                                            <td>{{plan.industry|default_if_none:"ثبت نشده"}}</td>
+                                            <td>{% if plan.status == "i" %}<span class="badge bg-label-success">ایده</span>{% else %}<span class="badge bg-label-success">محصول</span>{% endif %}</td>
+                                            {% if plan.status == "m" %}
+                                            <td>{{plan.get_progress_status_display}}</td>
+                                            {% endif %}
+                                        </tr>
+                                    </tbody>
                                 </table>
-                                <div class="text-center">
-                                    <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md my-3">اطلاعات کامل</a>
+
+                                <div class="text-center my-3">
+                                    <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md">اطلاعات کامل</a>
                                 </div>
                             </div>
                             {% endfor %}

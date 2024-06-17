@@ -116,7 +116,7 @@ class AcceleratorDashboard(LoginRequiredMixin, View):
         
         requests_count = object.accelerator_of_road.first().road_of_road_registration.count()
         approved_requests_count = object.accelerator_of_road.first().road_of_road_registration.filter(status="a").count()
-        self.context["approve_percentage"] = 100 * float(approved_requests_count)/float(requests_count)
+        self.context["approve_percentage"] = round(100 * float(approved_requests_count)/float(requests_count))
         return render(request, self.template_name, self.context)
 
 
