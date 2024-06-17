@@ -83,7 +83,7 @@
     {% if object.team_or_individual in "ta" %}
     <div class="col-lg-12">
         <div class="card">
-            <h5 class="card-header pb-1">اطلاعات اعضای تیم</h5>
+            <h5 class="card-header pb-1">اطلاعات اعضای تیم "{{object.team.name}}"</h5>
             <div class="table-responsive text-nowrap">
                 <table class="table table-striped">
                     <thead>
@@ -180,21 +180,15 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">نام محصول/ایده</th>
-                            <th scope="col">وضعیت محصول/ایده</th>
-                            {% if object.user.user_of_plan.first.status == "m" %}
-                            <th scope="col">وضعیت محصول</th>
-                            {% endif %}
+                            <th scope="col">تاریخ تکمیل درخواست</th>
+                            <th scope="col">مدت زمان انجام درخواست</th>
                             <th scope="col">نتیجه چالش انجام شده</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
                         <tr>
-                            <td>{{object.user.user_of_plan.first.name}}</td>
-                            <td>{{object.user.user_of_plan.first.get_status_display}}</td>
-                            {% if object.user.user_of_plan.first.status == "m" %}
-                            <td>{{object.user.user_of_plan.first.get_progress_status_display}}</td>
-                            {% endif %}
+                            <td>{{object.complete_registration_date|to_jalali}}</td>
+                            <td>در {{object.days_to_complete_registration}} روز</td>
                             <td><a href={% url "quiz:task-response-detail" object.road.uuid object.user.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
                         </tr>
                     </tbody>
@@ -207,7 +201,7 @@
 
     <div class="col-lg-12 mt-4">
         <div class="card">
-            <h5 class="card-header pb-1">اطلاعات ایده</h5>
+            <h5 class="card-header pb-1">اطلاعات کلی ایده</h5>
             <div class="table-responsive text-nowrap">
                 <table class="table table-striped">
                     <thead>
@@ -216,8 +210,7 @@
                             <th>دسته بندی</th>
                             <th>دارای کمینه</th>
                             <th>سطح محصول</th>
-                            <th>فیلم ارسال شده</th>
-                            <th>فایل pitch deck</th>
+                            <th>عملیات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -228,8 +221,7 @@
                                     <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{{idea.get_progress_status_display}}</td>
-                                    <td>{% if idea.video %}<a class="badge bg-label-info" target="blank" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                    <td>{% if idea.pitch_deck %}<a class="badge bg-label-info" target="blank" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td><a href={% url "team:plan-team-profile" object.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
                                 </tr>
                             {% endfor %}
                         {% else %}
@@ -239,8 +231,7 @@
                                     <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{{idea.get_progress_status_display}}</td>
-                                    <td>{% if idea.video %}<a class="badge bg-label-info" target="blank" href="{{idea.video.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                                    <td>{% if idea.pitch_deck %}<a class="badge bg-label-info" target="blank" href="{{idea.pitch_deck.url}}"><i class="fa fa-eye"></i> مشاهده</a>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td><a href={% url "team:plan-team-profile" object.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}
@@ -251,7 +242,7 @@
     </div>
 
     {% if object.is_valid_registration_period < 2 %}
-    <div class="col-lg-4 mt-4">
+    <div class="col-md-6 mt-4">
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">اختصاص زمان بیشتر برای مهلت تکمیل اطلاعات</h4>
@@ -267,7 +258,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <button class="btn btn-success btn-block" type="submit">ثبت</button>
+                        <button class="btn btn-label-success mt-3" type="submit">ثبت</button>
                     </form>
                 </div>
             </div>

@@ -207,8 +207,20 @@ class RoadRegistration(models.Model):
         return f"{self.user.get_full_name()} - مسیر {self.road.name}"
     
     def is_valid_registration_period(self):
-        try:
+        """_summary_
+
+        Returns:
+            False (boolean): It will be returned if the user registration is not complete.
+            'True' (string): It mean user complete the registration.
+            __int__ : It show the days passed from the registration date. This is obtained by subtracting the user's registration completion date from today's date.
+        """
+        
+        try: # If registration for a team
             team_owner = self.team.team_of_team_member.filter(is_owner=True).first().user
+            
+            if team_owner.user_of_road_registration.first().client_last_response_date:
+                return "True"
+            
             team_owner_complete_registration_date = team_owner.user_of_road_registration.first().complete_registration_date
             team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
 
@@ -217,15 +229,33 @@ class RoadRegistration(models.Model):
 
             days_passed = (date.today() - team_owner_complete_registration_date).days
             return team_owner_validity_pride_days - days_passed
-        except:
+        except: # If registration for an individual
+            if self.client_last_response_date:
+                return "True"
+            
             if self.complete_registration_date is None:
                 return False  # or True depending on your requirement when there's no start date
 
             days_passed = (date.today() - self.complete_registration_date).days
             return self.validity_pride_days - days_passed
-            # return days_passed <= self.validity_pride_days
         
-        # return days_passed <= team_owner_validity_pride_days
+    def days_to_complete_registration(self):
+        try: # If registration for a team
+            team_owner = self.team.team_of_team_member.filter(is_owner=True).first().user
+            team_owner_complete_registration_date = team_owner.user_of_road_registration.first().complete_registration_date
+            team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
+
+            if team_owner_complete_registration_date is None:
+                return False 
+
+            days_passed = (date.today() - team_owner_complete_registration_date).days
+            return days_passed
+        except: # If registration for an individual
+            if self.complete_registration_date is None:
+                return False  # or True depending on your requirement when there's no start date
+
+            days_passed = (date.today() - self.complete_registration_date).days
+            return days_passed
 
     def is_complete_registration_for_coordinator(self) -> Union[bool, None]:
         if self.team_or_individual == "t":

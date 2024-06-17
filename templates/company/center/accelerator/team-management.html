@@ -133,10 +133,18 @@
 								{% for item in all_requests %}
 									<tr>
 										<td>{{item.user.get_full_name}}</td>
-										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge bg-label-warning">شخص</span>{% endif %}</td>
+										<td>
+											{% if item.team_or_individual in "t" %}
+												{% if item.team %}
+												{{item.team.name}}
+												{% else %}
+												<span class="text-muted">تیم ساخته نشده!</span>
+												{% endif %}	
+											{% else %}
+												<span class="badge bg-label-warning">شخص</span>
+											{% endif %}
+										</td>
 										<td>{{item.client_last_response_date|to_jalali}}</td>
-										
-										
 										<td>
 											{% if item.team_or_individual == "t" %}
 												{% if item.is_complete_registration_for_coordinator %}
@@ -158,14 +166,15 @@
 												{% endif %}
 											{% endif %}
 										</td>
-										
 										<td>
-											{% if item.is_valid_registration_period > 3 %}
-											<span class="badge bg-label-success">{{item.is_valid_registration_period}}</span>
-											{% elif 0 < item.is_valid_registration_period < 3 %}
-											<span class="badge bg-label-warning"><i class="ti ti-xs ti-tada ti-exclamation-mark"></i> {{item.is_valid_registration_period}}</span>
+											{% if item.is_valid_registration_period == "True" %}
+											<span class="badge bg-label-success">تکمیل</span>
+											{% elif item.is_valid_registration_period > 3 %}
+											<span class="badge bg-label-success">{{item.is_valid_registration_period}} روز</span>
+											{% elif item.is_valid_registration_period < 3 and item.is_valid_registration_period > 0 %}
+											<span class="badge bg-label-warning">{{item.is_valid_registration_period}} روز</span>
 											{% else %}
-											<span class="badge bg-label-danger">{{item.is_valid_registration_period}}</span>
+											<span class="badge bg-label-danger">{{item.is_valid_registration_period}} روز</span>
 											{% endif %}
 										</td>
 										<td>

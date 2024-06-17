@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, ListView, View, CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
@@ -627,7 +628,8 @@ class TeamManagement(LoginRequiredMixin, View):
     def get(self, request):
         acc_object = self.request.user.access_to_center
         self.context["acc_object"] = acc_object
-        all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all()
+        all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
+            (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
         
         self.context["all_requests"] = all_requests
         self.context["approved_requests"] = all_requests.filter(status="a")
