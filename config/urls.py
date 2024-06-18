@@ -27,14 +27,16 @@ def router(request):
         elif int(registration_obj.status_user_state) == 5:
             return redirect("account:user-dashboard")
         return redirect("content:roads")
+    elif user.is_center_staff():
+        return redirect("company:acc-dashboard")
+    elif user.is_referee:
+        return redirect("account:referee-dashboard")
     elif user.is_mentor:
         return redirect("account:mentor-dashboard")
     elif user.is_investor:
         return redirect("investor:dashboard")
     elif user.is_company:
         return redirect("company:dashboard")
-    elif user.is_center_staff():
-        return redirect("company:acc-dashboard")
     else:
         raise Http404("You do not have valid permissions!")
 

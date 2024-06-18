@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.db.models import Q
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
@@ -9,6 +10,7 @@ from django.contrib import messages
 from content.models import Road
 from team.models import RoadRegistration
 from utils.check_status_user_state_level import add_one_level
+from notifier.api import send_welcome_sms
 
 from .models import User
 from .forms import (
@@ -20,7 +22,7 @@ from .forms import (
     UserRegisterFormLevel4,
     UserLoginOrRegisterForm,
 )
-from .mixins import ChangeUserAccessMixin, AnonymousRequiredMixin
+from .mixins import ChangeUserAccessMixin, AnonymousRequiredMixin, RefereeAccessMixin
 
 
 class LoginOrRegister(AnonymousRequiredMixin, View):
@@ -133,6 +135,9 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
                 registration_obj.save()
 
             login(request, user)
+            
+            send_welcome_sms(user.phone_number)
+            
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
             return redirect("account:register2")
 
@@ -290,4 +295,53 @@ class UserDashboard(LoginRequiredMixin, View):
 
     def get(self, request):
         self.context["registration_obj"] = RoadRegistration.objects.get(user=request.user)
+        return render(request, self.template_name, self.context)
+
+
+class RefereeDashboard(LoginRequiredMixin, RefereeAccessMixin, View):
+    template_name = "account/referee/dashboard.html"
+    context = {"title":"داشبورد داور"}
+
+    def get(self, request):
+        acc_object = self.request.user.referee_of_center.first()
+        all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
+            (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
+        
+        filtered_objects = all_requests.exclude(status="n")
+        individual_objects = all_requests.exclude(status="n").filter(team_or_individual="i")
+        unique_teams = set()
+        unique_objects = []
+        
+        for obj in filtered_objects:
+            if obj.team not in unique_teams:
+                unique_teams.add(obj.team)
+                if obj.team_or_individual == "t":
+                    unique_objects.append(obj)
+        combined_results = unique_objects + list(individual_objects)
+        
+        self.context["valid_requests"] = combined_results
+        return render(request, self.template_name, self.context)
+
+
+class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
+    template_name = "account/referee/judgment_page.html"
+    context = {}
+
+    def get(self, request, user_uuid):
+        user = User.objects.get(uuid=user_uuid)
+        if user.user_of_team_member.exists():
+            team = user.user_of_team_member.first().team
+            plan = team.team_of_plan.first()
+            self.context["user_object"] = user
+            self.context["object"] = f"تیم {team}"
+            self.context["team"] = team
+            self.context["plan"] = plan
+        else:
+            plan = user.user_of_plan.first()
+            self.context["user_object"] = user
+            self.context["object"] = user.last_name
+            self.context["team"] = None
+            self.context["plan"] = plan
+            
+        self.context["title"] = "داوری ایده و تیم"
         return render(request, self.template_name, self.context)

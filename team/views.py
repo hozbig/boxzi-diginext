@@ -431,8 +431,6 @@ def save_extra_day_for_complete_registration(request):
 
 class PlanAndTeamProfile(LoginRequiredMixin, View):
     template_name = "team/plan_team_profile.html"
-    model = Plan
-    form_class = PlanCreateForm
     context = {}
 
     def get(self, request, user_uuid):

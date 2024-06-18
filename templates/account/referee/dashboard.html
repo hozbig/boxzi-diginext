@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load tag_library %}
+
+{% block page_css %}
+{% endblock page_css %}
+
+{% block main %}
+<div class="row">
+
+	{% include "elements/messages-section.html" %}
+
+	<div class="col-xl-8 mb-4 col-lg-7 col-12">
+		<div class="card bg-transparent shadow-none border-0">
+			<div class="card-body row p-0 pb-3">
+				<div class="col-12">
+					<h3>{{request.user.get_full_name}} به باکسی‌زی خوش آمدید</h3>
+					<div class="col-12">
+						<p>برای شما یک پنل از اطلاعات مورد نیاز شما فراهم کرده ایم که بتوانید کار داوری خود را برای <b>{{request.user.referee_of_center.first.name}}</b> به راحتی انجام دهید.</p>
+					</div>
+					<div class="d-flex justify-content-between flex-wrap gap-3 me-5">
+						<div class="d-flex align-items-center gap-3">
+							<span class="bg-label-primary p-2 rounded">
+								<i class="ti ti-urgent ti-xl"></i>
+							</span>
+							<div class="content-right">
+								<p class="mb-0">گردآوری اطلاعات</p>
+							</div>
+						</div>
+						<div class="d-flex align-items-center gap-3">
+							<span class="bg-label-success p-2 rounded">
+								<i class="ti ti-trending-up ti-xl"></i>
+							</span>
+							<div class="content-right">
+								<p class="mb-0">یکجا بودن اطلاعات</p>
+							</div>
+						</div>
+						<div class="d-flex align-items-center gap-3">
+							<span class="bg-label-warning p-2 rounded">
+								<i class="ti ti-brand-cashapp ti-xl"></i>
+							</span>
+							<div class="content-right">
+								<p class="mb-0">تمرکز بر اطلاعات مورد نیاز</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12 mt-4">
+        <div class="card">
+			<h5 class="card-header"> لیست درخواست ها </h5>
+            <div class="card-content">
+                <div class="card-body card-dashboard">
+                    <div class="table-responsive">
+                        <table class="table zero-configuration">
+                            <thead>
+                                <tr class="">
+									<th>نام و نام خانوادگی</th>
+                                    <th>تیم</th>
+                                    <th>تاریخ ثبت</th>
+                                    <th>امتیاز</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+								{% for item in valid_requests %}
+									<tr>
+										<td class="fw-bold">{{item.user.get_full_name}}</td>
+										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge bg-label-warning">شخص</span>{% endif %}</td>
+										<td>{{item.client_last_response_date|to_jalali}}</td>
+										
+										<td>0 امتیاز</td>
+										<td>
+											<a href={% url "account:judgment-page" item.user.uuid %} class="badge bg-label-primary">اطلاعات کامل <i class="fa fa-eye"></i></a>
+										</td>
+									</tr>
+								{% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+{% endblock page_js %}

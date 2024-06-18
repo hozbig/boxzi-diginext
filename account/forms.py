@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms import ModelForm
 from django.core.validators import RegexValidator
 from django import forms
+from hcaptcha.fields import hCaptchaField
 
 from .models import User, Meeting, LeanCanvas, WorkExperience
 
@@ -17,6 +18,7 @@ class LoginForm(forms.Form):
         ]
     )
     password = forms.CharField(widget=forms.PasswordInput)
+    hcaptcha = hCaptchaField()
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -87,6 +89,7 @@ class UserLoginOrRegisterForm(ModelForm):
             )
         ]
     )
+    hcaptcha = hCaptchaField()
 
     class Meta(UserCreationForm):
         model = User
@@ -115,6 +118,7 @@ class UserRegisterFormLevel1(UserCreationForm):
             )
         ]
     )
+    hcaptcha = hCaptchaField()
 
     class Meta(UserCreationForm):
         model = User
@@ -228,6 +232,7 @@ class AddRefereeForm(forms.Form):
     email = forms.EmailField(required=True, label="ایمیل")
     first_name = forms.CharField(max_length=30, required=True, label="نام")
     last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")
+    referee_validity_date = forms.DateField(required=True, label="تاریخ دسترسی داور تا")
     
     REFEREE_TYPES = (
         ("i", "داور ایده"),
@@ -239,3 +244,7 @@ class AddRefereeForm(forms.Form):
         required=True,
         label="نوع داور"
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["referee_validity_date"].widget.attrs['class'] = "flatpickr-date"

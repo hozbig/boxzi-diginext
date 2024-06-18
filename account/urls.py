@@ -25,4 +25,6 @@ urlpatterns = [
     # ======== Target-User(team_member) Urls ========
     path("", views.UserDashboard.as_view(), name="user-dashboard"),
     
+    path("referee/", views.RefereeDashboard.as_view(), name="referee-dashboard"),
+    path("referee/<str:user_uuid>/judgment/", views.JudgmentPage.as_view(), name="judgment-page"),
 ]

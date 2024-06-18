@@ -96,7 +96,7 @@
 										
 										<td class="{% if item.status == "w" %}table-info{% elif item.status == "p" %}table-primary{% elif item.status == "a" %}table-success{% elif item.status == "r" %}table-danger{% elif item.status == "c" %}table-warning{% endif %}">{{item.get_status_display}}</td>
 										
-										<td>50 امتیاز</td>
+										<td>0 امتیاز</td>
 										<td>
 											<a href={% url "team:registration-detail" item.uuid %} class="badge bg-label-info">مشاهده <i class="fa fa-eye"></i></a>
 										</td>
@@ -130,7 +130,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-								{% for item in all_requests %}
+								{% for item in last_10_requests %}
 									<tr>
 										<td>{{item.user.get_full_name}}</td>
 										<td>
@@ -184,6 +184,12 @@
 								{% endfor %}
                             </tbody>
                         </table>
+
+						{% if all_requests.count > 10 %}
+						<div class="text-center my-3">
+							<a href="/team/plan-team/kun8i/plan-team/" class="btn bg-label-primary btn-md waves-effect waves-light">لیست کامل</a>
+						</div>
+						{% endif %}
                     </div>
                 </div>
             </div>

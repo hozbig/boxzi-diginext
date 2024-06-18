@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
     'django_quill',
+    'hcaptcha',
     # Apps:
     'account',
     'content',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'plan',
     'team',
     'investor',
+    'notifier',
 ]
 
 MIDDLEWARE = [
@@ -172,4 +174,30 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # or another session backend if you prefer
 
 # Optionally, expire sessions when the browser is closed
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True                 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+HCAPTCHA_SITEKEY = 'fcea3f06-fba6-466a-9a00-3d169a40a4b8'
+HCAPTCHA_SECRET = 'ES_4b8f00cc60b041fb9125852a616f2b01'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+        'sms': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

@@ -4,7 +4,10 @@
 {% load crispy_forms_tags %}
 {% load tag_library %}
 
-{% block page_css %}{% endblock page_css %}
+{% block page_css %}
+<link href={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr.css" %} rel="stylesheet"/>
+<link href={% static "assets-vuexy/vendor/libs/pickr/pickr-themes.css" %} rel="stylesheet"/>
+{% endblock page_css %}
 
 {% block extra_menu %}{% endblock extra_menu %}
 
@@ -20,16 +23,13 @@
                     <h5 class="card-header pb-1">ثبت و مدیریت اعضای تیم</h5>
                     <div class="card-content">
                         <div class="card-body">
-                            <form method="POST" action="{% url "team:save-team-member" %}?next={{next_url}}">
+                            <form method="POST">
                                 {% csrf_token %}
-                                <input name="team" value="{{object.id}}" hidden>
                                 <div class="row">
                                     {% for field in form %}
-                                        {% if not field.name == "team" %}
                                         <div class="col-md-6 mt-2">
                                             {{ field|as_crispy_field }}
                                         </div>
-                                        {% endif %}
                                     {% endfor %}
                                 </div>
 
@@ -47,25 +47,25 @@
                                             <th scope="col">نام و نام خانوادگی</th>
                                             <th scope="col">شماره تماس</th>
                                             <th scope="col">نوع داور</th>
-                                            <th scope="col">عملیات</th>
+                                            <th scope="col">مدت دسترسی</th>
+                                            {% comment %} <th scope="col">عملیات</th> {% endcomment %}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for person in object.team_of_team_member.all %}
+                                        {% for person in request.user.access_to_center.referees.all %}
                                             <tr>
                                                 <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
-                                                <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
-                                                <td>{{person.user.phone_number}}</td>
-                                                <td>
-                                                    {% if person.is_coordinator %}<span class="badge bg-label-warning">هماهنگ کننده</span>{% endif %}
-                                                    {% if person.is_owner %} | <span class="badge bg-label-warning">سازنده</span>{% endif %}
-                                                    {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
-                                                </td>
-                                                {% if not person.is_owner %}
-                                                <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge bg-label-danger">حذف</a></td>
+                                                <td class="font-weight-bold"><a class="">{{person.get_full_name}}</a></td>
+                                                <td>{{person.phone_number}}</td>
+                                                <td>{{person.get_referee_type_display}}</td>
+
+                                                {% if person.referee_validity_left_days.0 == True %}
+                                                    <td>{{person.referee_validity_left_days.1}} روز مانده</td>
                                                 {% else %}
-                                                <td><span class="badge bg-label-primary text-white">سازنده تیم</span></td>
+                                                    <td>{{person.referee_validity_left_days.1}}</td>
                                                 {% endif %}
+
+                                                {% comment %} <td><a href="" class="badge bg-label-danger">حذف</a></td> {% endcomment %}
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -82,4 +82,10 @@
 </div>
 {% endblock main %}
 
-{% block page_js %}{% endblock page_js %}
+{% block page_js %}
+<script src={% static "assets-vuexy/vendor/libs/jdate/jdate.min.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr-jdate.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/l10n/fa.js" %}></script>
+
+<script src={% static "assets-vuexy/js/forms-pickers-jalali.js" %}></script>
+{% endblock page_js %}

@@ -636,6 +636,7 @@ class TeamManagement(LoginRequiredMixin, View):
             (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
         
         self.context["all_requests"] = all_requests
+        self.context["last_10_requests"] = all_requests[:10]
         self.context["approved_requests"] = all_requests.filter(status="a")
         self.context["rejected_requests"] = all_requests.filter(status="r")
         
@@ -755,7 +756,6 @@ class RefereeManagement(LoginRequiredMixin, View):
     def get(self, request):
         self.context["title"] = "مدیریت داورها"
         self.context["form"] = self.form_class
-        
         return render(request, self.template_name, self.context)
     
     def post(self, request):
@@ -763,16 +763,21 @@ class RefereeManagement(LoginRequiredMixin, View):
             messages.error(request, "عملیات غیرمجاز! شما ادمین شتابدهنده نیستید.")
             return render(request, self.template_name, self.context)
         
-        form = request.POST
+        form_copy = request.POST.copy()
+        form_copy.update({"referee_validity_date": date_db_convertor.jdate_edge_convertor(form_copy["referee_validity_date"]),})
+        
+        form = self.form_class(form_copy)
         if form.is_valid():
             phone_number = form.cleaned_data["phone_number"]
             email = form.cleaned_data["email"]
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
+            referee_validity_date = form.cleaned_data["referee_validity_date"]
             referee_type = form.cleaned_data["referee_type"]
             user_objects = User.objects.filter(phone_number=phone_number)
+            
             if not user_objects.exists():
-                # generated_pass is the password can login with it
+                # Generated_pass is the password can login with it
                 generated_pass = get_random_string(length=10)
                 hashed_password = make_password(generated_pass)
                 user_obj = User.objects.create(
@@ -780,19 +785,22 @@ class RefereeManagement(LoginRequiredMixin, View):
                     email = email,
                     first_name = first_name,
                     last_name = last_name,
+                    referee_validity_date = referee_validity_date,
                     password = hashed_password,
                     referee_type= referee_type,
                     is_referee = True
                 )
-                # add user(referee) to center(accelerator) valid referees
-                center_obj = request.user.access_to_center.referees.add(user_obj)
+                # Add user(referee) to center(accelerator) valid referees
+                center_obj = request.user.access_to_center
+                center_obj.referees.add(user_obj)
                 center_obj.save()
+                messages.success(request, "عملیات با موفقیت انجام شد")
+                return redirect("company:referee-management")
             else:
                 messages.error(request, "این کاربر از قبل ثبت نام کرده است!")
-                return render(request, self.template_name, self.context)
-            messages.success(request, "عملیات با موفقیت انجام شد")
-            return render(request, self.template_name, self.context)
+                return redirect("company:referee-management")
         else:
+            self.context["form"] = self.form_class
             messages.error(request, "مشکلی در فرم وجود دارد!")
             return render(request, self.template_name, self.context)
 

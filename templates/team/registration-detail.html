@@ -221,7 +221,7 @@
                                     <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{{idea.get_progress_status_display}}</td>
-                                    <td><a href={% url "team:plan-team-profile" object.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
+                                    <td><a href={% url "team:plan-team-profile" object.user.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
                                 </tr>
                             {% endfor %}
                         {% else %}
@@ -231,7 +231,7 @@
                                     <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{{idea.get_progress_status_display}}</td>
-                                    <td><a href={% url "team:plan-team-profile" object.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
+                                    <td><a href={% url "team:plan-team-profile" object.user.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
                                 </tr>
                             {% endfor %}
                         {% endif %}

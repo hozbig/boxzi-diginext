@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-
+from datetime import date
 from content.models import WatchedContent
 from team.models import StartUpTeam
 from utils.uuid_generator import random_uuid
@@ -69,6 +69,7 @@ class User(AbstractUser):
         ("f", "دسترسی کامل"),
     )
     referee_type = models.CharField(verbose_name="نوع داور", max_length=4, choices=REFEREE_TYPES, default="i")
+    referee_validity_date = models.DateField("تاریخ دسترسی داور تا", auto_now=False, auto_now_add=False, null=True, blank=True)
     
     access_to_center = models.ForeignKey("company.Center", verbose_name="دسترسی به مرکز", blank=True, null=True, on_delete=models.CASCADE)
 
@@ -167,6 +168,15 @@ class User(AbstractUser):
         total_team_member_count = sum(team.team_member_count() for team in related_teams)
 
         return total_team_member_count
+
+    def referee_validity_left_days(self):
+        if not self.is_referee:
+            return [False, "عدم دسترسی!"]
+        
+        if self.referee_validity_date < date.today():
+            return [False, "باطل شده!"]
+        
+        return [True, (self.referee_validity_date - date.today()).days]
 
 
 class Meeting(models.Model):

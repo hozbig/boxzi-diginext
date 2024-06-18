@@ -21,6 +21,15 @@ class AdminAccessMixin:
             return super().dispatch(request, *args, **kwargs)
         else:
             raise Http404("Access Denied!")
+        
+        
+class RefereeAccessMixin:
+    def dispatch(self, request, *args, **kwargs):
+        user = get_object_or_404(User, uuid=request.user.uuid)
+        if user.is_referee:
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            raise Http404("Access Denied!")
 
 
 class AnonymousRequiredMixin:

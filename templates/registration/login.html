@@ -1,4 +1,5 @@
 {% load static %}
+{% load crispy_forms_tags %}
 
 <!DOCTYPE html>
 <html class="light-style layout-wide customizer-hide" data-assets-path="assets-vuexy/" data-template="vertical-menu-template" data-theme="theme-default" dir="rtl" lang="fa">
@@ -89,6 +90,7 @@
                                 <i class="ti ti-eye-off"></i>
                             </span>
                         </div>
+                        {{form.hcaptcha|as_crispy_field}}
                     </div>
                     <button class="btn btn-primary d-grid w-100">ورود</button>
                 </form>
