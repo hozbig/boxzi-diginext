@@ -86,6 +86,7 @@ class Center(models.Model):
     activity = models.CharField(verbose_name="حوزه فعالیت", max_length=255)
     teams = models.ManyToManyField("team.StartUpTeam", verbose_name="تیم های استارتاپی", blank=True, related_name="team_of_center")
     mentors = models.ManyToManyField("account.User", verbose_name="مربی ها", blank=True)
+    referees = models.ManyToManyField("account.User", verbose_name="داور ها", related_name="referee_of_center", blank=True)
 
     description = QuillField(default="", verbose_name="توضیحات", blank=True)
     

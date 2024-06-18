@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <h5 class="card-header pb-1">ثبت و مدیریت اعضای تیم</h5>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form method="POST" action="{% url "team:save-team-member" %}?next={{next_url}}">
+                                {% csrf_token %}
+                                <input name="team" value="{{object.id}}" hidden>
+                                <div class="row">
+                                    {% for field in form %}
+                                        {% if not field.name == "team" %}
+                                        <div class="col-md-6 mt-2">
+                                            {{ field|as_crispy_field }}
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <div class="text-right">
+                                    <button class="btn btn-label-success mt-3" type="submit">ثبت عضو</button>
+                                </div>
+                            </form>
+        
+                            <h5 class="mt-5">اعضای ثبت شده</h5>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">نام و نام خانوادگی</th>
+                                            <th scope="col">شماره تماس</th>
+                                            <th scope="col">نوع داور</th>
+                                            <th scope="col">عملیات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for person in object.team_of_team_member.all %}
+                                            <tr>
+                                                <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                                <td class="font-weight-bold"><a class="">{{person.user.get_full_name}}</a></td>
+                                                <td>{{person.user.phone_number}}</td>
+                                                <td>
+                                                    {% if person.is_coordinator %}<span class="badge bg-label-warning">هماهنگ کننده</span>{% endif %}
+                                                    {% if person.is_owner %} | <span class="badge bg-label-warning">سازنده</span>{% endif %}
+                                                    {% if not person.is_owner and not person.is_coordinator %}<span class="text-black-50">***</span>{% endif %}
+                                                </td>
+                                                {% if not person.is_owner %}
+                                                <td><a href={% url "team:delete-team-member" person.uuid object.uuid %} class="badge bg-label-danger">حذف</a></td>
+                                                {% else %}
+                                                <td><span class="badge bg-label-primary text-white">سازنده تیم</span></td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}{% endblock page_js %}

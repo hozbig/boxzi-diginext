@@ -46,6 +46,7 @@ urlpatterns = [
     path("accelerator/new-register-task/", views.CreatePreRegisterTask.as_view(), name="new-register-task"),
     path("accelerator/<str:uuid>/update-register-task/", views.UpdatePreRegisterTask.as_view(), name="update-register-task"),
     path("accelerator/<str:uuid>/delete-register-task/", views.DeletePreRegisterTask.as_view(), name="delete-register-task"),
+    path("accelerator/referee-management/", views.RefereeManagement.as_view(), name="referee-management"),
 
     path('logoutt/', views.create_center, name='create_center'),
 ]

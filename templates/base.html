@@ -104,11 +104,11 @@
 
                 {% comment %} ================== ACCELERATOR access ================== {% endcomment %}
                 {% if request.user.is_center_staff %}
-                <li class="menu-item {% if "/company/accelerator/" in request.path %}open{% endif %}">
+                <li class="menu-item {% if "/company/" in request.path %}open{% endif %}">
                     <a class="menu-link menu-toggle" href="javascript:void(0);">
                         <i class="menu-icon tf-icons ti ti-route"></i>
-                        <div>مدیریت مسیرآموزشی</div>
-                        <div class="badge bg-primary rounded-pill ms-auto">5</div>
+                        <div>مدیریت برنامه</div>
+                        <div class="badge bg-primary rounded-pill ms-auto">4</div>
                     </a>
                     <ul class="menu-sub">
                         <li class="menu-item {% if request.path == "/company/accelerator/new-road/" %}active{% endif %}">
@@ -131,20 +131,34 @@
                                 <div>آزمون ها و تسک ها</div>
                             </a>
                         </li>
+                    </ul>
+                </li>
+
+                <li class="menu-item {% if "/company/" in request.path %}open{% endif %}">
+                    <a class="menu-link menu-toggle" href="javascript:void(0);">
+                        <i class="menu-icon tf-icons ti ti-door-enter"></i>
+                        <div>مدیریت درخواست</div>
+                        <div class="badge bg-primary rounded-pill ms-auto">2</div>
+                    </a>
+                    <ul class="menu-sub">
+                        <li class="menu-item {% if request.path == "/company/team-management/" %}active{% endif %}">
+                            <a class="menu-link" href={% url "company:team-management" %}>
+                                <div>مدیریت درخواست ها</div>
+                            </a>
+                        </li>
                         <li class="menu-item {% if request.path == "/company/accelerator/new-register-task/" %}active{% endif %}">
                             <a class="menu-link" href={% url "company:new-register-task" %}>
                                 <div>آزمون های ورودی</div>
                             </a>
                         </li>
+                        <li class="menu-item {% if request.path == "/company/accelerator/referee-management/" %}active{% endif %}">
+                            <a class="menu-link" href={% url "company:referee-management" %}>
+                                <div>داور ها</div>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
-                <li class="menu-item {% if request.path == "/company/team-management/" %}active{% endif %}">
-                    <a class="menu-link" href={% url "company:team-management" %}>
-                        <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                        <div>مدیریت درخواست ها</div>
-                    </a>
-                </li>
                 {% endif %}
 
                 {% comment %} ================== INVESTOR access ================== {% endcomment %}

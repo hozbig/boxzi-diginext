@@ -4,13 +4,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.contrib.auth import login, authenticate
 from django.utils import timezone
-from content.models import WatchedContent
 from utils import date_db_convertor
 from django.contrib import messages
 from content.models import Road
 from team.models import RoadRegistration
-from utils.check_status_user_state_level import add_one_level, level_checker
-
+from utils.check_status_user_state_level import add_one_level
 
 from .models import User
 from .forms import (

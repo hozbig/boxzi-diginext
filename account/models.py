@@ -61,6 +61,14 @@ class User(AbstractUser):
     is_team_member = models.BooleanField(verbose_name="عضو تیم", default=False)
     is_investor = models.BooleanField(verbose_name="سرمایه گذار", default=False)
     is_company = models.BooleanField(verbose_name="شرکت", default=False)
+    is_referee = models.BooleanField(verbose_name="داور", default=False)
+    
+    REFEREE_TYPES = (
+        ("i", "داور ایده"),
+        ("t", "تیم"),
+        ("f", "دسترسی کامل"),
+    )
+    referee_type = models.CharField(verbose_name="نوع داور", max_length=4, choices=REFEREE_TYPES, default="i")
     
     access_to_center = models.ForeignKey("company.Center", verbose_name="دسترسی به مرکز", blank=True, null=True, on_delete=models.CASCADE)
 

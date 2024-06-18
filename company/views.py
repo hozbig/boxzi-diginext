@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib.auth.hashers import make_password
+from django.utils.crypto import get_random_string
 from utils import date_db_convertor
 from content.models import Content, Collection, Road, CollectionOrder, ContentOrder
 from content.forms import (
@@ -35,6 +37,8 @@ from quiz.forms import (
 )
 from subject.models import Topic, Subject
 from subject.forms import TopicSubjectCreationForm
+from account.models import User
+from account.forms import AddRefereeForm
 
 from .models import Company, Center
 from .mixins import CompanyAdminMixin
@@ -740,6 +744,57 @@ class DeletePreRegisterTask(LoginRequiredMixin, SuccessMessageMixin, DeleteView)
         context = super().get_context_data(**kwargs)
         context["title"] = "حذف آزمون ورودی"
         return context
+    
+    
+class RefereeManagement(LoginRequiredMixin, View):
+    model = User
+    form_class = AddRefereeForm
+    template_name = "company/center/accelerator/referee-management.html"
+    context = {}
+    
+    def get(self, request):
+        self.context["title"] = "مدیریت داورها"
+        self.context["form"] = self.form_class
+        
+        return render(request, self.template_name, self.context)
+    
+    def post(self, request):
+        if not request.user.is_center_staff:
+            messages.error(request, "عملیات غیرمجاز! شما ادمین شتابدهنده نیستید.")
+            return render(request, self.template_name, self.context)
+        
+        form = request.POST
+        if form.is_valid():
+            phone_number = form.cleaned_data["phone_number"]
+            email = form.cleaned_data["email"]
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            referee_type = form.cleaned_data["referee_type"]
+            user_objects = User.objects.filter(phone_number=phone_number)
+            if not user_objects.exists():
+                # generated_pass is the password can login with it
+                generated_pass = get_random_string(length=10)
+                hashed_password = make_password(generated_pass)
+                user_obj = User.objects.create(
+                    phone_number = phone_number,
+                    email = email,
+                    first_name = first_name,
+                    last_name = last_name,
+                    password = hashed_password,
+                    referee_type= referee_type,
+                    is_referee = True
+                )
+                # add user(referee) to center(accelerator) valid referees
+                center_obj = request.user.access_to_center.referees.add(user_obj)
+                center_obj.save()
+            else:
+                messages.error(request, "این کاربر از قبل ثبت نام کرده است!")
+                return render(request, self.template_name, self.context)
+            messages.success(request, "عملیات با موفقیت انجام شد")
+            return render(request, self.template_name, self.context)
+        else:
+            messages.error(request, "مشکلی در فرم وجود دارد!")
+            return render(request, self.template_name, self.context)
 
 
 from django.http import JsonResponse

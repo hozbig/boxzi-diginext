@@ -213,3 +213,29 @@ class UserRegisterFormLevel4(forms.ModelForm):
         self.fields["if_is_startup_experience"].required = False
         self.fields["why_us"].required = False
         self.fields["why_us_video"].required = False
+
+
+class AddRefereeForm(forms.Form):
+    phone_number = forms.CharField(
+        max_length=11,
+        validators=[
+            RegexValidator(
+                r'^09\d{9}$',
+                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد.'
+            )
+        ], required=True, label="شماره همراه"
+    )
+    email = forms.EmailField(required=True, label="ایمیل")
+    first_name = forms.CharField(max_length=30, required=True, label="نام")
+    last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")
+    
+    REFEREE_TYPES = (
+        ("i", "داور ایده"),
+        ("t", "تیم"),
+        ("f", "دسترسی کامل"),
+    )
+    referee_type = forms.ChoiceField(
+        choices=REFEREE_TYPES,
+        required=True,
+        label="نوع داور"
+    )
