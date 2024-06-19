@@ -89,7 +89,6 @@ class UserLoginOrRegisterForm(ModelForm):
             )
         ]
     )
-    hcaptcha = hCaptchaField()
 
     class Meta(UserCreationForm):
         model = User

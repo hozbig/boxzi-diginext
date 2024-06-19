@@ -9,11 +9,10 @@ class NotifyLog(models.Model):
         blank=True,
         default=random_uuid,
         editable=False,
-        primary_key=True,
     )
     
     status = models.CharField(verbose_name="کد وضعیت", max_length=3)
-    message = models.JSONField(verbose_name="پاسخ سرور")
+    message = models.JSONField(verbose_name="پاسخ سرور", null=True)
     
     send_try = models.PositiveIntegerField(verbose_name="تلاش برای ارسال")
     
