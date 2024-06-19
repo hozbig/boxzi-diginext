@@ -1,111 +1,209 @@
 import logging
+import json
 
 from kavenegar import KavenegarAPI, APIException, HTTPException
 from .models import NotifyLog
 
 
-API_KEY = '4973593739752F72545932434C7A356C6238623462644544617575596D794E36346E6E71745873357250773D'
+API_KEY = '5942524C707361635633774F54767244524A314C5856564A3367416464446F33'
+SENDER_NUMBER = '10000018121812'
+
 logger = logging.getLogger('sms')
 
-def send_authentication_sms(user_phone_number, username, password):
-    """
-    Sends an SMS containing the user's username and password.
 
-    Args:
-        user_phone_number (str or int): The user's phone number.
-        username (str): The user's username.
-        password (str): The user's password.
+def send_authentication_sms(destination_phone_number, password):
+    message = f"""
+    به باکس زی خوش آمدید!
+    
+    اطلاعات ورود به حساب خود:
+    رمزعبور: {password}
+    نام کاربری شما همان شماره موبایل شما میباشد
     """
-
-    message = f"Username: {username}\nPassword: {password}"
 
     try:
         api = KavenegarAPI(API_KEY)
         params = {
-            'sender': '10004346',
-            'receptor': user_phone_number,
+            'sender': SENDER_NUMBER,
+            'receptor': destination_phone_number,
             'message': message
         }
         response = api.sms_send(params)
-        status = response['return']['status']
-        
-        logger.info(f"SMS sent successfully for")
+        json_response = json.loads(response)
+        status = json_response['return']['status']
+        logger.info(f"SMS request sent successfully")
         
         try:
             notify_log_object = NotifyLog.objects.create(
-                phone_number=user_phone_number,
                 status=status,
-                response_data=response
+                message=json_response,
+                send_try=1
             )
             logger.info(f"NotifyLog object created successfully [uuid:{notify_log_object}]")
         except:
             logger.error(f"Create NotifyLog object failed!: {response}")
-            
         
     except APIException as e:
-        print("APIException occurred:", e)
+        logger.error(f"APIException occurred: {e}")
     except HTTPException as e:
-        print("HTTPException occurred:", e)
+        logger.error(f"HTTPException occurred: {e}")
     except Exception as e:
-        print("An unexpected error occurred:", e)
+        logger.error(f"An unexpected error occurred: {e}")
 
 
-def send_welcome_sms(user_phone_number):
+def send_authentication_sms_referee(destination_phone_number, password):
+    message = f"""
+    به باکس زی خوش آمدید!
+    
+    اطلاعات ورود به حساب خود:
+    رمزعبور: {password}
+    نام کاربری شما همان شماره موبایل شما میباشد
+    """
+
+    try:
+        api = KavenegarAPI(API_KEY)
+        params = {
+            'sender': SENDER_NUMBER,
+            'receptor': destination_phone_number,
+            'message': message
+        }
+        response = api.sms_send(params)
+        json_response = json.loads(response)
+        status = json_response['return']['status']
+        logger.info(f"SMS request sent successfully")
+        
+        try:
+            notify_log_object = NotifyLog.objects.create(
+                status=status,
+                message=json_response,
+                send_try=1
+            )
+            logger.info(f"NotifyLog object created successfully [uuid:{notify_log_object}]")
+        except:
+            logger.error(f"Create NotifyLog object failed!: {response}")
+        
+    except APIException as e:
+        logger.error(f"APIException occurred: {e}")
+    except HTTPException as e:
+        logger.error(f"HTTPException occurred: {e}")
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+
+
+def send_welcome_sms(destination_phone_number, user_name):
     """
     Sends a welcome SMS to the user.
 
     Args:
-        user_phone_number (str or int): The user's phone number.
+        destination_phone_number (str or int): The user's phone number.
     """
-
-    message = "Welcome to our service! We're glad to have you with us."
+    message = f"""
+    به باکس زی خوش آمدید!
+    
+    {user_name} عزیز حساب شما با موفقیت ساخته شد.
+    """
 
     try:
         api = KavenegarAPI(API_KEY)
         params = {
-            'sender': '10004346',
-            'receptor': user_phone_number,
+            'sender': SENDER_NUMBER,
+            'receptor': destination_phone_number,
             'message': message
         }
         response = api.sms_send(params)
-        print("Welcome SMS sent successfully:", response)
+        json_response = json.loads(response)
+        status = json_response['return']['status']
+        logger.info(f"Welcome SMS request sent successfully")
+        
+        try:
+            notify_log_object = NotifyLog.objects.create(
+                status=status,
+                message=json_response,
+                send_try=1
+            )
+            logger.info(f"NotifyLog object created successfully [uuid:{notify_log_object}]")
+        except:
+            logger.error(f"Create NotifyLog object failed!: {response}")
+        
     except APIException as e:
-        print("APIException occurred:", e)
+        logger.error(f"APIException occurred: {e}")
     except HTTPException as e:
-        print("HTTPException occurred:", e)
+        logger.error(f"HTTPException occurred: {e}")
     except Exception as e:
-        print("An unexpected error occurred:", e)
+        logger.error(f"An unexpected error occurred: {e}")
 
 
-def send_event_registration_sms(user_phone_number, event_name, event_date):
+def send_event_registration_sms(destination_phone_number, event_name):
     """
     Sends an SMS confirming the user's registration for an event.
 
     Args:
-        user_phone_number (str or int): The user's phone number.
+        destination_phone_number (str or int): The user's phone number.
         event_name (str): The name of the event.
         event_date (str): The date of the event.
     """
-
-    # Validate event_name and event_date
-    if not isinstance(event_name, str) or not isinstance(event_date, str):
-        print("Error: Event name and event date must be strings.")
-        return
-
-    message = f"You have successfully registered for {event_name} on {event_date}. Looking forward to seeing you there!"
+    message = f"""
+    تکمیل ثبت نام شما در برنامه {event_name} به صورت کامل انجام شد.
+    
+    پاسخ شتابدهنده و وضعیت درخواست شما برای شما ارسال خواهد شد.
+    """
 
     try:
         api = KavenegarAPI(API_KEY)
         params = {
-            'sender': '10004346',
-            'receptor': user_phone_number,
+            'sender': SENDER_NUMBER,
+            'receptor': destination_phone_number,
             'message': message
         }
         response = api.sms_send(params)
-        print("Event registration SMS sent successfully:", response)
+        json_response = json.loads(response)
+        status = json_response['return']['status']
+        logger.info(f"Road complete registration SMS request sent successfully")
+        
+        try:
+            notify_log_object = NotifyLog.objects.create(
+                status=status,
+                message=json_response,
+                send_try=1
+            )
+            logger.info(f"NotifyLog object created successfully [uuid:{notify_log_object}]")
+        except:
+            logger.error(f"Create NotifyLog object failed!: {response}")
+        
     except APIException as e:
-        print("APIException occurred:", e)
+        logger.error(f"APIException occurred: {e}")
     except HTTPException as e:
-        print("HTTPException occurred:", e)
+        logger.error(f"HTTPException occurred: {e}")
     except Exception as e:
-        print("An unexpected error occurred:", e)
+        logger.error(f"An unexpected error occurred: {e}")
+
+
+def custom_message_sms(destination_phone_number, message):
+    try:
+        api = KavenegarAPI(API_KEY)
+        params = {
+            'sender': SENDER_NUMBER,
+            'receptor': destination_phone_number,
+            'message': message
+        }
+        response = api.sms_send(params)
+        json_response = json.loads(response)
+        status = json_response['return']['status']
+        logger.info(f"Road complete registration SMS request sent successfully")
+        
+        try:
+            notify_log_object = NotifyLog.objects.create(
+                status=status,
+                message=json_response,
+                send_try=1
+            )
+            logger.info(f"NotifyLog object created successfully [uuid:{notify_log_object}]")
+        except:
+            logger.error(f"Create NotifyLog object failed!: {response}")
+        
+    except APIException as e:
+        logger.error(f"APIException occurred: {e}")
+    except HTTPException as e:
+        logger.error(f"HTTPException occurred: {e}")
+    except Exception as e:
+        logger.error(f"An unexpected error occurred: {e}")
+

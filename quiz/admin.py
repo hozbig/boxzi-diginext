@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import Exam, Answer, Question, UserExamAnsewrHistory, ExamOrder, PreRegisterTask
+from .models import Exam, Answer, Question, UserExamAnsewrHistory, ExamOrder, PreRegisterTask, PersonalTest
 
+admin.site.register(PersonalTest)
 admin.site.register(PreRegisterTask)
 admin.site.register(ExamOrder)
 class ExamAdmin(admin.ModelAdmin):

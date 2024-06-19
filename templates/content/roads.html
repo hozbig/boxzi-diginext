@@ -62,7 +62,7 @@
                         <tr class="table-primary text-center text-dark">
                             <th class="col-4">آخرین وضعیت درخواست شما</th>
                             <th>تکمیل پروفایل شخصی</th>
-                            <th>انجام آزمون شخصیت</th>
+                            <th>انجام چالش مهارت نرم</th>
 
                             {% if registration_obj.team_or_individual != "i" %}
                             <th>تکمیل اطلاعات تیم توسط سرپرست‌تیم</th>
@@ -92,7 +92,7 @@
                             <td class="border table-primary">{{registration_obj.get_status_display}}</td>
                             <!-- تکمیل بودن پروفایل -->
                             <td class="border ">{% if request.user.is_profile_complete %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
-                            <!-- انجام آزمون شخصیت -->
+                            <!-- انجام چالش مهارت نرم -->
                             <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
 
                             {% if registration_obj.team_or_individual != "i" %}

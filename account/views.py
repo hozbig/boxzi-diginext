@@ -136,7 +136,7 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
 
             login(request, user)
             
-            send_welcome_sms(user.phone_number)
+            send_welcome_sms(user.phone_number, user.first_name)
             
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
             return redirect("account:register2")
@@ -254,6 +254,7 @@ class UserProfile(LoginRequiredMixin, View):
     def get(self, request, uuid):
         user = User.objects.get(uuid=uuid)
         self.context["object"] = user
+        self.context["next_url"] = request.GET.get('next', None)
         return render(request, self.template_name, self.context)
     
 
@@ -319,6 +320,7 @@ class RefereeDashboard(LoginRequiredMixin, RefereeAccessMixin, View):
                     unique_objects.append(obj)
         combined_results = unique_objects + list(individual_objects)
         
+        self.context["valid_requests_count"] = len(combined_results)
         self.context["valid_requests"] = combined_results
         return render(request, self.template_name, self.context)
 

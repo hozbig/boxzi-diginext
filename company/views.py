@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
+from notifier.api import send_authentication_sms_referee
 from utils import date_db_convertor
 from content.models import Content, Collection, Road, CollectionOrder, ContentOrder
 from content.forms import (
@@ -794,6 +795,12 @@ class RefereeManagement(LoginRequiredMixin, View):
                 center_obj = request.user.access_to_center
                 center_obj.referees.add(user_obj)
                 center_obj.save()
+                
+                send_authentication_sms_referee(
+                    user_obj.phone_number,
+                    generated_pass,
+                )
+                
                 messages.success(request, "عملیات با موفقیت انجام شد")
                 return redirect("company:referee-management")
             else:

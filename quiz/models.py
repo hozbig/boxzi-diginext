@@ -262,7 +262,7 @@ class PersonalTest(models.Model):
     last_update_time = models.DateTimeField(auto_now=True, null=True, verbose_name="زمان بروزرسانی")
 
     class Meta:
-        verbose_name = "آزمون شخصیت"
+        verbose_name = "چالش مهارت نرم"
         verbose_name_plural = "آزمون های شخصیت"
 
     def __str__(self) -> str:

@@ -38,6 +38,9 @@
         <div class="col-md-12">
             <ul class="nav nav-pills flex-column flex-sm-row mb-4">
                 <li class="nav-item"> <a class="nav-link active"><i class="ti-xs ti ti-user-check me-1"></i> مشخصات</a> </li>
+                {% if next_url %}
+                <li class="nav-item mx-3"> <a href="{{next_url}}" class="nav-link bg-label-primary"><i class="ti-xs ti ti-arrow-back me-1"></i> صفحه قبل</a> </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -118,9 +121,15 @@
                                     <div class="badge p-2 bg-label-info mb-2 rounded">
                                         <i class="ti ti-notes ti-sm"></i>
                                     </div>
-                                    <h5 class="card-title mb-1 pt-1">آزمون شخصیت</h5>
-                                    <small class="text-muted">امتیاز دریافتی</small>
-                                    <p class="mb-2 mt-1"><i class="ti ti-medal-2"></i> ?? امتیاز</p>
+                                    <h5 class="card-title mb-1 pt-1">چالش مهارت نرم</h5>
+                                    <small class="text-muted"><i class="ti ti-medal-2"></i> 0 امتیاز دریافتی</small>
+                                    <p class="mb-2 mt-1">
+                                        {% if object.user_of_personal_test %}
+                                        <a href={% url "quiz:personal-tests-result" object.user_of_personal_test.first.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> مشاهده چالش</a>
+                                        {% else %}
+                                        <a class="badge bg-label-dark"><i class="fa fa-eye"></i> مشاهده چالش</a>
+                                        {% endif %}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -132,8 +141,14 @@
                                         <i class="ti ti-device-gamepad ti-sm"></i>
                                     </div>
                                     <h5 class="card-title mb-1 pt-1">چالش تخصصی</h5>
-                                    <small class="text-muted">امتیاز دریافتی</small>
-                                    <p class="mb-2 mt-1"><i class="ti ti-medal-2"></i> ?? امتیاز</p>
+                                    <small class="text-muted"><i class="ti ti-medal-2"></i> 0 امتیاز دریافتی</small>
+                                    <p class="mb-2 mt-1">
+                                        {% if object.user_of_pre_register_task_response.exists %}
+                                        <a href={% url "quiz:task-response-detail" object.user_of_pre_register_task_response.first.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> مشاهده چالش</a>
+                                        {% else %}
+                                        <a class="badge bg-label-dark"><i class="fa fa-eye"></i> مشاهده چالش</a>
+                                        {% endif %}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -144,7 +159,7 @@
                                     <div class="d-flex flex-column">
                                         <div class="card-title mb-auto">
                                             <h5 class="mb-0 text-nowrap">میانگین امیتیاز</h5>
-                                            <small>آزمون شخصیت و چالش تخصصی</small>
+                                            <small>چالش مهارت نرم و چالش تخصصی</small>
                                         </div>
                                         <div class="chart-statistics">
                                             <h3 class="card-title mb-0">4,350</h3>
@@ -190,7 +205,11 @@
                                 </table>
 
                                 <div class="text-center my-3">
+                                    {% if request.user.is_referee %}
                                     <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md">اطلاعات کامل</a>
+                                    {% else %}
+                                    <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md">اطلاعات کامل</a>
+                                    {% endif %}
                                 </div>
                             </div>
                             {% endfor %}
@@ -231,9 +250,11 @@
                                     </tbody>
                                 </table>
 
+                                {% if not request.user.is_referee %}
                                 <div class="text-center my-3">
                                     <a href={% url "team:plan-team-profile" object.uuid %} class="btn bg-label-primary btn-md">اطلاعات کامل</a>
                                 </div>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         </div>

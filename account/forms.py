@@ -10,15 +10,20 @@ from .models import User, Meeting, LeanCanvas, WorkExperience
 class LoginForm(forms.Form):
     phone_number = forms.CharField(
         max_length=11,
+        label="شماره موبایل",
         validators=[
             RegexValidator(
                 r'^09\d{9}$',
-                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد. مطمئن شوید که از اعداد لاتین استفاده میکنید!'
+                message='شماره تماس باید با 09 شروع شده و شامل 11 رقم باشد. مطمئن شوید که از اعداد لاتین استفاده میکنید!',
             )
         ]
     )
     password = forms.CharField(widget=forms.PasswordInput)
     hcaptcha = hCaptchaField()
+    
+    phone_number.widget.attrs["placeholder"] = "جهت ورود شماره موبایل خودرا وارد کنید"
+    password.widget.attrs["placeholder"] = "············"
+    password.label = ""
 
 
 class CustomUserCreationForm(UserCreationForm):

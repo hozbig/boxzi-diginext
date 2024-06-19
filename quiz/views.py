@@ -247,6 +247,16 @@ class PreRegisterPersonalTests(LoginRequiredMixin, View):
         next_url = request.GET.get('next')
         messages.success(request, "آزمون شما با موفقیت ثبت شد")
         return redirect(next_url if next_url else reverse("quiz:pre-register-required", kwargs={"road_uuid": road_uuid,}))
+    
+    
+class PersonalTestsResult(LoginRequiredMixin, View):
+    template_name = "quiz/personal-tests-result.html"
+    context = {}
+    
+    def get(self, request, test_uuid):
+        self.context["title"] = "آزمون ورودی شخصیت"
+        self.context["object"] = PersonalTest.objects.get(uuid=test_uuid)
+        return render(request, self.template_name, self.context)
 
 
 class PreRegisterChallenges(LoginRequiredMixin, View):
@@ -338,11 +348,9 @@ class PreRegisterTaskResponseDetail(LoginRequiredMixin, View):
     template_name = "quiz/task-response-detail.html"
     context = {}
 
-    def get(self, request, road_uuid, uuid):
-        road = Road.objects.get(uuid=road_uuid)
-        user = User.objects.get(uuid=uuid)
+    def get(self, request, uuid):
         self.context["title"] = "مشاهده پاسخ به چالش" 
-        self.context["object"] = PreRegisterTaskResponse.objects.get(user=user, road=road)
+        self.context["object"] = PreRegisterTaskResponse.objects.get(uuid=uuid)
         return render(request, self.template_name, self.context)
 
     def get_context_data(self, **kwargs):

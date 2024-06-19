@@ -11,7 +11,7 @@
 
 	{% include "elements/messages-section.html" %}
 
-	<div class="col-xl-8 mb-4 col-lg-7 col-12">
+	<div class="col-12">
 		<div class="card bg-transparent shadow-none border-0">
 			<div class="card-body row p-0 pb-3">
 				<div class="col-12">
@@ -46,6 +46,30 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-2 col-6 mt-4">
+		<div class="card h-100">
+			<div class="card-body text-center">
+				<div class="badge rounded-pill p-2 bg-label-primary mb-2">
+					<i class="ti ti-message-dots ti-sm"></i>
+				</div>
+				<h5 class="card-title mb-0 mt-2">{{valid_requests_count}}</h5>
+				<small>درخواست موجود</small>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-2 col-6 mt-4">
+		<div class="card h-100">
+			<div class="card-body text-center">
+				<div class="badge rounded-pill p-2 bg-label-success mb-2">
+					<i class="ti ti-message-dots ti-sm"></i>
+				</div>
+				<h5 class="card-title mb-0 mt-2">0</h5>
+				<small>درخواست بررسی شده</small>
 			</div>
 		</div>
 	</div>
