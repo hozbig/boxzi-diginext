@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'team',
     'investor',
     'notifier',
+    'assessment',
 ]
 
 MIDDLEWARE = [

@@ -16,10 +16,10 @@
             <div class="card accordion-item">
                 <h2 class="accordion-header d-flex align-items-center">
                     <button aria-expanded="false" class="accordion-button" data-bs-target="#accordionWithIcon-1" data-bs-toggle="collapse" type="button">
-                        {% if plan.status == "i" %}<i class="ti ti-bulb ti-xs me-2"></i> ایده{% else %}<i class="ti ti-robot ti-xs me-2"></i> محصول{% endif %}
+                        {% if plan.status == "i" %}<i class="ti ti-bulb ti-xs me-2"></i> ایده{% else %}<i class="ti ti-robot ti-xs me-2"></i> ارزیابی بخش فنی ایده و محصول{% endif %}
                     </button>
                 </h2>
-                <div class="accordion-collapse collapse show" id="accordionWithIcon-1">
+                <div class="accordion-collapse collapse" id="accordionWithIcon-1">
                     <div class="accordion-body">
                         <div class="row p-0 p-md-3">
                             <div class="col-md-6 mb-md-2 mb-2">
@@ -63,34 +63,37 @@
                             </a>
                         </div>
 
+                        {% if all_questions %}
                         <div class="row p-0 p-md-3">
-                            <h5 class="col-12 card-header">امتیاز دهی به محصول</h5>
+                            <hr>
+                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
                             <form method="POST" id="product_form">
                                 {% csrf_token %}
-                                <input type="text" name="p-0" id="p_0_id" hidden>
-                                <input type="text" name="p-1" id="p_1_id" hidden>
-                                <input type="text" name="p-2" id="p_2_id" hidden>
-
-                                <div class="pb-5">
-                                    ۱. این محصول چقدر نمره میگیره؟
-                                    <div class="mt-2 product-pips"></div>
-                                </div>
                                 
-                                <div class="py-5">
-                                    2. این محصول چقدر نمره میگیره؟
-                                    <div class="mt-2 product-pips"></div>
-                                </div>
-                                
-                                <div class="py-5">
-                                    3. این محصول چقدر نمره میگیره؟
-                                    <div class="mt-2 product-pips"></div>
-                                </div>
+                                {% for question in all_questions %}
+                                    {% if question.category.key_name == "plan" %}
+                                    <input type="text" name="{{question.uuid}}" id="p_{{forloop.counter}}_id" hidden>
+                                    <div class="col-12 border rounded px-5" >
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h6>
+                                            </div>
+                                            <!-- TODO:change the alignment of scoring to the left-->
+                                            <div class="col-4 my-4">
+                                                <div class="mt-2 mx-auto product-pips"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
                                 
                                 <div class="d-grid mt-5 col-md-6 mx-auto">
                                     <button type="submit" class="btn btn-label-success">ثبت</button>
                                 </div>
                             </form>
                         </div>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -98,18 +101,92 @@
             <div class="accordion-item card">
                 <h2 class="accordion-header d-flex align-items-center">
                     <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-2" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-briefcase ti-xs"></i> کسب و کار
+                        <i class="me-2 ti ti-briefcase ti-xs"></i> ارزیابی بخش کسب‌وکار
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse" id="accordionWithIcon-2">
-                    <div class="accordion-body"> اطلاعاتی در دسترسی نیست!</div>
+                    <div class="accordion-body">
+                        <div class="row p-0 p-md-3">
+                            <div class="col-md-6 mb-md-2 mb-2">
+                                <ul class="list-unstyled mb-4 mt-2">
+                                    <!-- TODO: add education status field -->
+                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-sticker text-heading"></i><span class="fw-medium mx-2 text-heading"> نام محصول:</span> <span>{{plan.name}}</span></li>
+                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-bulb text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت:</span> {% if plan.status == "i" %}<span class="badge bg-label-success">ایده</span>{% else %}<span class="badge bg-label-success">محصول</span>{% endif %}</li>
+                                    {% if plan.status == "m" %}
+                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-chart-arrows-vertical"></i><span class="fw-medium mx-2 text-heading">سطح محصول:</span> <span>{{plan.get_progress_status_display}}</span></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6 mb-md-2 mb-2">
+                                <ul class="list-unstyled mb-4 mt-2">
+                                    <!-- TODO: add education status field -->
+                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-align-justified text-heading"></i><span class="fw-medium mx-2 text-heading"> توضیحات:</span></li>
+                                    {{plan.description}}
+                                </ul>
+                            </div>
+    
+                            <a {% if plan.video %}href="{{plan.video.url}}"{% endif %} target="blank" class="col-6 mb-md-0 mb-2">
+                                <div class="form-check custom-option custom-option-icon">
+                                    <span class="form-check-label custom-option-content" for="customCheckboxIcon1">
+                                        <span class="custom-option-body">
+                                            <i class="ti ti-video"></i>
+                                            <span class="custom-option-title">فیلم محصول</span>
+                                        </span>
+                                    </span>
+                                </div>
+                            </a>
+    
+                            <a {% if plan.pitch_deck %}href="{{plan.pitch_deck.url}}"{% endif %} target="blank" class="col-6 mb-md-0 mb-2">
+                                <div class="form-check custom-option custom-option-icon">
+                                    <span class="form-check-label custom-option-content" for="customCheckboxIcon1">
+                                        <span class="custom-option-body">
+                                            <i class="ti ti-file-info"></i>
+                                            <span class="custom-option-title">فایل pitch deck</span>
+                                        </span>
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+
+                        {% if all_questions %}
+                        <div class="row p-0 p-md-3">
+                            <hr>
+                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
+                            <form method="POST" id="product_form">
+                                {% csrf_token %}
+                                
+                                {% for question in all_questions %}
+                                    {% if question.category.key_name == "business" %}
+                                    <input type="text" name="{{question.uuid}}" id="b_{{forloop.counter}}_id" hidden>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                            </div>
+                                            <!-- TODO:change the alignment of scoring to the left-->
+                                            <div class="col-4 my-4">
+                                                <div class="mt-2 mx-auto product-pips"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <div class="d-grid mt-5 col-md-6 mx-auto">
+                                    <button type="submit" class="btn btn-label-success">ثبت</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
+                    </div>
                 </div>
             </div>
 
             <div class="accordion-item card">
                 <h2 class="accordion-header d-flex align-items-center">
                     <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-3" data-bs-toggle="collapse" type="button">
-                        {% if team %}<i class="me-2 ti ti-users ti-xs"></i> تیم{% else %}<i class="me-2 ti ti-user ti-xs"></i> فرد{% endif %}
+                        {% if team %}<i class="me-2 ti ti-users ti-xs"></i> بررسی تیم کارآفرین{% else %}<i class="me-2 ti ti-user ti-xs"></i> بررسی فرد کارآفرین{% endif %}
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse" id="accordionWithIcon-3">
@@ -235,6 +312,38 @@
                             </div>
                         </div>
                         {% endif %}
+
+                        {% if all_questions %}
+                        <div class="row p-0 p-md-3">
+                            <hr>
+                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
+                            <form method="POST" id="product_form">
+                                {% csrf_token %}
+                                
+                                {% for question in all_questions %}
+                                    {% if question.category.key_name == "team_individual" %}
+                                    <input type="text" name="{{question.uuid}}" id="ti_{{forloop.counter}}_id" hidden>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                            </div>
+                                            <!-- TODO:change the alignment of scoring to the left-->
+                                            <div class="col-4 my-4">
+                                                <div class="mt-2 mx-auto product-pips"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <div class="d-grid mt-5 col-md-6 mx-auto">
+                                    <button type="submit" class="btn btn-label-success">ثبت</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -242,22 +351,90 @@
             <div class="accordion-item card">
                 <h2 class="accordion-header d-flex align-items-center">
                     <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-4" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-notes ti-xs"></i> چالش مهارت نرم
+                        <i class="me-2 ti ti-notes ti-xs"></i> ارزیابی مهارت‌های نرم کارآفرین
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse" id="accordionWithIcon-4">
-                    <div class="accordion-body"> اطلاعاتی در دسترسی نیست!</div>
+                    <div class="accordion-body">
+                        اطلاعاتی در دسترسی نیست!
+                    
+                        {% if all_questions %}
+                        <div class="row p-0 p-md-3">
+                            <hr>
+                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
+                            <form method="POST" id="product_form">
+                                {% csrf_token %}
+                                
+                                {% for question in all_questions %}
+                                    {% if question.category.key_name == "personal" %}
+                                    <input type="text" name="{{question.uuid}}" id="pt_{{forloop.counter}}_id" hidden>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                            </div>
+                                            <!-- TODO:change the alignment of scoring to the left-->
+                                            <div class="col-4 my-4">
+                                                <div class="mt-2 mx-auto product-pips"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <div class="d-grid mt-5 col-md-6 mx-auto">
+                                    <button type="submit" class="btn btn-label-success">ثبت</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
+                    </div>
                 </div>
             </div>
 
             <div class="accordion-item card">
                 <h2 class="accordion-header d-flex align-items-center">
                     <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-5" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-device-gamepad ti-xs"></i> چالش تخصصی
+                        <i class="me-2 ti ti-device-gamepad ti-xs"></i> ارزیابی مهارت‌های تخصصی کارآفرین
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse" id="accordionWithIcon-5">
-                    <div class="accordion-body"> اطلاعاتی در دسترسی نیست!</div>
+                    <div class="accordion-body">
+                        اطلاعاتی در دسترسی نیست!
+                    
+                        {% if all_questions %}
+                        <div class="row p-0 p-md-3">
+                            <hr>
+                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
+                            <form method="POST" id="product_form">
+                                {% csrf_token %}
+                                
+                                {% for question in all_questions %}
+                                    {% if question.category.key_name == "challenge" %}
+                                    <input type="text" name="{{question.uuid}}" id="ch_{{forloop.counter}}_id" hidden>
+                                    <div class="col-12 border rounded px-5">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                            </div>
+                                            <!-- TODO:change the alignment of scoring to the left-->
+                                            <div class="col-4 my-4">
+                                                <div class="mt-2 mx-auto product-pips"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                <div class="d-grid mt-5 col-md-6 mx-auto">
+                                    <button type="submit" class="btn btn-label-success">ثبت</button>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
+                    </div>
                 </div>
             </div>
         </div>

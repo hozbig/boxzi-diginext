@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms import ModelForm
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from django import forms
 from hcaptcha.fields import hCaptchaField
 
@@ -197,6 +198,14 @@ class UserRegisterFormLevel3(forms.ModelForm):
             self.fields[field].widget.attrs['style'] = 'text-align:right'
         self.fields["resume_file"].required = False
         self.fields["other_specialties"].required = False
+        self.fields["resume_file"].widget.attrs['accept'] = 'application/pdf'  # Restrict file input to PDF files
+
+    def clean_resume_file(self):
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        resume_file = self.cleaned_data.get('resume_file')
+        if resume_file and not resume_file.name.endswith('.pdf'):
+            raise ValidationError('فقط فایل‌های PDF مجاز هستند')
+        return resume_file
 
 
 class UserRegisterFormLevel4(forms.ModelForm):
@@ -221,6 +230,26 @@ class UserRegisterFormLevel4(forms.ModelForm):
         self.fields["if_is_startup_experience"].required = False
         self.fields["why_us"].required = False
         self.fields["why_us_video"].required = False
+        self.fields["why_us_video"].widget.attrs['accept'] = 'video/*'
+        
+    def clean_why_us_video(self):
+        why_us_video = self.cleaned_data.get('why_us_video')
+        if why_us_video:
+            if not why_us_video.content_type.startswith('video'):
+                raise ValidationError('فقط فایل‌های ویدیویی مجاز هستند')
+            if why_us_video.size > 50 * 1024 * 1024:  # 50MB
+                raise ValidationError('حجم فایل ویدیویی نباید بیشتر از 50MB باشد')
+        return why_us_video
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        why_us = cleaned_data.get("why_us")
+        why_us_video = cleaned_data.get("why_us_video")
+
+        if not why_us and not why_us_video:
+            raise ValidationError('لطفاً یکی از فیلدهای "چرا ما" یا "ویدئوی چرا ما" را پر کنید')
+
+        return cleaned_data
 
 
 class AddRefereeForm(forms.Form):

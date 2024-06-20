@@ -11,6 +11,7 @@ from content.models import Road
 from team.models import RoadRegistration
 from utils.check_status_user_state_level import add_one_level
 from notifier.api import send_welcome_sms
+from assessment.models import Question
 
 from .models import User
 from .forms import (
@@ -346,6 +347,7 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
             self.context["plan"] = plan
             
         self.context["title"] = "داوری ایده و تیم"
+        self.context["all_questions"] = Question.objects.all()
         return render(request, self.template_name, self.context)
     
     def post(self, request, user_uuid):

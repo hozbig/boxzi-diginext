@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% load tag_library %}
+
+{% block page_css %}
+<link href={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr.css" %} rel="stylesheet"/>
+<link href={% static "assets-vuexy/vendor/libs/pickr/pickr-themes.css" %} rel="stylesheet"/>
+{% endblock page_css %}
+
+{% block extra_menu %}{% endblock extra_menu %}
+
+{% block main %}
+<div class="row">
+
+    {% include "elements/messages-section.html" %}
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <h5 class="card-header pb-1">ثبت و مدیریت اعضای تیم</h5>
+                    <div class="card-content">
+                        <div class="card-body">
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="row">
+                                    {% for field in form %}
+                                        <div class="col-md-6 mt-2">
+                                            {{ field|as_crispy_field }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="text-right">
+                                    <button class="btn btn-label-success mt-3" type="submit">ثبت عضو</button>
+                                </div>
+                            </form>
+        
+                            <h5 class="mt-5">اعضای ثبت شده</h5>
+                            <div class="table-responsive text-nowrap">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">سوال</th>
+                                            <th scope="col">دسته بندی</th>
+                                            {% comment %} <th scope="col">عملیات</th> {% endcomment %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for question in object_list %}
+                                            <tr>
+                                                <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                                <td class="font-weight-bold"><a class="">{{question.question}}</a></td>
+                                                <td>{{question.category.name}}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock main %}
+
+{% block page_js %}
+<script src={% static "assets-vuexy/vendor/libs/jdate/jdate.min.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/flatpickr-jdate.js" %}></script>
+<script src={% static "assets-vuexy/vendor/libs/flatpickr/l10n/fa.js" %}></script>
+
+<script src={% static "assets-vuexy/js/forms-pickers-jalali.js" %}></script>
+{% endblock page_js %}

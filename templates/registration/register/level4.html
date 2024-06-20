@@ -138,14 +138,18 @@
         // Function to handle form submission
         $('#submitBtn').click(function(event) {
             event.preventDefault(); // Prevent default form submission
+
+            const reason_type = $('#id_torm').val();
+            if (reason_type !== "t" && reason_type !== "v") {
+                $('#label_torm').addClass("text-danger");
+                return;
+            }
             
             // Function to collect input values and create JSON objects for startup questions
             var startupData = {};
             $('.startup_question_a').each(function() {
                 startupData[$(this).attr('placeholder')] = $(this).val();
             });
-            console.log("startupData")
-            console.log(startupData)
             $('#id_if_is_startup_experience').val(JSON.stringify(startupData)); // Set the JSON variable as value of the corresponding input field
             
             // Function to collect input values and create JSON objects for accelerator questions
@@ -153,8 +157,6 @@
             $('.accelerator_question_a').each(function() {
                 acceleratorData[$(this).attr('placeholder')] = $(this).val();
             });
-            console.log("acceleratorData")
-            console.log(acceleratorData)
             $('#id_if_is_accelerator_experience').val(JSON.stringify(acceleratorData)); // Set the JSON variable as value of the corresponding input field
 
             $("#myForm").submit()

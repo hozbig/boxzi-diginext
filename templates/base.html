@@ -158,6 +158,11 @@
                                 <div>داور ها</div>
                             </a>
                         </li>
+                        <li class="menu-item {% if request.path == "/assessment/question/create/" %}active{% endif %}">
+                            <a class="menu-link" href={% url "assessment:create-question" %}>
+                                <div>مدیریت سوال های داوری</div>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 
