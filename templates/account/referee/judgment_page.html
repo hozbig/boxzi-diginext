@@ -4,7 +4,9 @@
 {% load crispy_forms_tags %}
 {% load tag_library %}
 
-{% block page_css %}{% endblock page_css %}
+{% block page_css %}
+<link href={% static "assets-vuexy/vendor/libs/nouislider/nouislider.css" %} rel="stylesheet"/>
+{% endblock page_css %}
 
 {% block main %}
 <div class="row">
@@ -17,7 +19,7 @@
                         {% if plan.status == "i" %}<i class="ti ti-bulb ti-xs me-2"></i> ایده{% else %}<i class="ti ti-robot ti-xs me-2"></i> محصول{% endif %}
                     </button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionWithIcon-1">
+                <div class="accordion-collapse collapse show" id="accordionWithIcon-1">
                     <div class="accordion-body">
                         <div class="row p-0 p-md-3">
                             <div class="col-md-6 mb-md-2 mb-2">
@@ -60,6 +62,35 @@
                                 </div>
                             </a>
                         </div>
+
+                        <div class="row p-0 p-md-3">
+                            <h5 class="col-12 card-header">امتیاز دهی به محصول</h5>
+                            <form method="POST" id="product_form">
+                                {% csrf_token %}
+                                <input type="text" name="p-0" id="p_0_id" hidden>
+                                <input type="text" name="p-1" id="p_1_id" hidden>
+                                <input type="text" name="p-2" id="p_2_id" hidden>
+
+                                <div class="pb-5">
+                                    ۱. این محصول چقدر نمره میگیره؟
+                                    <div class="mt-2 product-pips"></div>
+                                </div>
+                                
+                                <div class="py-5">
+                                    2. این محصول چقدر نمره میگیره؟
+                                    <div class="mt-2 product-pips"></div>
+                                </div>
+                                
+                                <div class="py-5">
+                                    3. این محصول چقدر نمره میگیره؟
+                                    <div class="mt-2 product-pips"></div>
+                                </div>
+                                
+                                <div class="d-grid mt-5 col-md-6 mx-auto">
+                                    <button type="submit" class="btn btn-label-success">ثبت</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -78,7 +109,7 @@
             <div class="accordion-item card">
                 <h2 class="accordion-header d-flex align-items-center">
                     <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-3" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-users ti-xs"></i> {% if team %}تیم{% else %}فرد{% endif %}
+                        {% if team %}<i class="me-2 ti ti-users ti-xs"></i> تیم{% else %}<i class="me-2 ti ti-user ti-xs"></i> فرد{% endif %}
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse" id="accordionWithIcon-3">
@@ -129,6 +160,80 @@
                             </div>
                         </div>
                         {% else %}
+                        <div class="row p-0 p-md-3">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-5 col-md-5">
+                                        <div class="mb-4">
+                                            <div class="">
+                                                <small class="card-text text-uppercase">درباره</small>
+                                                <ul class="list-unstyled mb-4 mt-2">
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-user text-heading"></i><span class="fw-medium mx-2 text-heading">نام کامل:</span> <span>علیرضا احمدی</span>
+                                                    </li><li class="d-flex align-items-center mb-2"> <i class="ti ti-crown text-heading"></i><span class="fw-medium mx-2 text-heading">نقش:</span> <span>فنی</span></li>
+                                                    <!-- TODO: add gender field -->
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-gender-bigender text-heading"></i><span class="fw-medium mx-2 text-heading">جنسیت:</span> <span>فنی</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-event text-heading"></i><span class="fw-medium mx-2 text-heading">تاریخ تولد:</span> <span>1403/3/27</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">ساکن:</span> <span>31 / 31</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-3 col-md-5 col-md-5">
+                                        <div class="mb-4">
+                                            <div class="">
+                                                <small class="card-text text-uppercase">اطلاعات تماس</small>
+                                                <ul class="list-unstyled mb-4 mt-2">
+                                                    
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-phone-call"></i><span class="fw-medium mx-2 text-heading">شماره تماس:</span> <span>09130000000</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-mail"></i><span class="fw-medium mx-2 text-heading">ایمیل:</span> <span>adsf@gmial.com</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-lg-3 col-md-5 col-md-5">
+                                        <div class="mb-4">
+                                            <div class="">
+                                                <small class="card-text text-uppercase">اطلاعات تحصیلی</small>
+                                                <ul class="list-unstyled mb-4 mt-2">
+                                                    <!-- TODO: add education status field -->
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-help-hexagon text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت تحصیل:</span> <span>کاردانی</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-school text-heading"></i><span class="fw-medium mx-2 text-heading"> آخرین مقطع‌تحصیلی:</span> <span>کاردانی</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin"></i><span class="fw-medium mx-2 text-heading">محل تحصیل:</span> <span>تهران</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+        
+                                    <div class="col-lg-3 col-md-5 col-md-5">
+                                        <div class="mb-4">
+                                            <div class="">
+                                                <small class="card-text text-uppercase">اطلاعات حرفه‌ای</small>
+                                                <ul class="list-unstyled mb-4 mt-2">
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-stethoscope"></i><span class="fw-medium mx-2 text-heading">زمینه اصلی تخصص:</span> <span>Ai</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-device-imac"></i><span class="fw-medium mx-2 text-heading">دیگر تخصص ها:</span> <span>devops</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-brand-python text-heading"></i><span class="fw-medium mx-2 text-heading">زبان برنامه‌نویسی:</span> <span>Python3</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-file-description text-heading"></i><span class="fw-medium mx-2 text-heading">رزومه:</span> <span><a href="/media/users/resumes/gxdnu/%D9%81%D8%B1%D9%85-%D9%87%D8%A7%DB%8C-%DA%A9%D8%A7%D8%B1%D8%A2%D9%85%D9%88%D8%B2%DB%8C.pdf" target="blank" class="badge bg-label-info">دانلود</a></span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-md-5 col-md-5">
+                                <div class="mb-4">
+                                    <div class="">
+                                        <small class="card-text text-uppercase">فعالیت‌های نوآوری و کسب‌وکار</small>
+                                        <ul class="list-unstyled mb-4 mt-2">
+                                            <li class="d-flex align-items-center mb-2"> <i class="ti ti-trending-up"></i><span class="fw-medium mx-2 text-heading">تجربه شرکت در برنامه شتابدهی:</span> <span>داشته ام</span></li>
+                                            <li class="d-flex align-items-center mb-2"> <i class="ti ti-briefcase"></i><span class="fw-medium mx-2 text-heading">تجربه‌کار یا بنیان‌گذاری استارتاپ:</span> <span>هیچ تجربه ای ندارم</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
@@ -162,4 +267,47 @@
 <!--/ User Profile Content -->
 {% endblock main %}
 
-{% block page_js %}{% endblock page_js %}
+{% block page_js %}
+<script src={% static "assets-vuexy/vendor/libs/nouislider/nouislider.js" %}></script>
+
+<script>
+    let sliderPips = document.querySelectorAll('.product-pips, .business-pips, .team-pips, .individual-pips, .soft-skill, .challange');
+    for (let i = 0; i < sliderPips.length; i++) {
+        noUiSlider.create(sliderPips[i], {
+          start: [5],
+          behaviour: 'tap-drag',
+          step: 1,
+          tooltips: false,
+          range: {
+            min: 0,
+            max: 10
+          },
+          pips: {
+            mode: 'steps',
+            stepped: true,
+            density: 10
+          },
+          direction: isRtl ? 'rtl' : 'ltr'
+        });
+    }
+</script>
+
+<script>
+    let productForm = document.getElementById("product_form");
+
+    productForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let pips = document.getElementsByClassName("product-pips");
+
+        for (let i = 0; i < pips.length; i++) {
+            let val = pips[i].noUiSlider.get();
+            console.log(`p_${i}_id`);
+            document.getElementById(`p_${i}_id`).value = val;
+        }
+
+        // Programmatically submit the form after updating the input values
+        productForm.submit();
+    });
+</script>
+{% endblock page_js %}

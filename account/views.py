@@ -347,3 +347,9 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
             
         self.context["title"] = "داوری ایده و تیم"
         return render(request, self.template_name, self.context)
+    
+    def post(self, request, user_uuid):
+        print("------------------------ request.POST ------------------------")
+        print(request.POST)
+        print("------------------------ request.POST ------------------------")
+        return render(request, self.template_name, self.context)
