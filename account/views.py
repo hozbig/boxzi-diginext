@@ -2,16 +2,19 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.urls import reverse
 from django.contrib.auth import login, authenticate
 from django.utils import timezone
 from utils import date_db_convertor
 from django.contrib import messages
 from content.models import Road
-from team.models import RoadRegistration
 from utils.check_status_user_state_level import add_one_level
 from notifier.api import send_welcome_sms
-from assessment.models import Question
+from assessment.models import Question, Response
+from plan.models import Plan
+from team.models import RoadRegistration, StartUpTeam
+from quiz.models import PreRegisterTaskResponse, PersonalTest
 
 from .models import User
 from .forms import (
@@ -339,19 +342,66 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
             self.context["object"] = f"تیم {team}"
             self.context["team"] = team
             self.context["plan"] = plan
+            self.context["title"] = "داوری تیم"
         else:
             plan = user.user_of_plan.first()
             self.context["user_object"] = user
             self.context["object"] = user.last_name
             self.context["team"] = None
             self.context["plan"] = plan
-            
-        self.context["title"] = "داوری ایده و تیم"
-        self.context["all_questions"] = Question.objects.all()
+            self.context["title"] = "داوری فرد"
+        
+        self.context["plan_questions"] = Question.objects.filter(category__key_name="plan")
+        self.context["business_questions"] = Question.objects.filter(category__key_name="business")
+        self.context["team_individual_questions"] = Question.objects.filter(category__key_name="team_individual")
+        self.context["personal_questions"] = Question.objects.filter(category__key_name="personal")
+        self.context["challenge_questions"] = Question.objects.filter(category__key_name="challenge")
         return render(request, self.template_name, self.context)
     
     def post(self, request, user_uuid):
-        print("------------------------ request.POST ------------------------")
-        print(request.POST)
-        print("------------------------ request.POST ------------------------")
+        form_copy = request.POST.copy()
+        
+        # Get needed related uuid
+        plan_uuid = form_copy.get("plan")
+        team_uuid = form_copy.get("team")
+        individual_uuid = form_copy.get("individual")
+        personal_test_uuid = form_copy.get("personal_test")
+        pre_register_change_uuid = form_copy.get("pre_register_change")
+        # Delete data
+        form_copy.pop("plan", None)
+        form_copy.pop("team", None)
+        form_copy.pop("individual", None)
+        form_copy.pop("personal_test", None)
+        form_copy.pop("pre_register_change", None)
+        form_copy.pop("csrfmiddlewaretoken", None)
+        # Get objects from models
+        plan = Plan.objects.filter(uuid=plan_uuid).first()
+        team = StartUpTeam.objects.filter(uuid=team_uuid).first()
+        individual = User.objects.filter(uuid=individual_uuid).first()
+        personal_test = PersonalTest.objects.filter(uuid=personal_test_uuid).first()
+        pre_register_change = PreRegisterTaskResponse.objects.filter(uuid=pre_register_change_uuid).first()
+        
+        for item in form_copy:
+            question = Question.objects.get(uuid=item)
+            point = int(form_copy[item].split('.')[0])
+            try:
+                with transaction.atomic():
+                    response = Response.objects.create(
+                        referee=request.user,
+                        question=question,
+                        point=point,
+                        plan=plan,
+                        team=team,
+                        individual=individual,
+                        personal_test=personal_test,
+                        pre_register_change=pre_register_change,
+                    )
+
+                    print("--------------------------- response")
+                    print(response)
+            except Exception as e:
+                print(f"Error saving response: {e}")
+
+        messages.success(request, "عملیات با موفقیت انجام شد")
+        return redirect(reverse('account:judgment-page', kwargs={'user_uuid': user_uuid}))
         return render(request, self.template_name, self.context)

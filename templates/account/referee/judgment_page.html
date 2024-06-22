@@ -11,17 +11,22 @@
 {% block main %}
 <div class="row">
 
+    {% include "elements/messages-section.html" %}
+
     <div class="col-md mb-4 mb-md-2">
         <div class="accordion mt-3" id="accordionWithIcon">
-            <div class="card accordion-item">
+            <!-- Start: Introduce of idea and product -->
+            <h5 class="col-12 card-header mb-3">معرفی ایده، محصول و تیم <i class="ti ti-corner-left-down"></i></h5>
+            <div class="card accordion-item border-label-info">
                 <h2 class="accordion-header d-flex align-items-center">
-                    <button aria-expanded="false" class="accordion-button" data-bs-target="#accordionWithIcon-1" data-bs-toggle="collapse" type="button">
-                        {% if plan.status == "i" %}<i class="ti ti-bulb ti-xs me-2"></i> ایده{% else %}<i class="ti ti-robot ti-xs me-2"></i> ارزیابی بخش فنی ایده و محصول{% endif %}
+                    <button aria-expanded="false" class="accordion-button collapsed {% if not team and not plan %}text-secondary{% endif %}" data-bs-target="#accordionWithIcon-up-1" data-bs-toggle="collapse" type="button">
+                        {% if plan.status == "i" %}<i class="ti ti-bulb ti-xs me-2"></i> ایده{% else %}<i class="ti ti-robot ti-xs me-2"></i> معرفی ایده و محصول{% endif %}
                     </button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionWithIcon-1">
+                <div class="accordion-collapse collapse" id="accordionWithIcon-up-1">
                     <div class="accordion-body">
                         <div class="row p-0 p-md-3">
+                            {% if plan %}
                             <div class="col-md-6 mb-md-2 mb-2">
                                 <ul class="list-unstyled mb-4 mt-2">
                                     <!-- TODO: add education status field -->
@@ -61,179 +66,247 @@
                                     </span>
                                 </div>
                             </a>
+                            {% else %}
+                            <h6 class="text-danger mt-3 text-center">ایده ای ثبت نشده است!</h6>
+                            {% endif %}
                         </div>
-
-                        {% if all_questions %}
-                        <div class="row p-0 p-md-3">
-                            <hr>
-                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
-                            <form method="POST" id="product_form">
-                                {% csrf_token %}
-                                
-                                {% for question in all_questions %}
-                                    {% if question.category.key_name == "plan" %}
-                                    <input type="text" name="{{question.uuid}}" id="p_{{forloop.counter}}_id" hidden>
-                                    <div class="col-12 border rounded px-5" >
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h6>
-                                            </div>
-                                            <!-- TODO:change the alignment of scoring to the left-->
-                                            <div class="col-4 my-4">
-                                                <div class="mt-2 mx-auto product-pips"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                                <div class="d-grid mt-5 col-md-6 mx-auto">
-                                    <button type="submit" class="btn btn-label-success">ثبت</button>
-                                </div>
-                            </form>
-                        </div>
-                        {% endif %}
-
                     </div>
                 </div>
             </div>
-
-            <div class="accordion-item card">
+            <div class="accordion-item card border-label-{% if team %}info{% else %}secondary{% endif %}">
                 <h2 class="accordion-header d-flex align-items-center">
-                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-2" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-briefcase ti-xs"></i> ارزیابی بخش کسب‌وکار
+                    <button aria-expanded="false" class="accordion-button collapsed {% if not team %}text-secondary{% endif %}" data-bs-target="#accordionWithIcon-up-2" data-bs-toggle="collapse" type="button">
+                        <i class="me-2 ti ti-users ti-xs"></i> معرفی تیم کارآفرین
                     </button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionWithIcon-2">
+                <div class="accordion-collapse collapse" id="accordionWithIcon-up-2">
                     <div class="accordion-body">
                         <div class="row p-0 p-md-3">
-                            <div class="col-md-6 mb-md-2 mb-2">
-                                <ul class="list-unstyled mb-4 mt-2">
-                                    <!-- TODO: add education status field -->
-                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-sticker text-heading"></i><span class="fw-medium mx-2 text-heading"> نام محصول:</span> <span>{{plan.name}}</span></li>
-                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-bulb text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت:</span> {% if plan.status == "i" %}<span class="badge bg-label-success">ایده</span>{% else %}<span class="badge bg-label-success">محصول</span>{% endif %}</li>
-                                    {% if plan.status == "m" %}
-                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-chart-arrows-vertical"></i><span class="fw-medium mx-2 text-heading">سطح محصول:</span> <span>{{plan.get_progress_status_display}}</span></li>
-                                    {% endif %}
-                                </ul>
-                            </div>
-                            <div class="col-md-6 mb-md-2 mb-2">
-                                <ul class="list-unstyled mb-4 mt-2">
-                                    <!-- TODO: add education status field -->
-                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-align-justified text-heading"></i><span class="fw-medium mx-2 text-heading"> توضیحات:</span></li>
-                                    {{plan.description}}
-                                </ul>
-                            </div>
-    
-                            <a {% if plan.video %}href="{{plan.video.url}}"{% endif %} target="blank" class="col-6 mb-md-0 mb-2">
-                                <div class="form-check custom-option custom-option-icon">
-                                    <span class="form-check-label custom-option-content" for="customCheckboxIcon1">
-                                        <span class="custom-option-body">
-                                            <i class="ti ti-video"></i>
-                                            <span class="custom-option-title">فیلم محصول</span>
-                                        </span>
-                                    </span>
-                                </div>
-                            </a>
-    
-                            <a {% if plan.pitch_deck %}href="{{plan.pitch_deck.url}}"{% endif %} target="blank" class="col-6 mb-md-0 mb-2">
-                                <div class="form-check custom-option custom-option-icon">
-                                    <span class="form-check-label custom-option-content" for="customCheckboxIcon1">
-                                        <span class="custom-option-body">
-                                            <i class="ti ti-file-info"></i>
-                                            <span class="custom-option-title">فایل pitch deck</span>
-                                        </span>
-                                    </span>
-                                </div>
-                            </a>
-                        </div>
-
-                        {% if all_questions %}
-                        <div class="row p-0 p-md-3">
-                            <hr>
-                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
-                            <form method="POST" id="product_form">
-                                {% csrf_token %}
-                                
-                                {% for question in all_questions %}
-                                    {% if question.category.key_name == "business" %}
-                                    <input type="text" name="{{question.uuid}}" id="b_{{forloop.counter}}_id" hidden>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
-                                            </div>
-                                            <!-- TODO:change the alignment of scoring to the left-->
-                                            <div class="col-4 my-4">
-                                                <div class="mt-2 mx-auto product-pips"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                                <div class="d-grid mt-5 col-md-6 mx-auto">
-                                    <button type="submit" class="btn btn-label-success">ثبت</button>
-                                </div>
-                            </form>
-                        </div>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item card">
-                <h2 class="accordion-header d-flex align-items-center">
-                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-3" data-bs-toggle="collapse" type="button">
-                        {% if team %}<i class="me-2 ti ti-users ti-xs"></i> بررسی تیم کارآفرین{% else %}<i class="me-2 ti ti-user ti-xs"></i> بررسی فرد کارآفرین{% endif %}
-                    </button>
-                </h2>
-                <div class="accordion-collapse collapse" id="accordionWithIcon-3">
-                    <div class="accordion-body">
-                        {% if team %}
-                        <div class="row p-0 p-md-3">
+                            {% if team %}
                             <div class="col-md-6 mb-md-2 mb-2">
                                 <ul class="list-unstyled mb-4 mt-2">
                                     <!-- TODO: add education status field -->
                                     <li class="d-flex align-items-center mb-2"> <i class="ti ti-help-hexagon text-heading"></i><span class="fw-medium mx-2 text-heading"> نام تیم:</span> <span>{{team.name}}</span></li>
                                     <li class="d-flex align-items-center mb-2"> <i class="ti ti-category text-heading"></i><span class="fw-medium mx-2 text-heading"> دسته بندی:</span> {{team.category}}</li>
                                     <li class="d-flex align-items-center mb-2"> <i class="ti ti-users-group text-heading"></i><span class="fw-medium mx-2 text-heading"> تعداد اعضا:</span> {{team.team_member_count}} نفر</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6 mb-md-2 mb-2">
+                                <ul class="list-unstyled mb-4 mt-2">
+                                    <!-- TODO: add education status field -->
                                     <li class="d-flex align-items-center mb-2"> <i class="ti ti-align-justified text-heading"></i><span class="fw-medium mx-2 text-heading"> توضیحات:</span></li>
                                     {{team.description}}
                                 </ul>
                             </div>
-                            <div class="col-md-6 mb-md-2 mb-2">
-                                <ul class="list-unstyled mt-2">
-                                    <!-- TODO: add education status field -->
-                                    <li class="d-flex align-items-center mb-0 mb-md-2"><span class="fw-bold mx-2 text-heading"> اعضای تیم:</span></li>
-                                </ul>
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr class="">
-                                            <th scope="col">نام و نام‌خانوادگی</th>
-                                            <th scope="col">هماهنگ کننده؟</th>
-                                            <th scope="col">نقش</th>
-                                            <th scope="col">آزمون تست شخصیت</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for member in team.team_of_team_member.all %}
-                                        <tr>
-                                            <td class=""><a href={% url "account:profile" member.user.uuid %} class="">{{member.user.get_full_name}}</a></td>
-                                            <td>
-                                                {% if member.is_coordinator %}
-                                                <span class="badge bg-label-success"><i class="fa fa-check"></i></span>
-                                                {% else %}
-                                                <span class="text-secondary">***</span>
-                                                {% endif %}
-                                            </td>
-                                            <td class="">{{member.user.get_type_display}}</td>
-                                            <td><a href="" class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده</a></td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+                            {% else %}
+                            <h6 class="text-danger mt-3 text-center">کاربر تیم سازی انجام نداده است!</h6>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End: Introduce of idea and product -->
+
+            <!-- Start: Rating -->
+            <hr>
+            <h5 class="col-12 card-header mb-3">داوری و ثبت امتیاز <i class="ti ti-corner-left-down"></i></h5>
+            <div class="card accordion-item border-label-priamry">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-1" data-bs-toggle="collapse" type="button">
+                        <i class="ti ti-robot ti-xs me-2"></i>ارزیابی و داوری بخش فنی ایده یا محصول
+                    </button>
+                </h2>
+                <div class="accordion-collapse collapse" id="accordionWithIcon-1">
+                    <div class="accordion-body">
+                        <div class="row p-0 p-md-3">
+                            <form method="POST" id="plan_form">
+                                {% csrf_token %}
+                                <input type="text" name="plan" value="{{plan.uuid}}" hidden>
+                                {% if plan_questions %}
+                                    {% for question in plan_questions %}
+                                        {% if question.category.key_name == "plan" %}
+                                        <input type="text" name="{{question.uuid}}" id="p_{{forloop.counter}}_id" hidden>
+                                        <div class="col-12 border rounded px-5 py-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h6>
+                                                </div>
+                                                <!-- TODO:change the alignment of scoring to the left-->
+                                                <div class="col-4 my-4">
+                                                    <div class="plan-pips"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="mt-3 col-md-12 mx-auto">
+                                        <button type="submit" class="btn btn-success">ثبت</button>
+                                    </div>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="accordion-item card border-label-warning">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-2" data-bs-toggle="collapse" type="button">
+                        <i class="me-2 ti ti-briefcase ti-xs"></i> ارزیابی و داوری بخش کسب‌وکار
+                    </button>
+                </h2>
+                <div class="accordion-collapse collapse" id="accordionWithIcon-2">
+                    <div class="accordion-body">
+                        
+                        <div class="row p-0 p-md-3">
+                            <form method="POST" id="business_form">
+                                {% csrf_token %}
+                                <input type="text" name="plan" value="{{plan.uuid}}" hidden>
+                                {% if business_questions %}
+                                    {% for question in business_questions %}
+                                        {% if question.category.key_name == "business" %}
+                                        <input type="text" name="{{question.uuid}}" id="b_{{forloop.counter}}_id" hidden>
+                                        <div class="col-12 border rounded px-5 py-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                                </div>
+                                                <!-- TODO:change the alignment of scoring to the left-->
+                                                <div class="col-4 my-4">
+                                                    <div class="business-pips"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="mt-3 col-md-12">
+                                        <button type="submit" class="btn btn-success">ثبت</button>
+                                    </div>
+                                {% endif %}
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item card border-label-success">
+                <h2 class="accordion-header d-flex align-items-center">
+                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-3" data-bs-toggle="collapse" type="button">
+                        {% if team %}<i class="me-2 ti ti-users ti-xs"></i> ارزیابی و داوری کارآفرین {% else %}<i class="me-2 ti ti-user ti-xs"></i> بررسی فرد کارآفرین{% endif %}
+                    </button>
+                </h2>
+                <div class="accordion-collapse collapse" id="accordionWithIcon-3">
+                    <div class="accordion-body">
+                        {% if team %}
+                        <div class="row p-0 p-md-3">
+                            <div class="accordion mt-3" id="accordionWithIcon">
+                                {% for member in team.team_of_team_member.all %}
+                                <div class="accordion-item card border-label-success">
+                                    <h2 class="accordion-header d-flex align-items-center">
+                                        <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-3-{{forloop.counter}}" data-bs-toggle="collapse" type="button">
+                                            <i class="me-2 ti ti-user ti-xs"></i> {{member.user.get_full_name}}
+                                        </button>
+                                    </h2>
+                                    <div class="accordion-collapse collapse" id="accordionWithIcon-3-{{forloop.counter}}">
+                                        <div class="accordion-body">
+                                            <div class="row p-0 p-md-3">
+                                                <div class="col-lg-3 col-md-5 col-md-5">
+                                                    <div class="mb-4">
+                                                        <div class="">
+                                                            <small class="card-text text-uppercase">درباره</small>
+                                                            <ul class="list-unstyled mb-4 mt-2">
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-user text-heading"></i><span class="fw-medium mx-2 text-heading">نام کامل:</span> <span>{{member.user.get_full_name}}</span>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-crown text-heading"></i><span class="fw-medium mx-2 text-heading">نقش:</span> <span>{{member.user.get_type_display}}</span></li>
+                                                                <!-- TODO: add gender field -->
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-gender-bigender text-heading"></i><span class="fw-medium mx-2 text-heading">جنسیت:</span> <span>{{member.user.get_type_display}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-event text-heading"></i><span class="fw-medium mx-2 text-heading">تاریخ تولد:</span> <span>{{member.user.birthday|to_jalali}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">ساکن:</span> <span>{{member.user.province}} / {{member.user.city}}</span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-lg-3 col-md-5 col-md-5">
+                                                    <div class="mb-4">
+                                                        <div class="">
+                                                            <small class="card-text text-uppercase">اطلاعات تماس</small>
+                                                            <ul class="list-unstyled mb-4 mt-2">
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-phone-call"></i><span class="fw-medium mx-2 text-heading">شماره تماس:</span> <span>{{member.user.phone_number}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-mail"></i><span class="fw-medium mx-2 text-heading">ایمیل:</span> <span>{{member.user.email}}</span></li>
+                                                            </ul>
+
+                                                            <small class="card-text text-uppercase">مهارت نرم</small>
+                                                            <ul class="list-unstyled mb-4 mt-2">
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-file-description text-heading"></i><span class="fw-medium mx-2 text-heading">نتیجه:</span> <span><a href="#" target="blank" class="badge bg-label-info">مشاهده</a></span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="col-lg-3 col-md-5 col-md-5">
+                                                    <div class="mb-4">
+                                                        <div class="">
+                                                            <small class="card-text text-uppercase">اطلاعات تحصیلی</small>
+                                                            <ul class="list-unstyled mb-4 mt-2">
+                                                                <!-- TODO: add education status field -->
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-help-hexagon text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت تحصیل:</span> <span>{{member.user.get_degree_display}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-school text-heading"></i><span class="fw-medium mx-2 text-heading"> آخرین مقطع‌تحصیلی:</span> <span>{{member.user.get_degree_display}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin"></i><span class="fw-medium mx-2 text-heading">محل تحصیل:</span> <span>{{member.user.college_name}}</span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                    
+                                                <div class="col-lg-3 col-md-5 col-md-5">
+                                                    <div class="mb-4">
+                                                        <div class="">
+                                                            <small class="card-text text-uppercase">اطلاعات حرفه‌ای</small>
+                                                            <ul class="list-unstyled mb-4 mt-2">
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-stethoscope"></i><span class="fw-medium mx-2 text-heading">زمینه اصلی تخصص:</span> <span>{{member.user.specialty}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-device-imac"></i><span class="fw-medium mx-2 text-heading">دیگر تخصص ها:</span> <span>{{member.user.other_specialties}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-brand-python text-heading"></i><span class="fw-medium mx-2 text-heading">زبان برنامه‌نویسی:</span> <span>{{member.user.programming_language}}</span></li>
+                                                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-file-description text-heading"></i><span class="fw-medium mx-2 text-heading">رزومه:</span> <span>{% if object.resume_file %}<a href="{{member.user.resume_file.url}}" target="blank" class="badge bg-label-info">دانلود</a>{% else %}<a class="badge bg-label-danger">آپلود نشده</a>{% endif %}</span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row p-0 p-md-3">
+                                                <form method="POST" id="team_individual_form">
+                                                    {% csrf_token %}
+                                                    <input type="text" name="individual" value="{{member.user.uuid}}" hidden>
+                                                    {% if team_individual_questions %}
+                                                        {% for question in team_individual_questions %}
+                                                            {% if question.category.key_name == "team_individual" %}
+                                                            <input type="text" name="{{question.uuid}}" id="ti_{{forloop.counter}}_id" hidden>
+                                                            <div class="col-12 border rounded px-5 py-3 mb-3">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                                                    </div>
+                                                                    <!-- TODO:change the alignment of scoring to the left-->
+                                                                    <div class="col-4 my-4">
+                                                                        <div class="team_individual-pips"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        
+                                                        <div class="mt-3 col-md-12">
+                                                            <button type="submit" class="btn btn-success">ثبت</button>
+                                                        </div>
+                                                    {% endif %}
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                         {% else %}
@@ -245,12 +318,12 @@
                                             <div class="">
                                                 <small class="card-text text-uppercase">درباره</small>
                                                 <ul class="list-unstyled mb-4 mt-2">
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-user text-heading"></i><span class="fw-medium mx-2 text-heading">نام کامل:</span> <span>علیرضا احمدی</span>
-                                                    </li><li class="d-flex align-items-center mb-2"> <i class="ti ti-crown text-heading"></i><span class="fw-medium mx-2 text-heading">نقش:</span> <span>فنی</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-user text-heading"></i><span class="fw-medium mx-2 text-heading">نام کامل:</span> <span>{{user_object.get_full_name}}</span>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-crown text-heading"></i><span class="fw-medium mx-2 text-heading">نقش:</span> <span>{{user_object.get_type_display}}</span></li>
                                                     <!-- TODO: add gender field -->
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-gender-bigender text-heading"></i><span class="fw-medium mx-2 text-heading">جنسیت:</span> <span>فنی</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-event text-heading"></i><span class="fw-medium mx-2 text-heading">تاریخ تولد:</span> <span>1403/3/27</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">ساکن:</span> <span>31 / 31</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-gender-bigender text-heading"></i><span class="fw-medium mx-2 text-heading">جنسیت:</span> <span>{{user_object.get_type_display}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-event text-heading"></i><span class="fw-medium mx-2 text-heading">تاریخ تولد:</span> <span>{{user_object.birthday|to_jalali}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">ساکن:</span> <span>{{user_object.province}} / {{user_object.city}}</span></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -261,9 +334,13 @@
                                             <div class="">
                                                 <small class="card-text text-uppercase">اطلاعات تماس</small>
                                                 <ul class="list-unstyled mb-4 mt-2">
-                                                    
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-phone-call"></i><span class="fw-medium mx-2 text-heading">شماره تماس:</span> <span>09130000000</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-mail"></i><span class="fw-medium mx-2 text-heading">ایمیل:</span> <span>adsf@gmial.com</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-phone-call"></i><span class="fw-medium mx-2 text-heading">شماره تماس:</span> <span>{{user_object.phone_number}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-mail"></i><span class="fw-medium mx-2 text-heading">ایمیل:</span> <span>{{user_object.email}}</span></li>
+                                                </ul>
+
+                                                <small class="card-text text-uppercase">مهارت نرم</small>
+                                                <ul class="list-unstyled mb-4 mt-2">
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-file-description text-heading"></i><span class="fw-medium mx-2 text-heading">نتیجه:</span> <span><a href="#" target="blank" class="badge bg-label-info">مشاهده</a></span></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -275,9 +352,9 @@
                                                 <small class="card-text text-uppercase">اطلاعات تحصیلی</small>
                                                 <ul class="list-unstyled mb-4 mt-2">
                                                     <!-- TODO: add education status field -->
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-help-hexagon text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت تحصیل:</span> <span>کاردانی</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-school text-heading"></i><span class="fw-medium mx-2 text-heading"> آخرین مقطع‌تحصیلی:</span> <span>کاردانی</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin"></i><span class="fw-medium mx-2 text-heading">محل تحصیل:</span> <span>تهران</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-help-hexagon text-heading"></i><span class="fw-medium mx-2 text-heading"> وضعیت تحصیل:</span> <span>{{user_object.get_degree_display}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-school text-heading"></i><span class="fw-medium mx-2 text-heading"> آخرین مقطع‌تحصیلی:</span> <span>{{user_object.get_degree_display}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin"></i><span class="fw-medium mx-2 text-heading">محل تحصیل:</span> <span>{{user_object.college_name}}</span></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -288,10 +365,10 @@
                                             <div class="">
                                                 <small class="card-text text-uppercase">اطلاعات حرفه‌ای</small>
                                                 <ul class="list-unstyled mb-4 mt-2">
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-stethoscope"></i><span class="fw-medium mx-2 text-heading">زمینه اصلی تخصص:</span> <span>Ai</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-device-imac"></i><span class="fw-medium mx-2 text-heading">دیگر تخصص ها:</span> <span>devops</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-brand-python text-heading"></i><span class="fw-medium mx-2 text-heading">زبان برنامه‌نویسی:</span> <span>Python3</span></li>
-                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-file-description text-heading"></i><span class="fw-medium mx-2 text-heading">رزومه:</span> <span><a href="/media/users/resumes/gxdnu/%D9%81%D8%B1%D9%85-%D9%87%D8%A7%DB%8C-%DA%A9%D8%A7%D8%B1%D8%A2%D9%85%D9%88%D8%B2%DB%8C.pdf" target="blank" class="badge bg-label-info">دانلود</a></span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-stethoscope"></i><span class="fw-medium mx-2 text-heading">زمینه اصلی تخصص:</span> <span>{{user_object.specialty}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-device-imac"></i><span class="fw-medium mx-2 text-heading">دیگر تخصص ها:</span> <span>{{user_object.other_specialties}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-brand-python text-heading"></i><span class="fw-medium mx-2 text-heading">زبان برنامه‌نویسی:</span> <span>{{user_object.programming_language}}</span></li>
+                                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-file-description text-heading"></i><span class="fw-medium mx-2 text-heading">رزومه:</span> <span>{% if object.resume_file %}<a href="{{user_object.resume_file.url}}" target="blank" class="badge bg-label-info">دانلود</a>{% else %}<a class="badge bg-label-danger">آپلود نشده</a>{% endif %}</span></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -304,139 +381,176 @@
                                     <div class="">
                                         <small class="card-text text-uppercase">فعالیت‌های نوآوری و کسب‌وکار</small>
                                         <ul class="list-unstyled mb-4 mt-2">
-                                            <li class="d-flex align-items-center mb-2"> <i class="ti ti-trending-up"></i><span class="fw-medium mx-2 text-heading">تجربه شرکت در برنامه شتابدهی:</span> <span>داشته ام</span></li>
-                                            <li class="d-flex align-items-center mb-2"> <i class="ti ti-briefcase"></i><span class="fw-medium mx-2 text-heading">تجربه‌کار یا بنیان‌گذاری استارتاپ:</span> <span>هیچ تجربه ای ندارم</span></li>
+                                            <li class="d-flex align-items-center mb-2"> <i class="ti ti-trending-up"></i><span class="fw-medium mx-2 text-heading">تجربه شرکت در برنامه شتابدهی:</span> <span>{{user_object.get_is_accelerator_experience_display}}</span></li>
+                                            <li class="d-flex align-items-center mb-2"> <i class="ti ti-briefcase"></i><span class="fw-medium mx-2 text-heading">تجربه‌کار یا بنیان‌گذاری استارتاپ:</span> <span>{{user_object.get_is_startup_experience_display}}</span></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {% endif %}
 
-                        {% if all_questions %}
                         <div class="row p-0 p-md-3">
                             <hr>
                             <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
-                            <form method="POST" id="product_form">
+                            <form method="POST" id="team_individual_form">
                                 {% csrf_token %}
-                                
-                                {% for question in all_questions %}
-                                    {% if question.category.key_name == "team_individual" %}
-                                    <input type="text" name="{{question.uuid}}" id="ti_{{forloop.counter}}_id" hidden>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
-                                            </div>
-                                            <!-- TODO:change the alignment of scoring to the left-->
-                                            <div class="col-4 my-4">
-                                                <div class="mt-2 mx-auto product-pips"></div>
+                                <input type="text" name="individual" value="{{user_object.uuid}}" hidden>
+                                {% if team_individual_questions %}
+                                    {% for question in team_individual_questions %}
+                                        {% if question.category.key_name == "team_individual" %}
+                                        <input type="text" name="{{question.uuid}}" id="ti_{{forloop.counter}}_id" hidden>
+                                        <div class="col-12 border rounded px-5 py-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                                </div>
+                                                <!-- TODO:change the alignment of scoring to the left-->
+                                                <div class="col-4 my-4">
+                                                    <div class="team_individual-pips"></div>
+                                                </div>
                                             </div>
                                         </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="mt-3 col-md-12">
+                                        <button type="submit" class="btn btn-success">ثبت</button>
                                     </div>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                                <div class="d-grid mt-5 col-md-6 mx-auto">
-                                    <button type="submit" class="btn btn-label-success">ثبت</button>
-                                </div>
+                                {% endif %}
                             </form>
                         </div>
                         {% endif %}
-
                     </div>
                 </div>
             </div>
 
-            <div class="accordion-item card">
+            <div class="accordion-item card border-label-{% if team %}primary{% else %}secondary{% endif %}">
                 <h2 class="accordion-header d-flex align-items-center">
-                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-4" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-notes ti-xs"></i> ارزیابی مهارت‌های نرم کارآفرین
+                    <button aria-expanded="false" class="accordion-button collapsed {% if not team %}text-secondary{% endif %}" data-bs-target="#accordionWithIcon-3-0" data-bs-toggle="collapse" type="button">
+                        <i class="me-2 ti ti-users ti-xs"></i> ارزیابی و داوری تیم کارآفرین
                     </button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionWithIcon-4">
+                <div class="accordion-collapse collapse" id="accordionWithIcon-3-0">
                     <div class="accordion-body">
-                        اطلاعاتی در دسترسی نیست!
-                    
-                        {% if all_questions %}
                         <div class="row p-0 p-md-3">
-                            <hr>
-                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
-                            <form method="POST" id="product_form">
+                            {% if team %}
+                            <form method="POST" id="business_form">
                                 {% csrf_token %}
-                                
-                                {% for question in all_questions %}
-                                    {% if question.category.key_name == "personal" %}
-                                    <input type="text" name="{{question.uuid}}" id="pt_{{forloop.counter}}_id" hidden>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
-                                            </div>
-                                            <!-- TODO:change the alignment of scoring to the left-->
-                                            <div class="col-4 my-4">
-                                                <div class="mt-2 mx-auto product-pips"></div>
+                                <input type="text" name="team" value="{{team.uuid}}" hidden>
+                                {% if business_questions %}
+                                    {% for question in business_questions %}
+                                        {% if question.category.key_name == "business" %}
+                                        <input type="text" name="{{question.uuid}}" id="b_{{forloop.counter}}_id" hidden>
+                                        <div class="col-12 border rounded px-5 py-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                                </div>
+                                                <!-- TODO:change the alignment of scoring to the left-->
+                                                <div class="col-4 my-4">
+                                                    <div class="business-pips"></div>
+                                                </div>
                                             </div>
                                         </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="mt-3 col-md-12">
+                                        <button type="submit" class="btn btn-success">ثبت</button>
                                     </div>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                                <div class="d-grid mt-5 col-md-6 mx-auto">
-                                    <button type="submit" class="btn btn-label-success">ثبت</button>
-                                </div>
+                                {% endif %}
+                            </form>
+                            {% else %}
+                            <h6 class="text-danger mt-3 text-center">کاربر تیم سازی انجام نداده است!</h6>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row p-0 p-md-3">
+                            <form method="POST" id="business_form">
+                                {% csrf_token %}
+                                <input type="text" name="team" value="{{team.uuid}}" hidden>
+                                {% if business_questions %}
+                                    {% for question in business_questions %}
+                                        {% if question.category.key_name == "business" %}
+                                        <input type="text" name="{{question.uuid}}" id="b_{{forloop.counter}}_id" hidden>
+                                        <div class="col-12 border rounded px-5 py-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                                </div>
+                                                <!-- TODO:change the alignment of scoring to the left-->
+                                                <div class="col-4 my-4">
+                                                    <div class="business-pips"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="mt-3 col-md-12">
+                                        <button type="submit" class="btn btn-success">ثبت</button>
+                                    </div>
+                                {% endif %}
                             </form>
                         </div>
-                        {% endif %}
-
                     </div>
                 </div>
             </div>
 
-            <div class="accordion-item card">
+            <div class="accordion-item card border-label-warning">
                 <h2 class="accordion-header d-flex align-items-center">
-                    <button aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionWithIcon-5" data-bs-toggle="collapse" type="button">
-                        <i class="me-2 ti ti-device-gamepad ti-xs"></i> ارزیابی مهارت‌های تخصصی کارآفرین
+                    <button aria-expanded="false" class="accordion-button collapsed {% if team %}text-secondary{% endif %}" data-bs-target="#accordionWithIcon-5" data-bs-toggle="collapse" type="button">
+                        <i class="me-2 ti ti-device-gamepad ti-xs"></i> ارزیابی و داوری چالش‌های تخصصی کارآفرین
                     </button>
                 </h2>
                 <div class="accordion-collapse collapse" id="accordionWithIcon-5">
                     <div class="accordion-body">
-                        اطلاعاتی در دسترسی نیست!
-                    
-                        {% if all_questions %}
+                        {% if not team %}
                         <div class="row p-0 p-md-3">
-                            <hr>
-                            <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
-                            <form method="POST" id="product_form">
+                            <div class="col-12">
+                                <div class="border rounded px-4 pt-3">
+                                    <h6 class="">{{user_object.user_of_pre_register_task_response.first.title}}</h6>
+                                    <p class="">{{user_object.user_of_pre_register_task_response.first.text|safe}}</p>
+                                    <li class="list-group-item small mb-2">تاریخ ارسال: <span class="font-weight-bold">{{user_object.user_of_pre_register_task_response.first.created_time|to_jalali}}</span></li>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="row p-0 p-md-3">
+                            <form method="POST" id="challenge_form">
                                 {% csrf_token %}
-                                
-                                {% for question in all_questions %}
-                                    {% if question.category.key_name == "challenge" %}
-                                    <input type="text" name="{{question.uuid}}" id="ch_{{forloop.counter}}_id" hidden>
-                                    <div class="col-12 border rounded px-5">
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <h5 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
-                                            </div>
-                                            <!-- TODO:change the alignment of scoring to the left-->
-                                            <div class="col-4 my-4">
-                                                <div class="mt-2 mx-auto product-pips"></div>
+                                <input type="text" name="pre_register_change" value="{{user_object.user_of_pre_register_task_response.first.uuid}}" hidden>
+                                {% if challenge_questions %}
+                                    {% for question in challenge_questions %}
+                                        {% if question.category.key_name == "challenge" %}
+                                        <input type="text" name="{{question.uuid}}" id="ch_{{forloop.counter}}_id" hidden>
+                                        <div class="col-12 border rounded px-5 py-3 mb-3">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h6 class="my-auto py-4">{{forloop.counter}}. {{question.question}}</h5>
+                                                </div>
+                                                <!-- TODO:change the alignment of scoring to the left-->
+                                                <div class="col-4 my-4">
+                                                    <div class="challenge-pips"></div>
+                                                </div>
                                             </div>
                                         </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    <div class="mt-3 col-md-12">
+                                        <button type="submit" class="btn btn-success">ثبت</button>
                                     </div>
-                                    {% endif %}
-                                {% endfor %}
-                                
-                                <div class="d-grid mt-5 col-md-6 mx-auto">
-                                    <button type="submit" class="btn btn-label-success">ثبت</button>
-                                </div>
+                                {% endif %}
                             </form>
                         </div>
+                        {% else %}
+                        <h6 class="text-danger mt-3 text-center">بخش چالش های تخصصی برای حالت تیمی این شتابدهنده فعال نمیباشد!</h6>
                         {% endif %}
-
                     </div>
                 </div>
             </div>
+            <!-- Start: Rating -->
         </div>
     </div>
     
@@ -448,7 +562,7 @@
 <script src={% static "assets-vuexy/vendor/libs/nouislider/nouislider.js" %}></script>
 
 <script>
-    let sliderPips = document.querySelectorAll('.product-pips, .business-pips, .team-pips, .individual-pips, .soft-skill, .challange');
+    let sliderPips = document.querySelectorAll('.plan-pips, .business-pips, .team_individual-pips, .personal-pips, .challenge-pips');
     for (let i = 0; i < sliderPips.length; i++) {
         noUiSlider.create(sliderPips[i], {
           start: [5],
@@ -469,22 +583,103 @@
     }
 </script>
 
+<!-- plan_form -->
 <script>
-    let productForm = document.getElementById("product_form");
+    let PlanForm = document.getElementById("plan_form");
 
-    productForm.addEventListener("submit", (e) => {
+    PlanForm.addEventListener("submit", (e) => {
         e.preventDefault();
 
-        let pips = document.getElementsByClassName("product-pips");
+        let pips = document.getElementsByClassName("plan-pips");
 
-        for (let i = 0; i < pips.length; i++) {
-            let val = pips[i].noUiSlider.get();
+        for (let i = 1; i <= pips.length; i++) {
+            let val = pips[i-1].noUiSlider.get();
             console.log(`p_${i}_id`);
             document.getElementById(`p_${i}_id`).value = val;
         }
 
         // Programmatically submit the form after updating the input values
-        productForm.submit();
+        PlanForm.submit();
+    });
+</script>
+
+<!-- business_form -->
+<script>
+    let businessForm = document.getElementById("business_form");
+
+    businessForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let pips = document.getElementsByClassName("business-pips");
+
+        for (let i = 1; i <= pips.length; i++) {
+            let val = pips[i-1].noUiSlider.get();
+            console.log(`b_${i}_id`);
+            document.getElementById(`b_${i}_id`).value = val;
+        }
+
+        // Programmatically submit the form after updating the input values
+        businessForm.submit();
+    });
+</script>
+
+<!-- team_individual_form -->
+<script>
+    let teamIndividualForm = document.getElementById("team_individual_form");
+
+    teamIndividualForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let pips = document.getElementsByClassName("team_individual-pips");
+
+        for (let i = 1; i <= pips.length; i++) {
+            let val = pips[i-1].noUiSlider.get();
+            console.log(`ti_${i}_id`);
+            document.getElementById(`ti_${i}_id`).value = val;
+        }
+
+        // Programmatically submit the form after updating the input values
+        teamIndividualForm.submit();
+    });
+</script>
+
+<!-- personal_form -->
+<script>
+    let personalForm = document.getElementById("personal_form");
+
+    personalForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let pips = document.getElementsByClassName("personal-pips");
+
+        for (let i = 1; i <= pips.length; i++) {
+            let val = pips[i-1].noUiSlider.get();
+            console.log(`pt_${i}_id`);
+            document.getElementById(`pt_${i}_id`).value = val;
+        }
+
+        // Programmatically submit the form after updating the input values
+        personalForm.submit();
+    });
+</script>
+
+<!-- challenge_form -->
+<script>
+    let challengeForm = document.getElementById("challenge_form");
+
+    challengeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        let pips = document.getElementsByClassName("challenge-pips");
+
+        for (let i = 1; i <= pips.length; i++) {
+            let val = pips[i-1].noUiSlider.get();
+            console.log(`ch_${i}_id`);
+            document.getElementById(`ch_${i}_id`).value = val;
+        }
+
+        // Programmatically submit the form after updating the input values
+        challengeForm.submit();
     });
 </script>
 {% endblock page_js %}

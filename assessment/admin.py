@@ -2,6 +2,29 @@ from django.contrib import admin
 
 from . import models
 
-admin.site.register(models.Category)
-admin.site.register(models.Question)
-admin.site.register(models.Response)
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "key_name"]
+
+admin.site.register(models.Category, CategoryAdmin)
+
+
+class ResponseAdmin(admin.ModelAdmin):
+    list_display = [
+        "question",
+        "referee",
+        "point",
+        "plan",
+        "team",
+        "individual",
+        "personal_test",
+        "pre_register_change",
+    ]
+
+admin.site.register(models.Response, ResponseAdmin)
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ["question", "category"]
+    
+admin.site.register(models.Question, QuestionAdmin)

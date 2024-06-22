@@ -75,4 +75,4 @@ class Response(models.Model):
         verbose_name_plural = "پاسخ ها"
 
     def __str__(self) -> str:
-        return self.question
+        return self.question.question
