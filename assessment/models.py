@@ -24,6 +24,9 @@ class Category(models.Model):
     def __str__(self) -> str:
         return self.name
     
+    def count_of_questions(self) -> int:
+        return self.category_of_question.all().count()
+    
     
 class Question(models.Model):
     uuid = models.CharField(
@@ -35,7 +38,7 @@ class Question(models.Model):
     )
     
     question = models.CharField(verbose_name="سوال", max_length=255)
-    category = models.ForeignKey(Category, verbose_name="دسته بندی", on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, verbose_name="دسته بندی", on_delete=models.CASCADE, related_name="category_of_question")
 
     created_time = models.DateTimeField(auto_now_add=True)
     last_update_time = models.DateTimeField(auto_now=True)

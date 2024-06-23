@@ -12,7 +12,7 @@ class NotifyLog(models.Model):
     )
     
     status = models.CharField(verbose_name="کد وضعیت", max_length=3)
-    message = models.JSONField(verbose_name="پاسخ سرور", null=True)
+    message = models.TextField(verbose_name="پاسخ سرور", null=True)
     
     send_try = models.PositiveIntegerField(verbose_name="تلاش برای ارسال")
     

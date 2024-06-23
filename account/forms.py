@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.forms import ModelForm
+from django.forms import ModelForm, ModelMultipleChoiceField
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django import forms
@@ -201,7 +201,6 @@ class UserRegisterFormLevel3(forms.ModelForm):
         self.fields["resume_file"].widget.attrs['accept'] = 'application/pdf'  # Restrict file input to PDF files
 
     def clean_resume_file(self):
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         resume_file = self.cleaned_data.get('resume_file')
         if resume_file and not resume_file.name.endswith('.pdf'):
             raise ValidationError('فقط فایل‌های PDF مجاز هستند')
@@ -237,7 +236,7 @@ class UserRegisterFormLevel4(forms.ModelForm):
         if why_us_video:
             if not why_us_video.content_type.startswith('video'):
                 raise ValidationError('فقط فایل‌های ویدیویی مجاز هستند')
-            if why_us_video.size > 50 * 1024 * 1024:  # 50MB
+            if why_us_video.size > 25 * 1024 * 1024: 
                 raise ValidationError('حجم فایل ویدیویی نباید بیشتر از 50MB باشد')
         return why_us_video
     
@@ -252,7 +251,7 @@ class UserRegisterFormLevel4(forms.ModelForm):
         return cleaned_data
 
 
-class AddRefereeForm(forms.Form):
+class AddRefereeForm(forms.ModelForm):
     phone_number = forms.CharField(
         max_length=11,
         validators=[
@@ -267,17 +266,19 @@ class AddRefereeForm(forms.Form):
     last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")
     referee_validity_date = forms.DateField(required=True, label="تاریخ دسترسی داور تا")
     
-    REFEREE_TYPES = (
-        ("i", "داور ایده"),
-        ("t", "تیم"),
-        ("f", "دسترسی کامل"),
-    )
-    referee_type = forms.ChoiceField(
-        choices=REFEREE_TYPES,
-        required=True,
-        label="نوع داور"
-    )
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "referee_type",
+            "referee_validity_date",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["referee_validity_date"].widget.attrs['class'] = "flatpickr-date"
+        for field_name, field in self.fields.items():
+            if isinstance(field, ModelMultipleChoiceField):
+                field.widget.attrs['class'] = 'select2'

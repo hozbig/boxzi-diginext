@@ -4,7 +4,7 @@ from . import models
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "key_name"]
+    list_display = ["name", "key_name", "count_of_questions"]
 
 admin.site.register(models.Category, CategoryAdmin)
 

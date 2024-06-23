@@ -14,10 +14,11 @@ class AssessmentConfig(AppConfig):
     #     # Define the data you want to ensure is present
     #     default_data = [
     #         {'name': 'ارزیابی بخش فنی ایده و محصول', 'key_name': "plan"},
-    #         {'name': 'ارزیابی بخش کسب‌وکار', 'key_name': "business"},
-    #         {'name': 'بررسی تیم/فرد کارآفرین', 'key_name': "team_individual"},
-    #         {'name': 'ارزیابی مهارت‌های نرم کارآفرین', 'key_name': "personal"},
-    #         {'name': 'ارزیابی مهارت‌های تخصصی کارآفرین', 'key_name': "challenge"},
+    #         {'name': 'ارزیابی بخش بیزنسی ایده و محصول', 'key_name': "business"},
+    #         {'name': 'ارزیابی افراد', 'key_name': "individual"},
+    #         {'name': 'ارزیابی تیم', 'key_name': "team"},
+    #         {'name': 'ارزیابی مهارت‌های تخصصی - فنی', 'key_name': "challenge_tech"},
+    #         {'name': 'آزمون های پیش ثبت نام	اضافه کردن', 'key_name': "challenge_business"},
     #     ]
 
     #     for data in default_data:

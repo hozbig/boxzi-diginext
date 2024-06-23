@@ -62,13 +62,8 @@ class User(AbstractUser):
     is_investor = models.BooleanField(verbose_name="سرمایه گذار", default=False)
     is_company = models.BooleanField(verbose_name="شرکت", default=False)
     is_referee = models.BooleanField(verbose_name="داور", default=False)
-    
-    REFEREE_TYPES = (
-        ("i", "داور ایده"),
-        ("t", "تیم"),
-        ("f", "دسترسی کامل"),
-    )
-    referee_type = models.CharField(verbose_name="نوع داور", max_length=4, choices=REFEREE_TYPES, default="i")
+
+    referee_type = models.ManyToManyField("assessment.Category", verbose_name="دسته بندی داور", blank=True)
     referee_validity_date = models.DateField("تاریخ دسترسی داور تا", auto_now=False, auto_now_add=False, null=True, blank=True)
     
     access_to_center = models.ForeignKey("company.Center", verbose_name="دسترسی به مرکز", blank=True, null=True, on_delete=models.CASCADE)

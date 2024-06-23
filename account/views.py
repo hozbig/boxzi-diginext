@@ -241,6 +241,8 @@ class RegisterLevel4(LoginRequiredMixin, View):
             registration_obj.status_user_state = add_one_level(registration_obj.status_user_state)
             registration_obj.complete_registration_date = timezone.datetime.now()
             registration_obj.save()
+            
+            # TODO: send message to user after complete installation
 
             messages.success(request, "ثبت نام شما در باکس زی کامل شد. جهت ثبت درخواست برای مسیر آموزشی مورد نظر فرایند هارو از طریق راهنمای داخل داشبورد خود ادامه بدید.")
             return redirect("account:user-dashboard")
@@ -354,7 +356,9 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
         self.context["plan_questions"] = Question.objects.filter(category__key_name="plan")
         self.context["individual_questions"] = Question.objects.filter(category__key_name="individual")
         self.context["team_questions"] = Question.objects.filter(category__key_name="team")
-        self.context["challenge_questions"] = Question.objects.filter(category__key_name="challenge")
+        self.context["challenge_questions"] = Question.objects.filter(
+            Q(category__key_name="challenge_tech") | Q(category__key_name="challenge_business")
+        )
         return render(request, self.template_name, self.context)
     
     def post(self, request, user_uuid):
