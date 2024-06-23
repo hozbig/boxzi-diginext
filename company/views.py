@@ -118,11 +118,14 @@ class AcceleratorDashboard(LoginRequiredMixin, View):
         self.context["object"] = object
         self.context["roads_count"] = object.accelerator_of_road.count()
         self.context["active_roads_count"] = 1
-        self.context["requests_count"] = object.accelerator_of_road.first().road_of_road_registration.count()
-        
-        requests_count = object.accelerator_of_road.first().road_of_road_registration.count()
-        approved_requests_count = object.accelerator_of_road.first().road_of_road_registration.filter(status="a").count()
-        self.context["approve_percentage"] = round(100 * float(approved_requests_count)/float(requests_count))
+        try:
+            self.context["requests_count"] = object.accelerator_of_road.first().road_of_road_registration.count()
+            requests_count = object.accelerator_of_road.first().road_of_road_registration.count()
+            approved_requests_count = object.accelerator_of_road.first().road_of_road_registration.filter(status="a").count()
+            self.context["approve_percentage"] = round(100 * float(approved_requests_count)/float(requests_count))
+        except:
+            pass
+
         return render(request, self.template_name, self.context)
 
 
