@@ -276,12 +276,12 @@
                                             </div>
                                             
                                             <div class="row p-0 p-md-3">
-                                                <form method="POST" id="team_individual_form">
+                                                <form method="POST" id="individual_form">
                                                     {% csrf_token %}
                                                     <input type="text" name="individual" value="{{member.user.uuid}}" hidden>
+                                                    
                                                     {% if individual_questions %}
                                                         {% for question in individual_questions %}
-                                                            {% if question.category.key_name == "team_individual" %}
                                                             <input type="text" name="{{question.uuid}}" id="i_{{forloop.counter}}_id" hidden>
                                                             <div class="col-12 border rounded px-5 py-3 mb-3">
                                                                 <div class="row">
@@ -290,11 +290,10 @@
                                                                     </div>
                                                                     <!-- TODO:change the alignment of scoring to the left-->
                                                                     <div class="col-4 my-4">
-                                                                        <div class="team_individual-pips"></div>
+                                                                        <div class="individual-pips"></div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            {% endif %}
                                                         {% endfor %}
                                                         
                                                         <div class="mt-3 col-md-12">
@@ -392,12 +391,11 @@
                         <div class="row p-0 p-md-3">
                             <hr>
                             <h5 class="col-12 card-header">داوری بخش فنی ایده و محصول </h5>
-                            <form method="POST" id="team_individual_form">
+                            <form method="POST" id="individual_form">
                                 {% csrf_token %}
                                 <input type="text" name="individual" value="{{user_object.uuid}}" hidden>
                                 {% if individual_questions %}
                                     {% for question in individual_questions %}
-                                        {% if question.category.key_name == "team_individual" %}
                                         <input type="text" name="{{question.uuid}}" id="i_{{forloop.counter}}_id" hidden>
                                         <div class="col-12 border rounded px-5 py-3 mb-3">
                                             <div class="row">
@@ -406,11 +404,10 @@
                                                 </div>
                                                 <!-- TODO:change the alignment of scoring to the left-->
                                                 <div class="col-4 my-4">
-                                                    <div class="team_individual-pips"></div>
+                                                    <div class="individual-pips"></div>
                                                 </div>
                                             </div>
                                         </div>
-                                        {% endif %}
                                     {% endfor %}
                                     
                                     <div class="mt-3 col-md-12">
@@ -439,8 +436,7 @@
                                 <input type="text" name="team" value="{{team.uuid}}" hidden>
                                 {% if team_questions %}
                                     {% for question in team_questions %}
-                                        {% if question.category.key_name == "team" %}
-                                        <input type="text" name="{{question.uuid}}" id="b_{{forloop.counter}}_id" hidden>
+                                        <input type="text" name="{{question.uuid}}" id="t_{{forloop.counter}}_id" hidden>
                                         <div class="col-12 border rounded px-5 py-3 mb-3">
                                             <div class="row">
                                                 <div class="col-6">
@@ -452,7 +448,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {% endif %}
                                     {% endfor %}
                                     
                                     <div class="mt-3 col-md-12">
@@ -493,7 +488,6 @@
                                 <input type="text" name="pre_register_change" value="{{user_object.user_of_pre_register_task_response.first.uuid}}" hidden>
                                 {% if challenge_questions %}
                                     {% for question in challenge_questions %}
-                                        {% if question.category.key_name == "challenge" %}
                                         <input type="text" name="{{question.uuid}}" id="ch_{{forloop.counter}}_id" hidden>
                                         <div class="col-12 border rounded px-5 py-3 mb-3">
                                             <div class="row">
@@ -506,7 +500,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {% endif %}
                                     {% endfor %}
                                     
                                     <div class="mt-3 col-md-12">
@@ -533,7 +526,7 @@
 <script src={% static "assets-vuexy/vendor/libs/nouislider/nouislider.js" %}></script>
 
 <script>
-    let sliderPips = document.querySelectorAll('.plan-pips, .business-pips, .team_individual-pips, .team-pips, .challenge-pips');
+    let sliderPips = document.querySelectorAll('.plan-pips, .business-pips, .individual-pips, .team-pips, .challenge-pips');
     for (let i = 0; i < sliderPips.length; i++) {
         noUiSlider.create(sliderPips[i], {
           start: [5],
@@ -573,26 +566,7 @@
     });
 </script>
 
-<!-- business_form -->
-<script>
-    let businessForm = document.getElementById("business_form");
-
-    businessForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        let pips = document.getElementsByClassName("business-pips");
-
-        for (let i = 1; i <= pips.length; i++) {
-            let val = pips[i-1].noUiSlider.get();
-            document.getElementById(`b_${i}_id`).value = val;
-        }
-
-        // Programmatically submit the form after updating the input values
-        businessForm.submit();
-    });
-</script>
-
-<!-- team_individual_form -->
+<!-- individual_form -->
 <script>
     let teamIndividualForm = document.getElementById("individual_form");
 
@@ -622,7 +596,7 @@
 
         for (let i = 1; i <= pips.length; i++) {
             let val = pips[i-1].noUiSlider.get();
-            document.getElementById(`pt_${i}_id`).value = val;
+            document.getElementById(`t_${i}_id`).value = val;
         }
 
         // Programmatically submit the form after updating the input values

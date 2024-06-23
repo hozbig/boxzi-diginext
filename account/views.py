@@ -352,10 +352,8 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
             self.context["title"] = "داوری فرد"
         
         self.context["plan_questions"] = Question.objects.filter(category__key_name="plan")
-        self.context["business_questions"] = Question.objects.filter(category__key_name="business")
         self.context["individual_questions"] = Question.objects.filter(category__key_name="individual")
         self.context["team_questions"] = Question.objects.filter(category__key_name="team")
-        self.context["personal_questions"] = Question.objects.filter(category__key_name="personal")
         self.context["challenge_questions"] = Question.objects.filter(category__key_name="challenge")
         return render(request, self.template_name, self.context)
     
@@ -366,23 +364,22 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
         plan_uuid = form_copy.get("plan")
         team_uuid = form_copy.get("team")
         individual_uuid = form_copy.get("individual")
-        personal_test_uuid = form_copy.get("personal_test")
-        pre_register_challenge_uuid = form_copy.get("pre_register_challenge")
+        pre_register_challenge_uuid = form_copy.get("pre_register_change")
         # Delete data
         form_copy.pop("plan", None)
         form_copy.pop("team", None)
         form_copy.pop("individual", None)
-        form_copy.pop("personal_test", None)
-        form_copy.pop("pre_register_challenge", None)
+        form_copy.pop("pre_register_change", None)
         form_copy.pop("csrfmiddlewaretoken", None)
         # Get objects from models
         plan = Plan.objects.filter(uuid=plan_uuid).first()
         team = StartUpTeam.objects.filter(uuid=team_uuid).first()
         individual = User.objects.filter(uuid=individual_uuid).first()
-        personal_test = PersonalTest.objects.filter(uuid=personal_test_uuid).first()
         pre_register_challenge = PreRegisterTaskResponse.objects.filter(uuid=pre_register_challenge_uuid).first()
         
         for item in form_copy:
+            print("--------------------- form_copy")
+            print(form_copy)
             question = Question.objects.get(uuid=item)
             point = int(form_copy[item].split('.')[0])
             try:
@@ -394,8 +391,7 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
                         plan=plan,
                         team=team,
                         individual=individual,
-                        personal_test=personal_test,
-                        pre_register_challenge=pre_register_challenge,
+                        pre_register_change=pre_register_challenge,
                     )
             except Exception as e:
                 print(f"Error saving response: {e}")

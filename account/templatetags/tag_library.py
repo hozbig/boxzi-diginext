@@ -14,6 +14,15 @@ register = template.Library()
 
 
 @register.filter()
+def plus_one(value):
+    try:
+        value = int(value)
+        return value + 1
+    except:
+        return False
+
+
+@register.filter()
 def to_jalali(value):
     try:
         return jalali.Gregorian(
