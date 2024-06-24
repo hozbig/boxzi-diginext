@@ -47,7 +47,7 @@
         <!-- /Left Text -->
         <div class="d-none d-lg-flex col-lg-7 p-0">
             <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
-                <img alt="auth-login-vuexy-cover" class="img-fluid my-5 auth-illustration" src={% static "assets-vuexy/img/illustrations/auth-login-illustration-light.png" %}>
+                <img alt="auth-login-vuexy-cover" class="img-fluid my-5 auth-illustration" src={% static "register-template/register_files/bg34-1.png" %}>
                 <img alt="auth-login-vuexy-cover" class="platform-bg" src={% static "assets-vuexy/img/illustrations/bg-shape-image-light.png" %}>
             </div>
         </div>
@@ -83,6 +83,9 @@
                     </div>
                     {{form.hcaptcha|as_crispy_field}}
                     <button class="btn btn-primary d-grid w-100">ورود</button>
+                    <div class="py-2">
+                        <a href="{% url "account:login-or-register" %}" class="small">حساب کاربری ندارید؟ ثبت نام کنید</a>
+                    </div>
                 </form>
             </div>
         </div>

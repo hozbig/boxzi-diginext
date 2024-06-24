@@ -16,7 +16,7 @@ from plan.models import Plan
 from plan.forms import PlanCreateForm
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
-from notifier.api import send_authentication_sms, send_event_registration_sms, custom_message_sms
+from notifier.api import send_messages
 
 from .models import RoadRegistration, StartUpTeam, TeamMember, search_items
 from .mixins import TeamAccessMixin
@@ -169,9 +169,17 @@ def save_team_member(request):
                     user = user_obj,
                 )
                 
-                send_authentication_sms(
-                    user_obj.phone_number,
-                    generated_pass,
+                send_messages(
+                    action="team_addition",
+                    destination_phone_number=user_obj.phone_number,
+                    user=user_obj.first_name,
+                    team_name=team.name
+                )
+                send_messages(
+                    action="username_password",
+                    destination_phone_number=user_obj.phone_number,
+                    user=user_obj.first_name,
+                    password=generated_pass,
                 )
             else:
                 messages.error(request, "این کاربر از قبل ثبت نام کرده است، امکان اضافه کردن آن به تیم خود وجود ندارد!")
@@ -248,7 +256,11 @@ class RoadRegistrationView(LoginRequiredMixin, View):
             registration_obj.client_last_response_date = timezone.datetime.now()
             registration_obj.save()
 
-            send_event_registration_sms(user.phone_number, road.name)
+            send_messages(
+                action="complete_road_registration",
+                destination_phone_number=request.user.phone_number,
+                user=request.user.first_name,
+            )
 
             messages.success(request, "درخواست شما ثبت شد")
             messages.info(request, "درخواست شما برای شرکت تیمتان در این مسیر رشد با موقیت ثبت شد.")
@@ -258,7 +270,11 @@ class RoadRegistrationView(LoginRequiredMixin, View):
             registration_obj.client_last_response_date = timezone.datetime.now()
             registration_obj.save()
 
-            send_event_registration_sms(user.phone_number, road.name)
+            send_messages(
+                action="complete_road_registration",
+                destination_phone_number=request.user.phone_number,
+                user=request.user.first_name,
+            )
 
             messages.success(request, "درخواست شما ثبت شد")
             messages.info(request, "درخواست شما برای شرکت انفرادی در این مسیر رشد با موقیت ثبت شد.")
@@ -296,7 +312,11 @@ def watch_registration(request, uuid):
     obj.status = "p"
     obj.save()
 
-    custom_message_sms(obj.user.phone_number, f"وضعیت درخواست شما: {obj.status}")
+    send_messages(
+        action="summer_camp_watched",
+        destination_phone_number=obj.user.phone_number,
+        user=obj.user.first_name
+    )
 
     messages.success(request, "عملیات با موفقیت انجام شد")
     return redirect(reverse('company:team-management'))
@@ -311,7 +331,11 @@ def reject_registration(request, uuid):
     obj.status = "r"
     obj.save()
 
-    custom_message_sms(obj.user.phone_number, f"وضعیت درخواست شما: {obj.status}")
+    send_messages(
+        action="summer_camp_rejection",
+        destination_phone_number=obj.user.phone_number,
+        user=obj.user.first_name
+    )
 
     messages.success(request, "عملیات با موفقیت انجام شد")
     return redirect(reverse('company:team-management'))
@@ -326,7 +350,11 @@ def approve_registration(request, uuid):
     obj.status = "a"
     obj.save()
 
-    custom_message_sms(obj.user.phone_number, f"وضعیت درخواست شما: {obj.status}")
+    send_messages(
+        action="summer_camp_acceptance",
+        destination_phone_number=obj.user.phone_number,
+        user=obj.user.first_name
+    )
 
     messages.success(request, "عملیات با موفقیت انجام شد")
     return redirect(reverse('company:team-management'))

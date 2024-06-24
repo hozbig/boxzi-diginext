@@ -4,6 +4,11 @@
 {% load tag_library %}
 
 {% block page_css %}
+<style>
+	.no-background {  
+		mix-blend-mode:multiply;
+	}
+</style>
 {% endblock page_css %}
 
 {% block main %}
@@ -17,8 +22,8 @@
 				<div class="col-7">
 					<div class="card-body text-nowrap">
 						<h5 class="card-title mb-0">تبریک {{request.user.first_name}}! 🎉</h5>
-						<p class="mb-2">ثبت نامت با موفقیت انجام شد.</p>
-						<a class="btn btn-success" href={% url "content:roads" %}>مسیر رشد</a>
+						<p class="mb-2">از اینجا فرایند ثبت درخواست را ادامه دهید.</p>
+						<a class="btn btn-success" href={% url "content:roads" %}>ادامه فرایند درخواست</a>
 					</div>
 				</div>
 				<div class="col-5 text-center text-sm-left">
@@ -67,6 +72,10 @@
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<div class="col-12 text-center">
+		<img src={% static "Stage1.png" %} alt="" width="1000" class="img-fluid no-background">
 	</div>
 
 </div>

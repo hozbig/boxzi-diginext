@@ -102,7 +102,7 @@
                                     <h3 class="card-title font-weight-bold">چالش مهارت نرم</h3>
                                 </div>
                                 <div class="col-12">
-                                    <a class="btn btn-label-success btn-darken-3 waves-success waves-light disabled">انجام شد <i class="fa fa-check"></i></a>
+                                    <a class="btn btn-label-warning btn-darken-3 waves-warning waves-light disabled">لینک آزمون ارسال شد <i class="fa fa-check"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +141,11 @@
                                         <h3 class="card-title font-weight-bold">چالش ورودی</h3>
                                     </div>
                                     <div class="col-12">
+                                        {% if registration.user.type == "t" %}
+                                        <a href="{% url "quiz:pre-register-challenge" task_business_side.uuid road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
+                                        {% else %}
                                         <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

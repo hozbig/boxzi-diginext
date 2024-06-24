@@ -8,11 +8,12 @@ from content.models import Collection, Road
 from team.models import RoadRegistration
 from django.http import HttpResponseRedirect
 from account.models import User
-from utils.check_status_user_state_level import add_one_level
+import uuid
 
+from .andaze import send_user_information
+from notifier.api import send_messages
 from .models import Exam, UserExamAnsewrHistory, Answer, PreRegisterTask, PreRegisterTaskResponse, PersonalTest
 from .forms import PreRegisterTaskResponseCreateForm, PreRegisterTaskResponseUpdateForm
-
 
 class ExamDetail(LoginRequiredMixin, View):
     model = Exam
@@ -92,12 +93,14 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         user = request.user
         road = Road.objects.get(uuid=road_uuid)
         task = road.pre_register_task
+        task_business_side = road.pre_register_task_for_business_side
         
         registration_obj = user.user_of_road_registration.first()
         
         self.context["title"] = "به عنوان تیم"
         self.context["registration"] = registration_obj
         self.context["task"] = task
+        self.context["task_business_side"] = task_business_side
         self.context["road"] = road
         if user.user_of_road_registration.first().team_or_individual == "i":
             self.context["challenge_response"] = user.user_of_pre_register_task_response.exists()
@@ -226,14 +229,29 @@ def i_am_team_coordinator(request, uuid):
 
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
-
 class PreRegisterPersonalTests(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-personal-tests.html"
     context = {}
     
     def get(self, request, road_uuid):
-        if request.user.user_of_personal_test.first():
-                return redirect("router")
+        road = Road.objects.get(uuid=road_uuid)
+        
+        # if not request.user.user_of_personal_test.exists():
+        #     send_user_information(request.user, road)
+        # else:
+        #     self.context["object"] = request.user.user_of_personal_test.first()
+        
+        object = PersonalTest(
+            user = request.user,
+            road = road,
+            reference_id = str(uuid.uuid4()),
+            first_response_of_sending_information_is_accepted = False,
+        )
+        object.save()
+        
+        next_url = request.GET.get('next')
+        if next_url:
+            self.context["next_url"] = next_url
         self.context["title"] = "آزمون ورودی شخصیت"
         return render(request, self.template_name, self.context)
     

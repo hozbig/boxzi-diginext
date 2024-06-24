@@ -257,6 +257,14 @@ class PersonalTest(models.Model):
     )
     user = models.ForeignKey("account.User", verbose_name="کاربر", related_name="user_of_personal_test", on_delete=models.CASCADE)
     road = models.ForeignKey("content.Road", verbose_name="مسیر", related_name="road_of_personal_test", on_delete=models.CASCADE)
+    
+    # Required field for andaze.io
+    reference_id = models.CharField(max_length=50, null=True, blank=True) # generate a uniq uuid4 in level2 for user: (addParticipantsForPartner) (value: reference)
+    assessment_obj_id = models.CharField(max_length=50, null=True, blank=True) # Andaze return this code to us for tracking the user exam response: (evaluationsForPartner) (value: data.evaluationsForPartner.id)
+    assessment_obj_name = models.CharField(max_length=50, null=True, blank=True) # Andaze return this type to us for tracking the user exam response: (evaluationsForPartner) (value: data.evaluationsForPartner.assessmentObj.name)
+    
+    first_response_of_sending_information_is_accepted = models.BooleanField(default=True)
+    final_user_result_url = models.URLField(max_length=500, null=True, blank=True)
 
     created_time = models.DateTimeField(auto_now_add=True, null=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, null=True, verbose_name="زمان بروزرسانی")

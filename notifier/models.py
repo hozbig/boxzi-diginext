@@ -11,8 +11,9 @@ class NotifyLog(models.Model):
         editable=False,
     )
     
-    status = models.CharField(verbose_name="کد وضعیت", max_length=3)
+    status = models.CharField(verbose_name="کد وضعیت", max_length=255)
     message = models.TextField(verbose_name="پاسخ سرور", null=True)
+    action = models.CharField(verbose_name="اسم عملیات", max_length=255, null=True, blank=True)
     
     send_try = models.PositiveIntegerField(verbose_name="تلاش برای ارسال")
     

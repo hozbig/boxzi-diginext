@@ -3,7 +3,13 @@
 {% load static %}
 {% load tag_library %}
 
-{% block page_css %}{% endblock page_css %}
+{% block page_css %}
+<style>
+	.no-background {  
+		mix-blend-mode:multiply;
+	}
+</style>
+{% endblock page_css %}
 
 {% block main %}
 <div class="row">
@@ -12,27 +18,28 @@
 
     <div class="col-md">
         <div class="card mb-3">
-            <div class="row g-0">
-                <div class="col-lg-5">
+            <div class="row g-8">
+                <div class="col-lg-7">
                     <img alt="{{object.name}}" class="card-img card-img-left" src="{% if object.poster %}{{object.poster.url}}{% else %}{% static "no-banner.jpg" %}{% endif %}"/>
                 </div>
-                <div class="col-lg-7">
+                <div class="col-lg-5">
                     <div class="card-body">
                         <h5 class="card-title">{{object.name}}</h5>
                         <div class="row">
-                            <div class="col-md-6">
-                                <ul class="list-unstyled mb-4 mt-3">
-                                    <li class="d-flex align-items-center mb-3"> <i class="ti ti-currency-dollar text-heading"></i><span class="fw-medium mx-2 text-heading">هزینه:</span> <span>{{object.price|not_zero}}</span></li>
-                                    <li class="d-flex align-items-center mb-3"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">محل برگزاری:</span> <span>{{object.location}}</span></li>
-                                    <li class="d-flex align-items-center mb-3"> <i class="ti ti-rubber-stamp text-heading"></i><span class="fw-medium mx-2 text-heading">برگزار کننده:</span> <span><img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></span></li>
+                            <div class="col-12">
+                                <ul class="list-unstyled">
+                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-currency-dollar text-heading"></i><span class="fw-medium mx-2 text-heading">هزینه:</span> <span>{{object.price|not_zero}}</span></li>
+                                    <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">محل برگزاری:</span> <span>{{object.location}}</span></li>
+                                    <li class="d-flex align-items-center"> <i class="ti ti-rubber-stamp text-heading"></i><span class="fw-medium mx-2 text-heading">برگزار کننده:</span> <span><img src={% if object.accelerator.logo %}{{object.accelerator.logo.url}}{% else %}{% static "no-banner.jpg" %}{% endif %} alt={{object.accelerator.name}} class="img-thumbnail" width="100"></span></li>
                                 </ul>
                             </div>
-                            <div class="col-md-6">
-                                <ul class="list-unstyled mb-4 mt-3">
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع:</span> <span><bdi>{{object.start_date|to_jalali}}</bdi></span></li>
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان:</span> <span><bdi>{{object.expiration_date|to_jalali}}</bdi></span></li>
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-clock-2"></i><span class="fw-medium mx-2 text-heading">مهلت ثبت نام:</span> <span><bdi>{{object.publish_date|to_jalali}}</bdi></span></li>
-                                <li class="d-flex align-items-center mb-3"> <i class="ti ti-calendar-plus"></i><span class="fw-medium mx-2 text-heading">شروع دوره:</span> <span><bdi>{{object.registration_deadline|to_jalali}}</bdi></span></li>
+                            <div class="col-12 my-4"><hr></div>
+                            <div class="col-12">
+                                <ul class="list-unstyled">
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع ثبت نام:</span> <span><bdi>{{object.start_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-clock-2"></i><span class="fw-medium mx-2 text-heading">پایان ثبت نام:</span> <span><bdi>{{object.publish_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-plus"></i><span class="fw-medium mx-2 text-heading">شروع کمپ:</span> <span><bdi>{{object.registration_deadline|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان دوره:</span> <span><bdi>{{object.expiration_date|to_jalali}}</bdi></span></li>
                             </ul>
                             </div>
                         </div>
@@ -135,54 +142,87 @@
         </div>
     </div>
 
-    <div class="col-lg-6 mt-4">
+    <div class="col-lg-8 mt-4">
         <!-- FAQ -->
-        <h5 class="card-header pb-3"><i class="fa fa-question-circle"></i> سوالات متداول</h5>
+        <h5 class="card-header pb-2"><i class="fa fa-question-circle"></i> سوالات متداول</h5>
         <div class="accordion" id="accordionPayment">
             <div class="card accordion-item">
                 <h2 class="accordion-header">
-                    <button aria-controls="accordionPayment-2" class="accordion-button collapsed" data-bs-target="#accordionPayment-2" data-bs-toggle="collapse" type="button"> آیا می‌توانیم در این برنامه به صورت آنلاین شرکت کنیم؟</button>
+                    <button aria-controls="accordionPayment-2" class="accordion-button" data-bs-target="#accordionPayment-2" data-bs-toggle="collapse" type="button"> آیا برای شرکت در کمپ هزینه‌ای باید پرداخت کرد؟</button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionPayment-2">
-                    <div class="accordion-body"> ما کارت‌های Visa®، MasterCard®، American Express® و PayPal® را قبول می‌کنیم. تمام اطلاعاتی که به سرورهای ما ارسال می‌شوند، به صورت رمز شده است؛ بنابراین می‌توانید با اطمینان کامل به اینکه اطلاعات کارت اعتباری شما در امان و ایمن نگه داشته می‌شود، اعتماد کنید.</div>
+                <div class="accordion-collapse collapse show" id="accordionPayment-2">
+                    <div class="accordion-body">خیر، شرکت در کمپ رایگان است.</div>
                 </div>
             </div>
-            <div class="card accordion-item active">
+
+            <div class="card accordion-item">
                 <h2 class="accordion-header">
-                    <button aria-controls="accordionPayment-1" aria-expanded="true" class="accordion-button" data-bs-target="#accordionPayment-1" data-bs-toggle="collapse" type="button"> گام‌ها و آزمون های دیجی‌نکست دارای مدال هستند؟</button>
+                    <button aria-controls="accordionPayment-1" aria-expanded="true" class="accordion-button" data-bs-target="#accordionPayment-1" data-bs-toggle="collapse" type="button"> نحوه تیم‌سازی در کمپ به چه صورت است؟</button>
                 </h2>
                 <div class="accordion-collapse collapse show" id="accordionPayment-1">
-                    <div class="accordion-body"> پرداخت در طول فرآیند تسویه حساب انجام می‌شود زمانی که برای سفارش خود پرداخت می‌کنید. شماره سفارشی که در صفحه تأیید نمایش داده می‌شود نشان‌دهنده این است که پرداخت با موفقیت انجام شده است.</div>
+                    <div class="accordion-body">افراد شرکت‌کننده در کمپ‌های دیجی‌نکست با کمک و راهنمایی منتورهای متخصص و بر مبنای اطلاعات تکمیل شده افراد و ارزیابی‌های انجام شده در تیم‌هایی با زمینه ایده مشترک قرار می‌گیرند.</div>
                 </div>
             </div>
+
             <div class="card accordion-item">
                 <h2 class="accordion-header">
-                    <button aria-controls="accordionPayment-3" class="accordion-button collapsed" data-bs-target="#accordionPayment-3" data-bs-toggle="collapse" type="button"> اگر سوال دیگری داشتم چکاری انجام بدم؟</button>
+                    <button aria-controls="accordionPayment-3" class="accordion-button" data-bs-target="#accordionPayment-3" data-bs-toggle="collapse" type="button"> آیا به صورت فردی هم امکان شرکت در این دوره وجود دارد؟</button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionPayment-3">
-                    <div class="accordion-body"> برای هر مشکل فنی که با وب‌سایت ما روبرو می‌شوید، لطفاً با ما تماس بگیرید. شما می‌توانید با مراجعه به
-                        <a href="javascript:void(0);">پورتال پشتیبانی ما</a>
-                        با ما تماس بگیرید، یا می‌توانید با شماره تلفن رایگان
-                        <span class="fw-medium">
-                            <bdi>1-000-000-000</bdi>
-                        </span>
-                        تماس بگیرید، یا ایمیل بزنید به
-                        <a href="javascript:void(0);">
-                            <bdi><span class="__cf_email__" data-cfemail="224d5046475062414d4f52434c5b4f434b4e0c414d4f">[email&#160;protected]</span></bdi>
-                        </a>
-                    </div>
+                <div class="accordion-collapse collapse show" id="accordionPayment-3">
+                    <div class="accordion-body"> بله. امکان ثبت‌نام به صورت انفرادی در دو موقعیت توسعه دهنده تکنولوژی و توسعه دهنده کسب‌و‌کار در کمپ دیجی‌نکست وجود دارد.</div>
                 </div>
             </div>
+
             <div class="card accordion-item">
                 <h2 class="accordion-header">
-                    <button aria-controls="accordionPayment-5" class="accordion-button collapsed" data-bs-target="#accordionPayment-5" data-bs-toggle="collapse" type="button"> چجوری به دریافت سرمایه برسم؟</button>
+                    <button aria-controls="accordionPayment-5" class="accordion-button" data-bs-target="#accordionPayment-5" data-bs-toggle="collapse" type="button"> آیا با هر ایده‌ای امکان شرکت در دوره وجود دارد؟</button>
                 </h2>
-                <div class="accordion-collapse collapse" id="accordionPayment-5">
-                    <div class="accordion-body"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد</div>
+                <div class="accordion-collapse collapse show" id="accordionPayment-5">
+                    <div class="accordion-body"> دیجی‌نکست در حوزه زنجیره ارزش تجارت الکترونیک و لبه تکنولوژی میزبان ایده‌های شماست.</div>
+                </div>
+            </div>
+
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-6" class="accordion-button" data-bs-target="#accordionPayment-6" data-bs-toggle="collapse" type="button"> اگر کمپ را با موفقیت پشت سر بگذاریم چه اتفاقی می‌افتد؟</button>
+                </h2>
+                <div class="accordion-collapse collapse show" id="accordionPayment-6">
+                    <div class="accordion-body"> بعد از اتمام موفق دوره هشت هفته‌ای کمپ استارتاپی تیم‌ها و ایده‌ها فرصت ارائه برای مدیران ارشد دیجی‌نکست، دیجی‌کالا و سرمایه‌گذاران را خواهند داشت که بعد از داوری در صورت پذیرفته شدن وارد فرآیند شتابدهی و سرمایه‌گذاری می‌شوند.</div>
+                </div>
+            </div>
+
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-7" class="accordion-button" data-bs-target="#accordionPayment-7" data-bs-toggle="collapse" type="button"> چه کسانی در موضوع منتورشیپ انتقال تجربه می‌کنند؟</button>
+                </h2>
+                <div class="accordion-collapse collapse show" id="accordionPayment-7">
+                    <div class="accordion-body"> منتورهای کمپ استارتاپی و فرآیند شتابدهی دیجی‌نکست مدیران ارشد دیجی‌کالا، دیجی‌نکست و افراد متخصص و با تجربه در حوزه فعالیت تیم‌ها هستند.</div>
+                </div>
+            </div>
+
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-8" class="accordion-button" data-bs-target="#accordionPayment-8" data-bs-toggle="collapse" type="button"> شرکت در این دوره ها چه کمکی به ما می‌کند؟</button>
+                </h2>
+                <div class="accordion-collapse collapse show" id="accordionPayment-8">
+                    <div class="accordion-body"> کمپ استارتاپی دیجی‌نکست با هدف کمک و تسریع شکل‌گیری کسب‌و‌کارهای دانش بنیان و نوآور برگزار می‌شود. به علاوه امکان ورود به فرآیند شتابدهی و سرمایه‌گذاری را نیز برای تیم‌های برتر فراهم می‌کند.</div>
+                </div>
+            </div>
+
+            <div class="card accordion-item">
+                <h2 class="accordion-header">
+                    <button aria-controls="accordionPayment-9" class="accordion-button" data-bs-target="#accordionPayment-9" data-bs-toggle="collapse" type="button"> اگر ایده‌ای نداشته باشیم، امکان شرکت در این برنامه را داریم؟</button>
+                </h2>
+                <div class="accordion-collapse collapse show" id="accordionPayment-9">
+                    <div class="accordion-body"> بله. شرکت در کمپ استارتاپی به شما این امکان را می‌دهد تا با تکیه بر مهارت و تخصص خود به ایده‌های جدیدی برسید و یا در تیم‌هایی با ایده‌های مختلف قرار بگیرید.</div>
                 </div>
             </div>
         </div>
         <!-- End FAQ -->
+    </div>
+
+    <div class="col-lg-4 mt-4">
+        <img src={% static "boxzi-infograph.png" %} alt="" class="img-fluid no-background">
     </div>
 
 </div>

@@ -10,7 +10,7 @@ from utils import date_db_convertor
 from django.contrib import messages
 from content.models import Road
 from utils.check_status_user_state_level import add_one_level
-from notifier.api import send_welcome_sms
+from notifier.api import send_messages
 from assessment.models import Question, Response
 from plan.models import Plan
 from team.models import RoadRegistration, StartUpTeam
@@ -140,7 +140,11 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
 
             login(request, user)
             
-            send_welcome_sms(user.phone_number, user.first_name)
+            send_messages(
+                action="initial_registration_success",
+                destination_phone_number=user.phone_number,
+                user=request.user.first_name,
+            )
             
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
             return redirect("account:register2")
@@ -242,8 +246,11 @@ class RegisterLevel4(LoginRequiredMixin, View):
             registration_obj.complete_registration_date = timezone.datetime.now()
             registration_obj.save()
             
-            # TODO: send message to user after complete installation
-
+            send_messages(
+                action="final_registration_success",
+                destination_phone_number=request.user.phone_number,
+                user=request.user.first_name,
+            )
             messages.success(request, "ثبت نام شما در باکس زی کامل شد. جهت ثبت درخواست برای مسیر آموزشی مورد نظر فرایند هارو از طریق راهنمای داخل داشبورد خود ادامه بدید.")
             return redirect("account:user-dashboard")
         
@@ -282,7 +289,6 @@ class ChangeUser(LoginRequiredMixin, ChangeUserAccessMixin, View):
         user = User.objects.get(uuid=uuid)
 
         form = self.form_class(request.POST, instance=user)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, self.success_message)
