@@ -2,6 +2,7 @@ liara.json
 liara_nginx.conf
 tmp
 Pipfile*
+.DS_*
 
 # Django #
 *.log

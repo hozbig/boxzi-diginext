@@ -92,16 +92,11 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
     context = {}
 
     def get(self, request):
-        try:
-            self.context["is_road"] = Road.objects.first()
-        except:
+        is_road = Road.objects.exists()
+        if is_road:
+            self.context["is_road"] = Road.objects.all().first()
+        else:
             self.context["is_road"] = False
-
-            try:
-                registration_obj = RoadRegistration.objects.get(user=request.user)
-                return redirect("router")
-            except:
-                pass
 
         self.context["form"] = UserRegisterFormLevel1
         return render(request, self.template_name, self.context)

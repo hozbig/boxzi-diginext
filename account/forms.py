@@ -148,7 +148,6 @@ class UserRegisterFormLevel1(UserCreationForm):
         self.fields['last_name'].widget.attrs['placeholder'] = "* " + self.fields["last_name"].label
         for field in self.fields:
             self.fields[field].required = True
-            self.fields[field].label = ""
             self.fields[field].widget.attrs['style'] = 'text-align:right'
         # Remove/Change help_text
         self.fields['accept_nda'].label = "قوانین سایت را مطالعه و قبول دارم."
@@ -179,7 +178,6 @@ class UserRegisterFormLevel2(forms.ModelForm):
         self.fields['city'].widget.attrs['placeholder'] = "* " + self.fields["city"].label
         for field in self.fields:
             self.fields[field].required = True
-            self.fields[field].label = ""
             self.fields[field].widget.attrs['style'] = 'text-align:right'
 
 
