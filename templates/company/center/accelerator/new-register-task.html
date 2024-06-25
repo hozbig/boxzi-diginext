@@ -23,28 +23,18 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card overflow-hidden">
-                        <h5 class="card-header pb-1">مدیریت آزمون های ورودی</h5>
+                        <h5 class="card-header pb-3">مدیریت آزمون های ورودی</h5>
                         <div class="card-content">
                             <div class="card-body">
-                                <h5 class="mt-4">فرم ساخت آزمون</h5>
                                 <form method="POST">
                                     {% csrf_token %}
                                     <input name="accelerator" value="{{acc_object.id}}" hidden>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-lg-6">
                                             {{ form.title|as_crispy_field }}
                                         </div>
-                                        <div class="col-md-3 mt-2">
+                                        <div class="col-lg-6">
                                             {{ form.type|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-3 mt-2">
-                                            {{ form.start_date|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-3 mt-2">
-                                            {{ form.expiration_date|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-12 mt-2">
-                                            {{ form.text|as_crispy_field }}
                                         </div>
                                     </div>
                                     <button class="btn btn-label-success mt-3" type="submit">ایجاد آزمون</button>
@@ -56,8 +46,6 @@
                                             <th>#</th>
                                             <th>نام آزمون</th>
                                             <th class="text-center">نوع</th>
-                                            <th class="text-center">تاریخ شروع</th>
-                                            <th class="text-center">تاریخ پایان</th>
                                             <th class="text-center">عملیات</th>
                                         </tr>
                                     </thead>
@@ -67,8 +55,6 @@
                                                 <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
                                                 <td class="font-weight-bold">{{task.title}}</td>
                                                 <td class="text-center table-{% if task.type == "t" %}primary{% else %}warning{% endif %}">{{task.get_type_display}}</td>
-                                                <td class="text-center">{{task.start_date|to_jalali}}</td>
-                                                <td class="text-center">{{task.expiration_date|to_jalali}}</td>
                                                 <td class="text-center">
                                                     <a href={% url "company:update-register-task" task.uuid %} class="badge bg-label-info">ویرایش</a>
                                                     <a href={% url "company:delete-register-task" task.uuid %} class="badge bg-label-danger">حذف <i class="feather icon-trash-2"></i></a>

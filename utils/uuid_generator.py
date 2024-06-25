@@ -1,6 +1,10 @@
 import string
+import uuid
 
 from django.utils.crypto import get_random_string
+
+def random_uuid4():
+    return uuid.uuid4()
 
 def random_uuid(max_char=5):
     """

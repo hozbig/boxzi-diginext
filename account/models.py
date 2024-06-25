@@ -83,8 +83,8 @@ class User(AbstractUser):
     abilities = models.ManyToManyField("subject.Subject", verbose_name="توانایی ها", related_name="abilities_of_user", blank=True)
     
     TYPES = (
-        ("t", "فنی"), # Tech side
-        ("b", "بیزنسی"), # Business side
+        ("t", "توسعه دهنده تکنولوژی"), # Tech side
+        ("b", "توسعه دهنده کسب‌وکار"), # Business side
     )
     type = models.CharField(choices=TYPES, max_length=1, verbose_name="نقش شما", default="t")
     resume_file = models.FileField(verbose_name="فایل pdf رزومه", upload_to=resume_directory_path, null=True, blank=True)
@@ -109,6 +109,8 @@ class User(AbstractUser):
     other_specialties = models.CharField(verbose_name="دیگر تخصص های شما", max_length=255, null=True, blank=True)
     why_us = models.TextField(default="", verbose_name="علت درخواست شما برای برنامه شتابدهی", blank=True, null=True)
     why_us_video = models.FileField(verbose_name="توضیحات کوتاه شما به صورت فیلم", upload_to=why_us_directory_path, max_length=100, null=True, blank=True)
+
+    accept_nda = models.BooleanField(verbose_name="پذیرش قوانین و مقرارت سایت.", default=True)
 
     bio = models.TextField(default="", verbose_name="بیوگرافی", blank=True, null=True)
 

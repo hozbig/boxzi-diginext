@@ -180,6 +180,9 @@ class TaskResponse(models.Model):
         return self.title
 
 
+
+
+# PreRegisterTask = Challenge: an object of this model can be for a tech or business guy
 class PreRegisterTask(models.Model):
     uuid = models.CharField(
         unique=True,
@@ -189,12 +192,9 @@ class PreRegisterTask(models.Model):
         editable=False,
     )
     title = models.CharField(max_length=64, verbose_name="عنوان")
-    text = QuillField(default="", verbose_name="محتوا متنی")
-    start_date = models.DateField("تاریخ شروع", auto_now=False, auto_now_add=False, null=True)
-    expiration_date = models.DateField("تاریخ پایان", auto_now=False, auto_now_add=False, null=True)
     TYPES = (
-        ("t", "فنی"), # Tech
-        ("b", "بیزنسی"), # Business
+        ("t", "تکنولوژی"), # Tech
+        ("b", "کسب‌وکار"), # Business
     )
     type = models.CharField(choices=TYPES, max_length=1, default="t", verbose_name="نوع")
 
@@ -208,6 +208,31 @@ class PreRegisterTask(models.Model):
 
     def __str__(self) -> str:
         return f"{self.title} ({self.get_type_display()})"
+    
+
+class PreRegisterTaskQuestion(models.Model):
+    uuid = models.CharField(
+        unique=True,
+        max_length=5,
+        blank=True,
+        default=random_uuid,
+        editable=False,
+    )
+    pre_register = models.ForeignKey(PreRegisterTask, verbose_name="آزمون", on_delete=models.CASCADE, related_name="pre_register_of_pre_register_task_question",)
+
+    title = models.CharField(max_length=255, verbose_name="عنوان")
+    text = QuillField(verbose_name="عنوان")
+
+    accelerator = models.ForeignKey("company.Center", related_name="accelerator_of_pre_register_task_question", verbose_name="برگزارکننده", null=True, on_delete=models.CASCADE)
+    created_time = models.DateTimeField(auto_now_add=True, null=True, verbose_name="زمان ساخت")
+    last_update_time = models.DateTimeField(auto_now=True, null=True, verbose_name="زمان بروزرسانی")
+
+    class Meta:
+        verbose_name = "سوال های آزمون پیش ثبت نام"
+        verbose_name_plural = "سوال های آزمون های پیش ثبت نام"
+
+    def __str__(self) -> str:
+        return f"{self.pre_register}"
 
 
 class PreRegisterTaskResponse(models.Model):
@@ -221,30 +246,22 @@ class PreRegisterTaskResponse(models.Model):
     # The user who answered to pre register task
     user = models.ForeignKey("account.User", verbose_name="کاربر", related_name="user_of_pre_register_task_response", on_delete=models.CASCADE)
     # The task that user answered
-    task = models.ForeignKey(PreRegisterTask, verbose_name="تسک", related_name="task_of_pre_register_task_response", on_delete=models.CASCADE)
+    question = models.ForeignKey(PreRegisterTaskQuestion, verbose_name="سوال", related_name="task_of_pre_register_task_response", on_delete=models.CASCADE, null=True)
     # The road that user want to sign for
-    road = models.ForeignKey("content.Road", verbose_name="مسیر", related_name="road_of_pre_register_task_response", on_delete=models.CASCADE)
-    
-    file = models.FileField(verbose_name="فایل", upload_to="task-response/%Y/%m/", max_length=100, null=True, blank=True, help_text="در صورت نیاز میتوانید یک فایل نیز برای شتابدهنده ارسال کنید")
-    title = models.CharField(max_length=64, verbose_name="عنوان پاسخ")
-    text = QuillField(default="", verbose_name="محتوا متنی")
-    
-    STATUS = (
-        ("w", "در انتظار برسی"), # Waiting
-        ("d", "تایید شده"), # Done
-        ("r", "رد شده"), # Reject
-    )
-    status = models.CharField(choices=STATUS, max_length=1, default="w", verbose_name="وضعیت")
+    road = models.ForeignKey("content.Road", verbose_name="مسیر", related_name="question_of_pre_register_task_response", on_delete=models.CASCADE)
+
+    # text = QuillField(default="", verbose_name="محتوا متنی")
+    text = models.TextField(default="", verbose_name="محتوا متنی")
 
     created_time = models.DateTimeField(auto_now_add=True, null=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, null=True, verbose_name="زمان بروزرسانی")
 
     class Meta:
-        verbose_name = "پاسخ کاربر به آزمون"
-        verbose_name_plural = "پاسخ های کاربر به آزمون"
+        verbose_name = "پاسخ کاربر به سوال های آزمون"
+        verbose_name_plural = "پاسخ های کاربر به سوال های آزمون"
 
     def __str__(self) -> str:
-        return self.title
+        return f"{self.user.get_full_name} به سوال {self.question.title} از آزمون {self.question.pre_register.title}"
 
 
 class PersonalTest(models.Model):

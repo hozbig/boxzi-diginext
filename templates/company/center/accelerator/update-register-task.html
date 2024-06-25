@@ -18,7 +18,53 @@
 
     {% include "elements/messages-section.html" %}
 
-    <div class="col-12">
+    <div class="col-md-8">
+        <div class="card">
+            <h5 class="card-header pb-0">سوال های ساخته شده</h5>
+            <div class="card-content">
+                <div class="card-body">
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">نام سوال</th>
+                                <th scope="col">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for question in object.pre_register_of_pre_register_task_question.all %}
+                                <tr>
+                                    <th scope="row">{{forloop.counter|stringformat:"02d"}}</th>
+                                    <td class="font-weight-bold">{{question.title}}</td>
+                                    <td>
+                                        <a href={% url "company:delete_pre_register_task_question" question.uuid %} class="badge bg-label-danger">حذف</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+    
+                    <h5 class="mt-4">فرم ساخت آزمون</h5>
+                    <form method="POST" action={% url "company:save_pre_register_task_question" object.uuid %}>
+                        {% csrf_token %}
+                        <input name="pre_register" value="{{acc_object.id}}" hidden>
+                        {% for field in question_form %}
+                            {% if not field.name in "pre_register accelerator" %}
+                            <div class="col-md-12 mt-2">
+                                {{ field|as_crispy_field }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <button class="btn btn-label-success mt-3" type="submit">ثبت سوال</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
         <section id="nav-filled">
             <div class="row">
                 <div class="col-sm-12">
@@ -32,20 +78,11 @@
                                     {% csrf_token %}
                                     <input name="accelerator" value="{{acc_object.id}}" hidden>
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-12">
                                             {{ form.title|as_crispy_field }}
                                         </div>
-                                        <div class="col-md-3 mt-2">
+                                        <div class="col-12 mt-2">
                                             {{ form.type|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-3 mt-2">
-                                            {{ form.start_date|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-3 mt-2">
-                                            {{ form.expiration_date|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-12 mt-2">
-                                            {{ form.text|as_crispy_field }}
                                         </div>
                                     </div>
             

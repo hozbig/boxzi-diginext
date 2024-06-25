@@ -9,6 +9,7 @@ from .models import (
     Task,
     TaskOrder,
     PreRegisterTask,
+    PreRegisterTaskQuestion,
     PreRegisterTaskResponse,
     )
 
@@ -78,11 +79,6 @@ class PreRegisterTaskCreateForm(ModelForm):
         model = PreRegisterTask
         text = QuillFormField()
         exclude = ("created_time", "last_update_time")
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["start_date"].widget.attrs['class'] = "flatpickr-date"
-        self.fields["expiration_date"].widget.attrs['class'] = "flatpickr-date"
         
         
 class PreRegisterTaskUpdateForm(ModelForm):
@@ -90,22 +86,19 @@ class PreRegisterTaskUpdateForm(ModelForm):
         model = PreRegisterTask
         text = QuillFormField()
         exclude = ("created_time", "last_update_time", "accelerator")
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["start_date"].widget.attrs['class'] = "flatpickr-date"
-        self.fields["expiration_date"].widget.attrs['class'] = "flatpickr-date"
+
+
+class PreRegisterTaskQuestionCreateForm(ModelForm):
+    class Meta:
+        model = PreRegisterTaskQuestion
+        text = QuillFormField()
+        exclude = ("created_time", "last_update_time")
         
 
 class PreRegisterTaskResponseCreateForm(ModelForm):
     class Meta:
         model = PreRegisterTaskResponse
-        text = QuillFormField()
         exclude = ("created_time", "last_update_time")
-        
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["file"].widget.attrs['class'] = "form-control"
 
 
 class PreRegisterTaskResponseUpdateForm(ModelForm):

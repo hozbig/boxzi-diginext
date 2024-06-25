@@ -23,7 +23,7 @@ from content.forms import (
     CollectionOrderCreateForm,
     ContentOrderCreateForm,
 )
-from quiz.models import Exam, Question, Answer, ExamOrder, Task, TaskOrder, PreRegisterTask
+from quiz.models import Exam, Question, Answer, ExamOrder, Task, TaskOrder, PreRegisterTask, PreRegisterTaskQuestion
 from quiz.forms import (
     ExamCreateForm,
     ExamUpdateForm,
@@ -35,6 +35,7 @@ from quiz.forms import (
     TaskOrderForm,
     PreRegisterTaskCreateForm,
     PreRegisterTaskUpdateForm,
+    PreRegisterTaskQuestionCreateForm
 )
 from subject.models import Topic, Subject
 from subject.forms import TopicSubjectCreationForm
@@ -685,12 +686,6 @@ class CreatePreRegisterTask(LoginRequiredMixin, View):
     
     def post(self, request):
         form_copy = request.POST.copy()
-        form_copy.update(
-            {
-                "start_date": date_db_convertor.jdate_edge_convertor(form_copy["start_date"]),
-                "expiration_date": date_db_convertor.jdate_edge_convertor(form_copy["expiration_date"]),
-            }
-        )
 
         form = self.form_class(form_copy)
 
@@ -711,20 +706,16 @@ class UpdatePreRegisterTask(LoginRequiredMixin, View):
     slug_field, slug_url_kwarg = "uuid", "uuid"
     context = {"title": "ویرایش آزمون ورودی"}
 
-
     def get(self, request, uuid):
         obj = self.model.objects.get(uuid=uuid)
         self.context["form"] = self.form_class(instance=obj)
+        self.context["question_form"] = PreRegisterTaskQuestionCreateForm
+        self.context["object"] = obj
         self.context["acc_object"] = self.request.user.access_to_center
         return render(request, self.template_name, self.context)
 
     def post(self, request, uuid):
         form_copy = request.POST.copy()
-        form_copy.update(
-            {
-                "start_date": date_db_convertor.jdate_edge_convertor(form_copy["start_date"]),
-                "expiration_date": date_db_convertor.jdate_edge_convertor(form_copy["expiration_date"]),            }
-        )
 
         obj = self.model.objects.get(uuid=uuid)
         form = self.form_class(form_copy, instance=obj)
@@ -737,6 +728,36 @@ class UpdatePreRegisterTask(LoginRequiredMixin, View):
         
         return redirect(reverse('company:update-register-task', kwargs={'uuid': uuid}))
     
+
+@login_required
+@require_POST
+def save_pre_register_task_question(request, pre_register_task_uuid):
+    pre_register_task_object = PreRegisterTask.objects.get(uuid=pre_register_task_uuid)
+    if request.method == 'POST':
+        form_copy = request.POST.copy()
+        form_copy.update({"pre_register": pre_register_task_object,"accelerator": pre_register_task_object.accelerator})
+
+        form = PreRegisterTaskQuestionCreateForm(form_copy)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "عملیات با موفقیت انجام شد")
+        else:
+            messages.error(request, "مشکلی در فرم وجود دارد!")
+    else:
+        messages.error(request, "درخاست نامعتبر!")
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
+
+@login_required
+def delete_pre_register_task_question(request, uuid):
+    try:
+        PreRegisterTaskQuestion.objects.get(uuid=uuid).delete()
+        messages.success(request, "عملیات با موفقیت انجام شد")
+    except:
+        messages.error(request, "درخاست نامعتبر!")
+
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+
 
 class DeletePreRegisterTask(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = PreRegisterTask

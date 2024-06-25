@@ -141,7 +141,7 @@
                                         <h3 class="card-title font-weight-bold">چالش ورودی</h3>
                                     </div>
                                     <div class="col-12">
-                                        {% if registration.user.type == "t" %}
+                                        {% if registration.user.type == "b" %}
                                         <a href="{% url "quiz:pre-register-challenge" task_business_side.uuid road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
                                         {% else %}
                                         <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
@@ -172,16 +172,19 @@
                 {% endif %}
 
                 {% if not request.user.user_of_plan.first %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                    <div class="card text-white bg-transparent border border-info text-center">
-                        <div class="card-content d-flex ">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12 mb-50">
-                                        <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
-                                    </div>
-                                    <div class="col-12">
-                                        <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
+                <div class="row mt-5">
+                    <div class="col-12"><h5 class="">مراحل آپشنال: </h5></div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
+                        <div class="card text-white bg-transparent border border-info text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 mb-50">
+                                            <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -189,16 +192,19 @@
                     </div>
                 </div>
                 {% else %}
-                <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                    <div class="card text-white bg-transparent border border-success text-center">
-                        <div class="card-content d-flex ">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-12 mb-50">
-                                        <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
-                                    </div>
-                                    <div class="col-12">
-                                        <a class="btn btn-label-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                <div class="row mt-5">
+                    <div class="col-12"><h5 class="">مراحل آپشنال: </h5></div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
+                        <div class="card text-white bg-transparent border border-success text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 mb-50">
+                                            <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                        </div>
+                                        <div class="col-12">
+                                            <a class="btn btn-label-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

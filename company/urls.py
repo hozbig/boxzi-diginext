@@ -45,6 +45,9 @@ urlpatterns = [
     path("invest-management/", views.InvestManagement.as_view(), name="invest-management"),
     path("accelerator/new-register-task/", views.CreatePreRegisterTask.as_view(), name="new-register-task"),
     path("accelerator/<str:uuid>/update-register-task/", views.UpdatePreRegisterTask.as_view(), name="update-register-task"),
+    path("accelerator/save_pre_register_task_question/<str:pre_register_task_uuid>/", views.save_pre_register_task_question, name="save_pre_register_task_question"),
+    path("accelerator/delete_pre_register_task_question/<str:uuid>/", views.delete_pre_register_task_question, name="delete_pre_register_task_question"),
+
     path("accelerator/<str:uuid>/delete-register-task/", views.DeletePreRegisterTask.as_view(), name="delete-register-task"),
     path("accelerator/referee-management/", views.RefereeManagement.as_view(), name="referee-management"),
 

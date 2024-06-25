@@ -23,6 +23,7 @@ class LoginForm(forms.Form):
     hcaptcha = hCaptchaField()
     
     phone_number.widget.attrs["placeholder"] = "جهت ورود شماره موبایل خودرا وارد کنید"
+    phone_number.widget.attrs["class"] = "phoneInput"
     password.widget.attrs["placeholder"] = "············"
     password.label = ""
 
@@ -109,6 +110,7 @@ class UserLoginOrRegisterForm(ModelForm):
         # Remove labels and add placeholders
         self.fields['phone_number'].widget.attrs['placeholder'] = 'شماره تماس *'
         self.fields['phone_number'].widget.attrs['style'] = 'text-align:right'
+        self.fields['phone_number'].widget.attrs["class"] = "phoneInput"
         # Remove labels
         self.fields['phone_number'].label = ''
 
@@ -132,6 +134,7 @@ class UserRegisterFormLevel1(UserCreationForm):
             "last_name",
             "phone_number",
             "email",
+            "accept_nda",
         )
     
     def __init__(self, *args, **kwargs):
@@ -148,6 +151,7 @@ class UserRegisterFormLevel1(UserCreationForm):
             self.fields[field].label = ""
             self.fields[field].widget.attrs['style'] = 'text-align:right'
         # Remove/Change help_text
+        self.fields['accept_nda'].label = "قوانین سایت را مطالعه و قبول دارم."
         self.fields['password1'].help_text = 'گذرواژه شما باید حداقل ۸ حرف داشته باشد، نباید مشابه اطلاعات شخصی، یک رمز عبور معمول یا فقط عدد باشد'
         self.fields['password2'].help_text = ''
 
@@ -196,7 +200,6 @@ class UserRegisterFormLevel3(forms.ModelForm):
         for field in self.fields:
             self.fields[field].required = True
             self.fields[field].widget.attrs['style'] = 'text-align:right'
-        self.fields["resume_file"].required = False
         self.fields["other_specialties"].required = False
         self.fields["resume_file"].widget.attrs['accept'] = 'application/pdf'  # Restrict file input to PDF files
 

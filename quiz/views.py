@@ -102,8 +102,24 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         self.context["task"] = task
         self.context["task_business_side"] = task_business_side
         self.context["road"] = road
+
+        count_of_t_question = task.pre_register_of_pre_register_task_question.count()
+        count_of_b_question = task_business_side.pre_register_of_pre_register_task_question.count()
+        user_response_count = user.user_of_pre_register_task_response.count()
+
         if user.user_of_road_registration.first().team_or_individual == "i":
-            self.context["challenge_response"] = user.user_of_pre_register_task_response.exists()
+            if user.type == "t":
+                if (count_of_t_question - user_response_count) < 1:
+                    self.context["challenge_response"] = True
+                else:
+                    self.context["challenge_response"] = False
+            elif user.type == "b":
+                if (count_of_b_question - user_response_count) < 1:
+                    self.context["challenge_response"] = True
+                else:
+                    self.context["challenge_response"] = False
+
+                    
         return render(request, self.template_name, self.context)
     
     def post(self, request, task_uuid, road_uuid):
@@ -236,35 +252,23 @@ class PreRegisterPersonalTests(LoginRequiredMixin, View):
     def get(self, request, road_uuid):
         road = Road.objects.get(uuid=road_uuid)
         
-        # if not request.user.user_of_personal_test.exists():
-        #     send_user_information(request.user, road)
+        # First way (we should use Andaze platform for user characterize analyze behavioral - its toooooo shit)
+        if not request.user.user_of_personal_test.exists():
+            send_user_information(request.user, road)
         # else:
         #     self.context["object"] = request.user.user_of_personal_test.first()
         
-        object = PersonalTest(
-            user = request.user,
-            road = road,
-            reference_id = str(uuid.uuid4()),
-            first_response_of_sending_information_is_accepted = False,
-        )
-        object.save()
+        # ====== Alternative way if the above way is not work properly
+        # object = PersonalTest(
+        #     user = request.user,
+        #     road = road,
+        #     reference_id = str(uuid.uuid4()),
+        #     first_response_of_sending_information_is_accepted = False,
+        # )
+        # object.save()
         
-        next_url = request.GET.get('next')
-        if next_url:
-            self.context["next_url"] = next_url
         self.context["title"] = "آزمون ورودی شخصیت"
         return render(request, self.template_name, self.context)
-    
-    def post(self, request, road_uuid):
-        if request.user.user_of_personal_test.first():
-                return redirect("router")
-
-        road = Road.objects.get(uuid=road_uuid)
-        PersonalTest.objects.create(user=request.user, road=road)
-
-        next_url = request.GET.get('next')
-        messages.success(request, "آزمون شما با موفقیت ثبت شد")
-        return redirect(next_url if next_url else reverse("quiz:pre-register-required", kwargs={"road_uuid": road_uuid,}))
     
     
 class PersonalTestsResult(LoginRequiredMixin, View):
@@ -283,48 +287,34 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
     context = {}
     
     def get(self, request, task_uuid, road_uuid):
-        if request.user.user_of_pre_register_task_response.exists():
-            messages.error(request, "عملیات غیرمجاز !")
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
-
-        task = PreRegisterTask.objects.get(uuid=task_uuid)
         road = Road.objects.get(uuid=road_uuid)
         self.context["title"] = "تست ورودی"
         self.context["exam_form"] = self.form_class
-        self.context["task"] = task
         self.context["road"] = road
         return render(request, self.template_name, self.context)
     
-    def post(self, request, task_uuid, road_uuid):
-        if request.user.user_of_pre_register_task_response.exists():
-            messages.error(request, "عملیات غیرمجاز !")
-            return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+def save_task_question_response(request, task_uuid, road_uuid):
+    task = PreRegisterTask.objects.get(uuid=task_uuid)
+    road = Road.objects.get(uuid=road_uuid)
 
-        task = PreRegisterTask.objects.get(uuid=task_uuid)
-        road = Road.objects.get(uuid=road_uuid)
+    form_copy = request.POST.copy()
+    form_copy.update(
+        {
+            "user": request.user,
+            "road": road,
+            "task": task,
+        }
+    )
 
-        form_copy = request.POST.copy()
-        form_copy.update(
-            {
-                "user": request.user,
-                "road": road,
-                "task": task,
-            }
-        )
-
-        form = self.form_class(form_copy, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "پاسخ شما به چالش با موفقیت ثبت شد")
-            next_url = request.GET.get('next')
-            return redirect(next_url if next_url else reverse("quiz:pre-register-required", kwargs={"task_uuid": task_uuid, "road_uuid": road_uuid,}))
-        
-        messages.error(request, "مشکلی پیش آمده است!")
-        self.context["title"] = "تست ورودی"
-        self.context["exam_form"] = form
-        self.context["task"] = task
-        self.context["road"] = road
-        return render(request, self.template_name, self.context)
+    form = PreRegisterTaskResponseCreateForm(form_copy)
+    print(form)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "پاسخ شما به چالش با موفقیت ثبت شد")
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    
+    messages.error(request, "مشکلی رخ داده است")
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 class PreRegisterChallengesUpdate(LoginRequiredMixin, View):

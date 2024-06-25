@@ -12,55 +12,66 @@
 <div class="row">
 
     {% include "elements/messages-section.html" %}
+    
+    {% if request.user.type == "t" %}
+        {% for question in road.pre_register_task.pre_register_of_pre_register_task_question.all %}
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <h5 class="card-header pb-0">{{forloop.counter}}. {{question.title}}</h5>
+                    <div class="card-body">
+                        <p class="p-0">{{question.text.html|safe}}</p>
 
-    <div class="col-12">
-        <h5 class="mt-4">آکاردئون</h5>
-        <div class="row">
-            <div class="col-md mb-4 mb-md-2">
-                <small class="text-light fw-medium">آکاردئون پایه</small>
-                <div class="accordion mt-3" id="accordionExample">
-                    <div class="card accordion-item active">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button aria-controls="accordionOne" aria-expanded="true" class="accordion-button" data-bs-target="#accordionOne" data-bs-toggle="collapse" type="button"> محتوای چالش</button>
-                        </h2>
-                        <div class="accordion-collapse collapse show" data-bs-parent="#accordionExample" id="accordionOne">
-                            <div class="accordion-body">{{task.text.html|safe}}</div>
-                        </div>
-                    </div>
-                    <div class="card accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button aria-controls="accordionTwo" aria-expanded="false" class="accordion-button collapsed" data-bs-target="#accordionTwo" data-bs-toggle="collapse" type="button"> فرم ثبت پاسخ</button>
-                        </h2>
-                        <div aria-labelledby="headingTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample" id="accordionTwo">
-                            <div class="accordion-body">
-                                <form method="POST" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    <input name="user" value="{{request.user.id}}" hidden>
-                                    <input name="accelerator" value="{{task.id}}" hidden>
-                                    <input name="accelerator" value="{{road.id}}" hidden>
-                                    <input name="status" value="w" hidden>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            {{ exam_form.title|as_crispy_field }}
-                                        </div>
-                                        <div class="col-md-4">
-                                            {{ exam_form.file|as_crispy_field }}
-                                        </div>
-                                        <div class="col-12">
-                                            {{ exam_form.text|as_crispy_field }}
-                                        </div>
-                                    </div>
-            
-                                    <button class="btn btn-label-success btn-block" type="submit">ثبت پاسخ</button>
-                                </form>
+                        <form method="POST" action={% url "quiz:save_task_question_response" road.pre_register_task.uuid road.uuid %}>
+                            {% csrf_token %}
+                            <input name="question" value="{{question.id}}" hidden>
+                            <div class="row">
+                                <div class="col-12">
+                                    {% if question.task_of_pre_register_task_response.first %}
+                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question.task_of_pre_register_task_response.first.text}}</textarea>
+                                    {% else %}
+                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید..."></textarea>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
+    
+                            <button class="btn btn-label-success btn-block" type="submit">ثبت پاسخ</button>
+                        </form>
+
                     </div>
                 </div>
             </div>
-        </div>
-        <!--/ Accordion -->
-    </div>
+        {% endfor %}
+    {% elif request.user.type == "b" %}
+        {% for question in road.pre_register_task_for_business_side.pre_register_of_pre_register_task_question.all %}
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <h5 class="card-header pb-0">{{forloop.counter}}. {{question.title}}</h5>
+                    <div class="card-body">
+                        <p class="p-0">{{question.text.html|safe}}</p>
+
+                        <form method="POST" action={% url "quiz:save_task_question_response" road.pre_register_task.uuid road.uuid %}>
+                            {% csrf_token %}
+                            <input name="question" value="{{question.id}}" hidden>
+                            <div class="row">
+                                <div class="col-12">
+                                    {% if question.task_of_pre_register_task_response.first %}
+                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question.task_of_pre_register_task_response.first.text}}</textarea>
+                                    {% else %}
+                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید..."></textarea>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <button class="btn btn-label-success btn-block" type="submit">ثبت پاسخ</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <a href={% url "quiz:pre-register-required" request.user.user_of_road_registration.first.road.uuid %} class="btn btn-label-info mt-4">بازگشت به فرایند تکمیل درخواست</a>
 
 </div>
 {% endblock main %}

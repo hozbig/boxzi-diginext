@@ -1,9 +1,11 @@
 import requests
 import uuid
 
+from django.shortcuts import redirect
 from account.models import User
-from .models import PersonalTest
 from lowercase_booleans import true, false
+
+from .models import PersonalTest
 
 def generate_uuid4():
     return str(uuid.uuid4())
@@ -47,7 +49,10 @@ def update_validate_token():
 
 
 def send_user_information(user_obj:User, road):
-    try
+    if user_obj.user_of_personal_test.exists():
+        return redirect("router")
+
+    try:
         user_first_name = user_obj.first_name
         user_last_name = user_obj.last_name
         user_phone_number = user_obj.phone_number

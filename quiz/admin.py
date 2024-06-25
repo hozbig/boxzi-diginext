@@ -1,9 +1,21 @@
 from django.contrib import admin
 
-from .models import Exam, Answer, Question, UserExamAnsewrHistory, ExamOrder, PreRegisterTask, PersonalTest
+from .models import (
+    Exam,
+    Answer,
+    Question,
+    UserExamAnsewrHistory,
+    ExamOrder,
+    PreRegisterTask,
+    PreRegisterTaskQuestion,
+    PreRegisterTaskResponse,
+    PersonalTest
+)
 
 admin.site.register(PersonalTest)
 admin.site.register(PreRegisterTask)
+admin.site.register(PreRegisterTaskQuestion)
+admin.site.register(PreRegisterTaskResponse)
 admin.site.register(ExamOrder)
 class ExamAdmin(admin.ModelAdmin):
     list_display = ["name", "medals", "uuid"]
