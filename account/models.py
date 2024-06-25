@@ -3,7 +3,7 @@ from django.db import models
 from datetime import date
 from content.models import WatchedContent
 from team.models import StartUpTeam
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 from django.core.validators import MaxValueValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -47,9 +47,9 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     username = None
@@ -179,9 +179,9 @@ class User(AbstractUser):
 class Meeting(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
 
@@ -224,9 +224,9 @@ class Meeting(models.Model):
 class WorkExperience(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
 
@@ -257,9 +257,9 @@ class WorkExperience(models.Model):
 class LeanCanvas(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     

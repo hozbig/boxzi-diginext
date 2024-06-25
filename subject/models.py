@@ -1,14 +1,14 @@
 from django.db import models
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 
 
 
 class Topic(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     name = models.CharField(verbose_name="نام", max_length=50)
@@ -28,9 +28,9 @@ class Topic(models.Model):
 class Subject(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     topic = models.ForeignKey(Topic, verbose_name="موضوع", related_name="topic_of_subject", on_delete=models.CASCADE, null=True, blank=True)

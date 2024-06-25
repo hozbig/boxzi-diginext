@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from django_quill.fields import QuillField
 from django.db.models import Count
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 from plan.models import Plan
 from account.models import User
 
@@ -10,9 +10,9 @@ from account.models import User
 class Company(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     name = models.CharField(verbose_name="اسم کسب و کار", max_length=255)
@@ -41,9 +41,9 @@ class Company(models.Model):
 class Product(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     company = models.ForeignKey(Company, verbose_name="کمپانی", related_name="product_of_company", on_delete=models.CASCADE)
@@ -66,9 +66,9 @@ class Product(models.Model):
 class Center(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     name = models.CharField(verbose_name="اسم مرکز", max_length=255)

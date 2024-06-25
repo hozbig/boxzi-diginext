@@ -2,7 +2,7 @@ from typing import Union
 from django.db import models
 from django.db.models import Q
 from datetime import date
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -18,9 +18,9 @@ def validate_numeric(value):
 class Category(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     
@@ -40,9 +40,9 @@ class Category(models.Model):
 class StartUpTeam(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     
@@ -132,9 +132,9 @@ def search_items(query:str):
 class TeamMember(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     
@@ -157,9 +157,9 @@ class TeamMember(models.Model):
 class RoadRegistration(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     team = models.ForeignKey(StartUpTeam, related_name="team_of_road_registration", verbose_name="تیم", on_delete=models.CASCADE, null=True, blank=True)

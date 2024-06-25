@@ -1,5 +1,5 @@
 from django.db import models
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 from django_quill.fields import QuillField
 
 
@@ -38,9 +38,9 @@ class Question(models.Model):
 class Exam(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     name = models.CharField(max_length=64, verbose_name="عنوان")
@@ -79,9 +79,9 @@ class UserExamAnsewrHistory(models.Model):
 class ExamOrder(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
 
@@ -103,9 +103,9 @@ class ExamOrder(models.Model):
 class Task(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     title = models.CharField(max_length=64, verbose_name="عنوان")
@@ -127,9 +127,9 @@ class Task(models.Model):
 class TaskOrder(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     
@@ -151,9 +151,9 @@ class TaskOrder(models.Model):
 class TaskResponse(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     user = models.ForeignKey("account.User", verbose_name="کاربر", related_name="user_of_task_response", on_delete=models.CASCADE)
@@ -186,9 +186,9 @@ class TaskResponse(models.Model):
 class PreRegisterTask(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     title = models.CharField(max_length=64, verbose_name="عنوان")
@@ -213,9 +213,9 @@ class PreRegisterTask(models.Model):
 class PreRegisterTaskQuestion(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     pre_register = models.ForeignKey(PreRegisterTask, verbose_name="آزمون", on_delete=models.CASCADE, related_name="pre_register_of_pre_register_task_question",)
@@ -238,9 +238,9 @@ class PreRegisterTaskQuestion(models.Model):
 class PreRegisterTaskResponse(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     # The user who answered to pre register task
@@ -267,9 +267,9 @@ class PreRegisterTaskResponse(models.Model):
 class PersonalTest(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     user = models.ForeignKey("account.User", verbose_name="کاربر", related_name="user_of_personal_test", on_delete=models.CASCADE)

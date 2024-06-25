@@ -1,13 +1,13 @@
 from django.db import models
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 
 
 class Category(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     
@@ -31,9 +31,9 @@ class Category(models.Model):
 class Question(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     
@@ -54,9 +54,9 @@ class Question(models.Model):
 class Response(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     

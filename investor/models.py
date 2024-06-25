@@ -1,6 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 from account.models import User
 
 def validate_is_investor(value):
@@ -12,9 +12,9 @@ def validate_is_investor(value):
 class InvestorFound(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     investor = models.ForeignKey("account.User", verbose_name="سرمایه گذار", on_delete=models.CASCADE, validators=[validate_is_investor], related_name="fund_of_investor")

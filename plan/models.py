@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.html import mark_safe
 from team.models import StartUpTeam
 from django_quill.fields import QuillField
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 
 
 def validate_is_investor(value):
@@ -22,9 +22,9 @@ def pitch_deck_directory_path(instance, filename):
 class Plan(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     user = models.ForeignKey("account.User", verbose_name="کاربر", related_name="user_of_plan", null=True, on_delete=models.CASCADE)
@@ -76,9 +76,9 @@ class Plan(models.Model):
 class ProductWallet(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
 

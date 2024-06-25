@@ -4,16 +4,16 @@ import readtime
 from django.db import models
 from django_quill.fields import QuillField
 from django.utils import timezone
-from utils.uuid_generator import random_uuid
+from utils.uuid_generator import random_uuid4
 
 
 # content -> steps that are defined in roadmap
 class Content(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     title = models.CharField(verbose_name="عنوان", max_length=255)
@@ -75,9 +75,9 @@ class WatchedContent(models.Model):
 class Collection(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     name = models.CharField(verbose_name="نام", max_length=50)
@@ -125,9 +125,9 @@ class ContentOrder(models.Model):
 class Road(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
     poster = models.ImageField(verbose_name="پوستر", upload_to="roads-poster/", null=True)
@@ -223,9 +223,9 @@ class CollectionOrder(models.Model):
 class RoadFund(models.Model):
     uuid = models.CharField(
         unique=True,
-        max_length=5,
+        max_length=36,
         blank=True,
-        default=random_uuid,
+        default=random_uuid4,
         editable=False,
     )
 
