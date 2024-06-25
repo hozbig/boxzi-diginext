@@ -10,7 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
-from notifier.api import send_messages
+from notifier.sms import send_messages
+from notifier.email import send_email
 from utils import date_db_convertor
 from content.models import Content, Collection, Road, CollectionOrder, ContentOrder
 from content.forms import (
@@ -831,6 +832,7 @@ class RefereeManagement(LoginRequiredMixin, View):
                     user=user_obj.first_name,
                     password=generated_pass,
                 )
+                send_email(template="authentication_info", user=user_obj, password=generated_pass)
                 
                 messages.success(request, "عملیات با موفقیت انجام شد")
                 return redirect("company:referee-management")

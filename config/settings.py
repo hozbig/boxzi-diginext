@@ -202,3 +202,12 @@ LOGGING = {
         },
     },
 }
+
+
+# Email configurations
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.c1.liara.email"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "laughing_dhawan_ee37ed"
+EMAIL_HOST_PASSWORD = "891f26c5-a1df-43fc-868c-a185e7c15d30"
+EMAIL_USE_TLS = True

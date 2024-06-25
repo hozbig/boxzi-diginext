@@ -11,7 +11,7 @@ from account.models import User
 import uuid
 
 from .andaze import send_user_information
-from notifier.api import send_messages
+from notifier.sms import send_messages
 from .models import Exam, UserExamAnsewrHistory, Answer, PreRegisterTask, PreRegisterTaskResponse, PersonalTest
 from .forms import PreRegisterTaskResponseCreateForm, PreRegisterTaskResponseUpdateForm
 

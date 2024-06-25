@@ -39,11 +39,15 @@
 
         {% for field in form %}
             <div class="form-group">
-                {% if not field.name == "phone_number" %}
+                {% if not field.name in "phone_number accept_nda" %}
                 {{ field|as_crispy_field }}
                 {% endif %}
             </div>
         {% endfor %}
+
+        <div class="form-group">
+            {{ form.accept_nda|as_crispy_field }}
+        </div>
         
         <div class="form-group">
             <p class="text-center text-success">درخواست شما برای <b>{{is_road.name}}</b> می‌باشد</p>

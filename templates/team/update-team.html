@@ -272,4 +272,13 @@
     });
 </script>
 
+<script>
+    document.querySelectorAll('.phoneInput').forEach(function (input) {
+        input.addEventListener('input', function (e) {
+            // Replace any non-numeric character with an empty string
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    });
+</script>
+
 {% endblock page_js %}

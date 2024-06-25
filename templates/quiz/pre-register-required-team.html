@@ -172,10 +172,10 @@
                 {% endif %}
 
                 {% if not request.user.user_of_plan.first %}
-                <div class="row mt-5">
-                    <div class="col-12"><h5 class="">مراحل آپشنال: </h5></div>
+                <div class="row mt-5 justify-content-center">
+                    <div class="col-12"><h5 class="text-center">مراحل آپشنال: </h5></div>
                     <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                        <div class="card text-white bg-transparent border border-info text-center">
+                        <div class="card text-white bg-transparent border border-dark text-center">
                             <div class="card-content d-flex ">
                                 <div class="card-body">
                                     <div class="row">
@@ -183,7 +183,7 @@
                                             <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
                                         </div>
                                         <div class="col-12">
-                                            <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
+                                            <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-label-primary btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
                                         </div>
                                     </div>
                                 </div>
@@ -192,7 +192,7 @@
                     </div>
                 </div>
                 {% else %}
-                <div class="row mt-5">
+                <div class="row mt-5 justify-content-center">
                     <div class="col-12"><h5 class="">مراحل آپشنال: </h5></div>
                     <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
                         <div class="card text-white bg-transparent border border-success text-center">
@@ -320,7 +320,7 @@
                 <div class="col-12 mt-3" id="final_btn">
                     <form method="post" action={% url "team:road-registration" road.uuid %}>
                         {% csrf_token %}
-                        <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</div>
+                        <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید. برای ارسال درخواست خود روی دکمه "تائید و ثبت درخواست" کلیک کنید.</div>
                         <button type="submit" class="btn btn-primary">تائید و ثبت درخواست</button>
                     </form>
                 </div>

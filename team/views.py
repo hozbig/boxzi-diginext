@@ -16,7 +16,8 @@ from plan.models import Plan
 from plan.forms import PlanCreateForm
 from django.contrib.auth.hashers import make_password
 from django.utils.crypto import get_random_string
-from notifier.api import send_messages
+from notifier.sms import send_messages
+from notifier.email import send_email
 
 from .models import RoadRegistration, StartUpTeam, TeamMember, search_items
 from .mixins import TeamAccessMixin
@@ -181,6 +182,7 @@ def save_team_member(request):
                     user=user_obj.first_name,
                     password=generated_pass,
                 )
+                send_email(template="authentication_info", user=request.user, password=generated_pass)
             else:
                 messages.error(request, "این کاربر از قبل ثبت نام کرده است، امکان اضافه کردن آن به تیم خود وجود ندارد!")
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
@@ -312,11 +314,11 @@ def watch_registration(request, uuid):
     obj.status = "p"
     obj.save()
 
-    send_messages(
-        action="summer_camp_watched",
-        destination_phone_number=obj.user.phone_number,
-        user=obj.user.first_name
-    )
+    # send_messages(
+    #     action="summer_camp_watched",
+    #     destination_phone_number=obj.user.phone_number,
+    #     user=obj.user.first_name
+    # )
 
     messages.success(request, "عملیات با موفقیت انجام شد")
     return redirect(reverse('company:team-management'))

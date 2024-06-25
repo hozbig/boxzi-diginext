@@ -23,6 +23,8 @@ class LoginForm(forms.Form):
     hcaptcha = hCaptchaField()
     
     phone_number.widget.attrs["placeholder"] = "جهت ورود شماره موبایل خودرا وارد کنید"
+    # 'phoneInput' class name related to a js script that exist under the pages that have a html input for phone number
+    # Its prevent that user use persian number, its only accept latin number
     phone_number.widget.attrs["class"] = "phoneInput"
     password.widget.attrs["placeholder"] = "············"
     password.label = ""
@@ -110,6 +112,8 @@ class UserLoginOrRegisterForm(ModelForm):
         # Remove labels and add placeholders
         self.fields['phone_number'].widget.attrs['placeholder'] = 'شماره تماس *'
         self.fields['phone_number'].widget.attrs['style'] = 'text-align:right'
+        # 'phoneInput' class name related to a js script that exist under the pages that have a html input for phone number
+        # Its prevent that user use persian number, its only accept latin number
         self.fields['phone_number'].widget.attrs["class"] = "phoneInput"
         # Remove labels
         self.fields['phone_number'].label = ''
@@ -125,6 +129,10 @@ class UserRegisterFormLevel1(UserCreationForm):
             )
         ]
     )
+    # 'phoneInput' class name related to a js script that exist under the pages that have a html input for phone number
+    # Its prevent that user use persian number, its only accept latin number
+    phone_number.widget.attrs["class"] = "phoneInput"
+
     hcaptcha = hCaptchaField()
 
     class Meta(UserCreationForm):
@@ -262,6 +270,10 @@ class AddRefereeForm(forms.ModelForm):
             )
         ], required=True, label="شماره همراه"
     )
+    # 'phoneInput' class name related to a js script that exist under the pages that have a html input for phone number
+    # Its prevent that user use persian number, its only accept latin number
+    phone_number.widget.attrs["class"] = "phoneInput"
+
     email = forms.EmailField(required=True, label="ایمیل")
     first_name = forms.CharField(max_length=30, required=True, label="نام")
     last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")

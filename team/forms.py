@@ -30,6 +30,10 @@ class TeamMemberForm(forms.Form):
     first_name = forms.CharField(max_length=30, required=True, label="نام")
     last_name = forms.CharField(max_length=30, required=True, label="نام خانوادگی")
 
+    # 'phoneInput' class name related to a js script that exist under the pages that have a html input for phone number
+    # Its prevent that user use persian number, its only accept latin number
+    phone_number.widget.attrs["class"] = "phoneInput"
+
 
 class ExtraDaysForCompleteRegistration(forms.Form):
     extra_days = forms.IntegerField(

@@ -10,7 +10,8 @@ from utils import date_db_convertor
 from django.contrib import messages
 from content.models import Road
 from utils.check_status_user_state_level import add_one_level
-from notifier.api import send_messages
+from notifier.sms import send_messages
+from notifier.email import send_email
 from assessment.models import Question, Response
 from plan.models import Plan
 from team.models import RoadRegistration, StartUpTeam
@@ -146,6 +147,11 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
 
         messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
         self.context["form"] = form
+        is_road = Road.objects.exists()
+        if is_road:
+            self.context["is_road"] = Road.objects.all().first()
+        else:
+            self.context["is_road"] = False
         return render(request, self.template_name, self.context)
 
 
@@ -246,6 +252,7 @@ class RegisterLevel4(LoginRequiredMixin, View):
                 destination_phone_number=request.user.phone_number,
                 user=request.user.first_name,
             )
+            send_email(template="welcome", user=request.user)
             messages.success(request, "ثبت نام شما در باکس زی کامل شد. جهت ثبت درخواست برای مسیر آموزشی مورد نظر فرایند هارو از طریق راهنمای داخل داشبورد خود ادامه بدید.")
             return redirect("account:user-dashboard")
         
