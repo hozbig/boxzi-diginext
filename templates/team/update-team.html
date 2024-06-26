@@ -88,41 +88,39 @@
                 </div>
             </div>
 
-            <div class="col-12 mt-4">
+            <div class="col-12 my-4">
                 <div class="card">
                     <h5 class="card-header pb-1">{% if not request.user.user_of_team_member.first.team.team_of_plan.first %}پرسشنامه ایده/محصول{% else %}ایده شما{% endif %}</h5>
                     <div class="card-content">
                         <div class="card-body">
                             {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
-                            <form method="POST" id="multiStepForm" action="{% url "team:save-product" %}?next={{next_url}}" enctype="multipart/form-data">
+                            <form method="POST" id="multiStepForm" action="{% url 'team:save-product' %}?next={{next_url}}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input name="team" value="{{object.id}}" hidden>
                                 <div class="row">
-                                    <div class="col-12 mt-2 level active" id="level1">
+                                    <div class="col-12 mt-2 level" id="level1">
                                         <h4 class="mb-2"><span class="text-danger font-weight-bold">مرحله اول: </span>اطلاعات کلی ایده/محصول خود را وارد کنید</h4>
                                         {{ add_product_form.name|as_crispy_field }}
                                         {{ add_product_form.description|as_crispy_field }}
                                     </div>
-
-                                    <div class="col-12 mt-2 level active" id="level2">
+                            
+                                    <div class="col-12 mt-2 level" id="level2" style="display: none;">
                                         <h4 class="mb-2"><span class="text-danger font-weight-bold">مرحله دوم: </span>آپلود فایل پیچ دک</h4>
                                         {{ add_product_form.pitch_deck|as_crispy_field }}
                                     </div>
-
-                                    <div class="col-12 mt-2 level active" id="level3">
+                            
+                                    <div class="col-12 mt-2 level" id="level3" style="display: none;">
                                         <h4 class="mb-2"><span class="text-danger font-weight-bold">مرحله سوم: </span>مشخص کردن سطح رشدی ایده/محصول</h4>
                                         {{ add_product_form.status|as_crispy_field }}
                                         {{ add_product_form.progress_status|as_crispy_field }}
                                         {{ add_product_form.video|as_crispy_field }}
                                     </div>
-
+                            
                                     <div class="col-12 mt-3">
-                                        <span class="btn text-dark btn-label-success" id="next">ادامه</span>
-                                        <button type="submit" class="btn text-dark btn-label-success" id="submit" style="display: none;">ثبت نهایی</button>
+                                        <span class="badge text-dark btn-label-success" id="next">ادامه</span>
+                                        <button type="submit" class="badge text-dark btn-label-success" id="submit" style="display: none;">ثبت نهایی</button>
                                     </div>
                                 </div>
-        
-                                <!-- <button class="btn btn-label-success mt-3 btn-block" type="submit">ثبت ایده/محصول</button> -->
                             </form>
                             {% else %}
                             <div class="table-responsive text-nowrap">
@@ -199,77 +197,64 @@
 {% block page_js %}
 
 <script>
-    $(document).ready(function() {
-        var currentLevel = 1;
-        var totalLevels = $(".level").length;
 
-        function showCurrentLevel() {
-            $(".level").removeClass("active");
-            $("#level" + currentLevel).addClass("active");
-            if (currentLevel === 1) {
-                $("#previous").hide();
-            } else {
-                $("#previous").show();
-            }
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('multiStepForm');
+        const nextButton = document.getElementById('next');
+        const submitButton = document.getElementById('submit');
+        const levels = document.querySelectorAll('.level');
+        const progressStatusField = document.querySelector('#id_progress_status').parentElement.parentElement;
+        const videoField = document.querySelector('#id_video').parentElement.parentElement;
+        const statusField = document.getElementById('id_status');
 
-            if (currentLevel === totalLevels) {
-                $("#next").hide();
-                $("#submit").show();
-            } else {
-                $("#next").show();
-                $("#submit").hide();
-            }
+        let currentLevel = 0;
+
+        function showLevel(level) {
+            levels.forEach((lvl, index) => {
+                lvl.style.display = index === level ? 'block' : 'none';
+            });
+            nextButton.style.display = level === levels.length - 1 ? 'none' : 'inline-block';
+            submitButton.style.display = level === levels.length - 1 ? 'inline-block' : 'none';
         }
 
         function validateLevel(level) {
-            var isValid = true;
-            $("#level" + level + " :input").each(function() {
-                if ($(this).prop('required') && $(this).val() === '') {
-                    isValid = false;
-                    $(this).addClass('is-invalid');
-                } else {
-                    $(this).removeClass('is-invalid');
+            const inputs = levels[level].querySelectorAll('input, textarea, select');
+            for (let input of inputs) {
+                if (input.hasAttribute('required') && !input.value) {
+                    alert('Please fill all required fields.');
+                    return false;
                 }
-            });
-            return isValid;
+            }
+            return true;
         }
 
-        $("#next").click(function() {
+        nextButton.addEventListener('click', function() {
             if (validateLevel(currentLevel)) {
-                if (currentLevel < totalLevels) {
-                    currentLevel++;
-                    showCurrentLevel();
-                }
+                currentLevel++;
+                showLevel(currentLevel);
+            }
+        });
+
+        statusField.addEventListener('change', function() {
+            if (statusField.value === 'm') {
+                progressStatusField.style.display = 'block';
+                videoField.style.display = 'block';
+                document.getElementById('id_progress_status').setAttribute('required', 'required');
+                document.getElementById('id_video').setAttribute('required', 'required');
             } else {
-                alert("لطفاً تمام فیلدها را پر کنید.");
+                progressStatusField.style.display = 'none';
+                videoField.style.display = 'none';
+                document.getElementById('id_progress_status').removeAttribute('required');
+                document.getElementById('id_video').removeAttribute('required');
             }
         });
 
-        $("#previous").click(function() {
-            if (currentLevel > 1) {
-                currentLevel--;
-                showCurrentLevel();
-            }
-        });
-
-        showCurrentLevel();
-
-
-        function ideaOrProduct() {
-            if ($('#id_status').val() === 'i') {
-                $('#div_id_progress_status').hide();
-                $('#div_id_video').hide();
-            } else if ($('#id_status').val() === 'm') {
-                $('#div_id_progress_status').show();
-                $('#div_id_video').show();
-            }
-        }
-
-        ideaOrProduct();
-        $('#id_status').change(function() {
-            ideaOrProduct();
-        });
+        // Initial setup
+        progressStatusField.style.display = 'none';
+        videoField.style.display = 'none';
+        showLevel(currentLevel);
     });
+       
 </script>
 
 <script>

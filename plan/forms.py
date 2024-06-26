@@ -12,7 +12,10 @@ class PlanCreateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+        self.fields["pitch_deck"].widget.attrs['class'] = "form-control"
+        self.fields["pitch_deck"].required = True
         self.fields["pitch_deck"].widget.attrs['accept'] = 'application/pdf'
+        self.fields["video"].widget.attrs['class'] = "form-control"
         self.fields["video"].widget.attrs['accept'] = 'video/*'
         
     def clean_pitch_deck(self):
