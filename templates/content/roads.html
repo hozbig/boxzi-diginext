@@ -53,17 +53,21 @@
         <div class="card">
             <h5 class="card-header">وضعیت تکمیل درخواست ثبت‌نام در مسیر</h5>
             <div class="table-responsive">
+                {% if registration_obj.status != "n" %}
                 <div class="px-3 mb-3">
-                    {% if registration_obj.status != "n" %}
                     <a class="btn btn-success waves-effect mb-2">{{registration_obj.get_status_display}}</a>
-                    {% else %}
+                </div>
+                {% else %}
+                    {% if not registration_obj.team_or_individual == "a" %}
+                    <div class="px-3 mb-3">
                         {% if registration_obj.is_valid_registration_period %}
                         <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-success waves-effect">ادامه تکمیل درخواست!</a>
                         {% else %}
-                        <a href={% url "quiz:pre-register-required" registration_obj.road.uuid %} class="btn btn-success waves-effect">ادامه تکمیل درخواست!</a>
+                        <a class="btn btn-danger waves-effect">مهلت شما برای تکمیل درخواست به پایان رسیده است.</a>
                         {% endif %}
+                    </div>
                     {% endif %}
-                </div>
+                {% endif %}
                 <table class="table">
                     <thead>
                         <tr class="table-primary text-center text-dark">

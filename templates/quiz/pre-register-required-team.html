@@ -14,7 +14,18 @@
     {% include "elements/messages-section.html" %}
     
     <div class="col-12">
-        <h1 class="text-center">شروع ماجراجویی‌های جدید شما</h1>
+        <h1 class="text-center">شروع ماجراجویی‌های جدید شما 
+            <button class="btn text-nowrap d-inline-block" type="button">
+                <span class="tf-icons ti-sm ti ti-clock"></span>
+                {% if registration.is_valid_registration_period > 3 %}
+                <span class="badge rounded-pill bg-label-success badge-notifications">{{registration.is_valid_registration_period}}</span>
+                {% elif registration.is_valid_registration_period < 3 and registration.is_valid_registration_period > 0 %}
+                <span class="badge rounded-pill bg-label-warning badge-notifications">{{registration.is_valid_registration_period}}</span>
+                {% else %}
+                <span class="badge rounded-pill bg-label-danger badge-notifications">{{registration.is_valid_registration_period}}</span>
+                {% endif %}
+            </button>
+        </h1>
     </div>
 
     {% comment %} progressbar {% endcomment %}
@@ -94,7 +105,7 @@
             {% comment %} personal test {% endcomment %}
             {% if request.user.user_of_personal_test.exists %}
             <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                <div class="card text-white bg-transparent border border-success text-center">
+                <div class="card text-white bg-transparent border border-warning text-center">
                     <div class="card-content d-flex ">
                         <div class="card-body">
                             <div class="row">
@@ -170,48 +181,6 @@
                     </div>
                 </div>
                 {% endif %}
-
-                {% if not request.user.user_of_plan.first %}
-                <div class="row mt-5 justify-content-center">
-                    <div class="col-12"><h5 class="text-center">مراحل آپشنال: </h5></div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                        <div class="card text-white bg-transparent border border-dark text-center">
-                            <div class="card-content d-flex ">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12 mb-50">
-                                            <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
-                                        </div>
-                                        <div class="col-12">
-                                            <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-label-primary btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% else %}
-                <div class="row mt-5 justify-content-center">
-                    <div class="col-12"><h5 class="">مراحل آپشنال: </h5></div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                        <div class="card text-white bg-transparent border border-success text-center">
-                            <div class="card-content d-flex ">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12 mb-50">
-                                            <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
-                                        </div>
-                                        <div class="col-12">
-                                            <a class="btn btn-label-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
             {% endif %}
 
             {% if request.user.user_of_road_registration.first.team_or_individual == "t" %}
@@ -223,7 +192,7 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 mb-50">
-                                        <h3 class="card-title font-weight-bold">ساخت تیم و هم تیمی</h3>
+                                        <h3 class="card-title font-weight-bold">اطلاعات تیم</h3>
                                     </div>
                                     <div class="col-12">
                                         <a class="btn btn-label-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
@@ -291,17 +260,23 @@
                 {% if registration.is_valid_registration_period %}
                     {% if request.user.is_profile_complete and request.user.user_of_personal_test.exists and request.user.user_of_team_member.first and request.user.user_of_team_member.first.team.team_member_count > 1 and request.user.user_of_team_member.first.team.team_of_plan.first %}
                         {% if request.user.user_of_team_member.first.team.all_users_completed_registration %}
-                        <div class="col-12 mt-3" id="final_btn">
-                            <form method="post" action={% url "team:road-registration" road.uuid %}>
-                                {% csrf_token %}
-                                <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</div>
-                                <button type="submit" class="btn btn-primary">تائید و ثبت درخواست</button>
-                            </form>
+                        <div class="col-lg-6 col-md-8 pt-3 mt-5">
+                            <div class="card p-3 alert-success text-center">
+                                <form method="post" action={% url "team:road-registration" road.uuid %}>
+                                    {% csrf_token %}
+                                    <h5 class="alert-heading mb-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</h5>
+                                    <button type="submit" class="btn btn-success mt-2">برای ارسال درخواست خود کلیک کنید</button>
+                                </form>
+                            </div>
                         </div>
                         {% else %}
-                        <div class="col-12 mt-3">
-                            <h3 class="text-danger text-center">{{registration.is_valid_registration_period}} روز زمان باقی مانده است</h3>
-                            <button class="btn btn-warning">تمام اعضای شما باید به حساب خود وارد و تکمیل اطلاعات خودرا انجام دهند</button>
+                        <div class="col-lg-6 col-md-8 pt-3 mt-5">
+                            <div class="card p-3 alert-danger text-center">
+                                <div class="">
+                                    <h5 class="alert-heading mb-2">{{registration.is_valid_registration_period}} روز زمان باقی مانده است</h5>
+                                    <p class="mb-0"> اطلاعات شما و تمام اعضای شما باید ثبت و تایید شوند تا امکان ارسال درخواست برای شما فعال شود.</p>
+                                </div>
+                            </div>
                         </div>
                         {% endif %}
                     {% endif %}
@@ -317,12 +292,14 @@
 
             {% if registration.team_or_individual == "i" and registration.is_complete_registration_for_individual %}
                 {% if registration.status == "n" %}
-                <div class="col-12 mt-3" id="final_btn">
-                    <form method="post" action={% url "team:road-registration" road.uuid %}>
-                        {% csrf_token %}
-                        <div class="mb-50 text-center text-success font-weight-bold font-medium-2">تبریک! شما تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید. برای ارسال درخواست خود روی دکمه "تائید و ثبت درخواست" کلیک کنید.</div>
-                        <button type="submit" class="btn btn-primary">تائید و ثبت درخواست</button>
-                    </form>
+                <div class="col-lg-6 col-md-8 pt-3 mt-5">
+                    <div class="card p-3 alert-success text-center">
+                        <form method="post" action={% url "team:road-registration" road.uuid %}>
+                            {% csrf_token %}
+                            <h5 class="alert-heading mb-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</h5>
+                            <button type="submit" class="btn btn-success mt-2">برای ارسال درخواست خود کلیک کنید</button>
+                        </form>
+                    </div>
                 </div>
                 {% else %}
                 <div class="col-12 mt-3" id="final_btn">
@@ -330,6 +307,52 @@
                 </div>
                 {% endif %}
             {% endif %}
+
+            {% comment %} ================ INDIVIDUAL ================ {% endcomment %}
+            {% if registration.team_or_individual == "i" %}
+                {% if not request.user.user_of_plan.first %}
+                <div class="row mt-5 justify-content-center">
+                    <div class="col-12"><h5 class="text-center">مراحل آپشنال: </h5></div>
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card text-white bg-transparent border border-dark text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 mb-50">
+                                            <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                        </div>
+                                        <div class="col-12">
+                                            <a href="{% url "team:add-product" %}?next={{request.path}}" class="btn btn-label-primary btn-darken-3 waves-effect waves-light">ثبت ایده/محصول</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row mt-5 justify-content-center">
+                    <div class="col-12"><h5 class="text-center">مراحل آپشنال: </h5></div>
+                    <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="card text-white bg-transparent border border-success text-center">
+                            <div class="card-content d-flex ">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12 mb-50">
+                                            <h3 class="card-title font-weight-bold">مدیریت ایده/محصول</h3>
+                                        </div>
+                                        <div class="col-12">
+                                            <a class="btn btn-label-success btn-darken-3 waves-effect waves-success disabled">انجام شد <i class="fa fa-check"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+
         </div>
     </div>
 

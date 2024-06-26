@@ -29,26 +29,26 @@
           <div class="card-content">
               <div class="card-body">
                   {% if not request.user.user_of_team_member.first.team.team_of_plan.first %}
-                  <form method="POST" id="multiStepForm" action="{% url 'team:save-product' %}?next={{next_url}}" enctype="multipart/form-data">
+                  <form method="POST" id="multiStepForm" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input name="team" value="{{object.id}}" hidden>
                     <div class="row">
                         <div class="col-12 mt-2 level" id="level1">
                             <h4 class="mb-2"><span class="text-danger font-weight-bold">مرحله اول: </span>اطلاعات کلی ایده/محصول خود را وارد کنید</h4>
-                            {{ add_product_form.name|as_crispy_field }}
-                            {{ add_product_form.description|as_crispy_field }}
+                            {{ form.name|as_crispy_field }}
+                            {{ form.description|as_crispy_field }}
                         </div>
                 
                         <div class="col-12 mt-2 level" id="level2" style="display: none;">
                             <h4 class="mb-2"><span class="text-danger font-weight-bold">مرحله دوم: </span>آپلود فایل پیچ دک</h4>
-                            {{ add_product_form.pitch_deck|as_crispy_field }}
+                            {{ form.pitch_deck|as_crispy_field }}
                         </div>
                 
                         <div class="col-12 mt-2 level" id="level3" style="display: none;">
                             <h4 class="mb-2"><span class="text-danger font-weight-bold">مرحله سوم: </span>مشخص کردن سطح رشدی ایده/محصول</h4>
-                            {{ add_product_form.status|as_crispy_field }}
-                            {{ add_product_form.progress_status|as_crispy_field }}
-                            {{ add_product_form.video|as_crispy_field }}
+                            {{ form.status|as_crispy_field }}
+                            {{ form.progress_status|as_crispy_field }}
+                            {{ form.video|as_crispy_field }}
                         </div>
                 
                         <div class="col-12 mt-3">
@@ -120,7 +120,7 @@
             const inputs = levels[level].querySelectorAll('input, textarea, select');
             for (let input of inputs) {
                 if (input.hasAttribute('required') && !input.value) {
-                    alert('Please fill all required fields.');
+                    alert('لطفا تمام فیلد های لازم را پرکنید.');
                     return false;
                 }
             }
@@ -139,12 +139,12 @@
                 progressStatusField.style.display = 'block';
                 videoField.style.display = 'block';
                 document.getElementById('id_progress_status').setAttribute('required', 'required');
-                document.getElementById('id_video').setAttribute('required', 'required');
+                {% comment %} document.getElementById('id_video').setAttribute('required', 'required'); {% endcomment %}
             } else {
                 progressStatusField.style.display = 'none';
                 videoField.style.display = 'none';
                 document.getElementById('id_progress_status').removeAttribute('required');
-                document.getElementById('id_video').removeAttribute('required');
+                {% comment %} document.getElementById('id_video').removeAttribute('required'); {% endcomment %}
             }
         });
 

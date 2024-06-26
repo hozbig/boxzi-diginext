@@ -261,7 +261,11 @@ class RoadRegistration(models.Model):
         if self.team_or_individual == "t":
             user = self.user
             is_profile_complete = user.is_profile_complete()
-            has_personal_test = user.user_of_personal_test.exists()
+
+            if user.user_of_personal_test.exists() and not user.user_of_personal_test.first().final_user_result_url == None:
+                has_personal_test = True
+            else:
+                has_personal_test = False
             
             first_team_member = user.user_of_team_member.first()
             if not first_team_member:
@@ -279,7 +283,11 @@ class RoadRegistration(models.Model):
         if self.team_or_individual == "a":
             user = self.user
             is_profile_complete = user.is_profile_complete()
-            has_personal_test = user.user_of_personal_test.exists()
+
+            if user.user_of_personal_test.exists() and not user.user_of_personal_test.first().final_user_result_url == None:
+                has_personal_test = True
+            else:
+                has_personal_test = False
             
             return is_profile_complete and has_personal_test
             
@@ -289,8 +297,30 @@ class RoadRegistration(models.Model):
         if self.team_or_individual == "i":
             user = self.user
             is_profile_complete = user.is_profile_complete()
-            has_personal_test = user.user_of_personal_test.exists()
-            has_challenge_response = user.user_of_pre_register_task_response.exists()
+
+            if user.user_of_personal_test.exists() and not user.user_of_personal_test.first().final_user_result_url == None:
+                has_personal_test = True
+            else:
+                has_personal_test = False
+
+            task_business_side = self.road.pre_register_task_for_business_side
+            task = self.road.pre_register_task
+
+            count_of_t_question = task.pre_register_of_pre_register_task_question.count()
+            count_of_b_question = task_business_side.pre_register_of_pre_register_task_question.count()
+            user_response_count = user.user_of_pre_register_task_response.count()
+
+            if user.user_of_road_registration.first().team_or_individual == "i":
+                if user.type == "t":
+                    if (count_of_t_question - user_response_count) < 1:
+                        has_challenge_response = True
+                    else:
+                        has_challenge_response = False
+                elif user.type == "b":
+                    if (count_of_b_question - user_response_count) < 1:
+                        has_challenge_response = True
+                    else:
+                        has_challenge_response = False
             
             return is_profile_complete and has_personal_test and has_challenge_response
             

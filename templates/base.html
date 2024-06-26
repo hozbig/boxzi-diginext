@@ -220,7 +220,7 @@
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" data-bs-toggle="dropdown" href="javascript:void(0);">
                                 <div class="avatar avatar-online">
-                                    <img alt class="h-auto rounded-circle" src={% static "assets-vuexy/img/avatars/1.png" %}>
+                                    <img alt class="h-auto rounded-circle" src={% static "profile-male2.avif" %}>
                                 </div>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -229,7 +229,7 @@
                                         <div class="d-flex">
                                             <div class="flex-shrink-0 me-3">
                                                 <div class="avatar avatar-online">
-                                                    <img alt class="h-auto rounded-circle" src={% static "assets-vuexy/img/avatars/1.png" %}>
+                                                    <img alt class="h-auto rounded-circle" src={% static "profile-male2.avif" %}>
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
@@ -243,7 +243,9 @@
                                     <div class="dropdown-divider"></div>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href={% url 'account:update' request.user.uuid %}>
+                                    <!-- TODO: active this -->
+                                    {% comment %} <a class="dropdown-item" href={% url 'account:update' request.user.uuid %}> {% endcomment %}
+                                    <a class="dropdown-item">
                                         <i class="ti ti-user-check me-2 ti-sm"></i>
                                         <span class="align-middle">پروفایل من</span>
                                     </a>

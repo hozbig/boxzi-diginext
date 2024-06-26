@@ -182,7 +182,7 @@ def save_team_member(request):
                     user=user_obj.first_name,
                     password=generated_pass,
                 )
-                send_email(template="authentication_info", user=request.user, password=generated_pass)
+                send_email(template="authentication_info", user=user_obj, password=generated_pass)
             else:
                 messages.error(request, "این کاربر از قبل ثبت نام کرده است، امکان اضافه کردن آن به تیم خود وجود ندارد!")
                 return HttpResponseRedirect(request.META.get("HTTP_REFERER"))

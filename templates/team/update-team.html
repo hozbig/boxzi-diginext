@@ -25,6 +25,12 @@
 
     {% include "elements/messages-section.html" %}
 
+    {% if next_url %}
+        <div class="col-12 mb-3">
+            <a href="{{next_url}}" class="btn btn-label-info btn-block" type="submit">اتمام و بازگشت به مسیر <i class="ti ti-arrow-forward"></i></a>
+        </div>
+    {% endif %}
+
     <div class="col-lg-8">
         <div class="row">
             <div class="col-12">
@@ -181,10 +187,6 @@
                         </div>
                     
                         <button class="btn btn-label-success mt-3 btn-block" type="submit">ویرایش</button>
-
-                        {% if next_url %}
-                            <a href="{{next_url}}" class="btn btn-label-info btn-block mt-3" type="submit">اتمام و بازگشت به مسیر</a>
-                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -195,9 +197,7 @@
 {% endblock main %}
 
 {% block page_js %}
-
 <script>
-
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('multiStepForm');
         const nextButton = document.getElementById('next');
@@ -221,7 +221,7 @@
             const inputs = levels[level].querySelectorAll('input, textarea, select');
             for (let input of inputs) {
                 if (input.hasAttribute('required') && !input.value) {
-                    alert('Please fill all required fields.');
+                    alert('لطفا تمام فیلد های لازم را پرکنید.');
                     return false;
                 }
             }
@@ -240,12 +240,10 @@
                 progressStatusField.style.display = 'block';
                 videoField.style.display = 'block';
                 document.getElementById('id_progress_status').setAttribute('required', 'required');
-                document.getElementById('id_video').setAttribute('required', 'required');
             } else {
                 progressStatusField.style.display = 'none';
                 videoField.style.display = 'none';
                 document.getElementById('id_progress_status').removeAttribute('required');
-                document.getElementById('id_video').removeAttribute('required');
             }
         });
 
@@ -254,7 +252,6 @@
         videoField.style.display = 'none';
         showLevel(currentLevel);
     });
-       
 </script>
 
 <script>
