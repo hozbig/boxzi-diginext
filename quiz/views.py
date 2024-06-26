@@ -12,7 +12,7 @@ import uuid
 
 from .andaze import send_user_information
 from notifier.sms import send_messages
-from .models import Exam, UserExamAnsewrHistory, Answer, PreRegisterTask, PreRegisterTaskResponse, PersonalTest
+from .models import Exam, UserExamAnsewrHistory, Answer, PreRegisterTask, PreRegisterTaskResponse, PersonalTest, PreRegisterTaskQuestion
 from .forms import PreRegisterTaskResponseCreateForm, PreRegisterTaskResponseUpdateForm
 
 class ExamDetail(LoginRequiredMixin, View):
@@ -97,7 +97,11 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         
         registration_obj = user.user_of_road_registration.first()
         
-        self.context["title"] = "به عنوان تیم"
+        if registration_obj.team_or_individual == "i":
+            self.context["title"] = "به عنوان فرد"
+        elif registration_obj.team_or_individual in "ta":
+            self.context["title"] = "به عنوان تیم"
+
         self.context["registration"] = registration_obj
         self.context["task"] = task
         self.context["task_business_side"] = task_business_side
@@ -297,6 +301,15 @@ def save_task_question_response(request, task_uuid, road_uuid):
     task = PreRegisterTask.objects.get(uuid=task_uuid)
     road = Road.objects.get(uuid=road_uuid)
 
+    question = request.POST.get("question")
+    question = PreRegisterTaskQuestion.objects.get(id=question)
+
+    try:
+        is_answer_exist = PreRegisterTaskResponse.objects.get(user=request.user, question=question)
+    except:
+        is_answer_exist = False
+
+
     form_copy = request.POST.copy()
     form_copy.update(
         {
@@ -306,7 +319,11 @@ def save_task_question_response(request, task_uuid, road_uuid):
         }
     )
 
-    form = PreRegisterTaskResponseCreateForm(form_copy)
+    if is_answer_exist:
+        form = PreRegisterTaskResponseCreateForm(form_copy, instance=is_answer_exist)
+    else:
+        form = PreRegisterTaskResponseCreateForm(form_copy)
+
     print(form)
     if form.is_valid():
         form.save()

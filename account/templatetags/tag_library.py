@@ -9,8 +9,18 @@ from content.models import Collection, WatchedContent, ContentOrder
 from quiz.models import UserExamAnsewrHistory
 from team.models import StartUpTeam
 from subject.models import Subject, Topic
+from quiz.models import PreRegisterTaskResponse
 
 register = template.Library()
+
+
+@register.filter()
+def is_user_answer_to_question(question, user):
+    try:
+        result = PreRegisterTaskResponse.objects.filter(user=user, question=question)
+        return result.last().text
+    except:
+        return ""
 
 
 @register.filter()

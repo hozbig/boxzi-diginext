@@ -26,11 +26,8 @@
                             <input name="question" value="{{question.id}}" hidden>
                             <div class="row">
                                 <div class="col-12">
-                                    {% if question.task_of_pre_register_task_response.first %}
-                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question.task_of_pre_register_task_response.first.text}}</textarea>
-                                    {% else %}
-                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید..."></textarea>
-                                    {% endif %}
+                                    <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question|is_user_answer_to_question:request.user}}</textarea>
+                                    {% comment %} <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question.task_of_pre_register_task_response.first.text}}</textarea> {% endcomment %}
                                 </div>
                             </div>
     

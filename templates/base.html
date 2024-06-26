@@ -11,6 +11,18 @@
     <!-- Favicon -->
     <link href={% static "boxzi-logo.ico" %} rel="icon" type="image/x-icon"/>
 
+    <!-- Start FlowChat Widget -->
+    <script>
+        window.flowchatSettings = {
+            chatbot_id: '6660b4ff9780da920cae4c34', //Your chatbot ID
+            direction: 'bottom-left', //Direction of chat widget [bottom-right | bottom-left]
+            alwaysOpen: false, //Chatbot is always open
+            debug: false, //Active some features
+        };
+    </script>
+    <script src="https://widget.flowchat.tech/assets-vuexy/script.js" %}></script>
+    <!-- End FlowChat Widget -->
+
     <!-- Icons -->
     <link href={% static "assets-vuexy/vendor/fonts/fontawesome.css" %} rel="stylesheet"/>
     <link href={% static "assets-vuexy/vendor/fonts/tabler-icons.css" %} rel="stylesheet"/>
@@ -344,18 +356,6 @@
 <script src={% static "assets-vuexy/js/main.js" %}></script>
 <!-- Page JS -->
 {% block page_js %}{% endblock page_js %}
-
-<!-- Start FlowChat Widget -->
-<script>
-    window.flowchatSettings = {
-        chatbot_id: '6660b4ff9780da920cae4c34', //Your chatbot ID
-        direction: 'bottom-right', //Direction of chat widget [bottom-right | bottom-left]
-        alwaysOpen: false, //Chatbot is always open
-        debug: false, //Active some features
-    };
-</script>
-<script src="https://widget.flowchat.tech/assets-vuexy/script.js" %}></script>
-<!-- End FlowChat Widget -->
 
 </body>
 
