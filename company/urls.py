@@ -42,6 +42,7 @@ urlpatterns = [
     path("accelerator/delete-task-order/<int:pk>/", views.delete_task_order, name="delete-task-order"),
     path("new-subject/", views.NewSubject.as_view(), name="new-subject"),
     path("team-management/", views.TeamManagement.as_view(), name="team-management"),
+    path("all-requests/", views.AllRequests.as_view(), name="all-requests"),
     path("invest-management/", views.InvestManagement.as_view(), name="invest-management"),
     path("accelerator/new-register-task/", views.CreatePreRegisterTask.as_view(), name="new-register-task"),
     path("accelerator/<str:uuid>/update-register-task/", views.UpdatePreRegisterTask.as_view(), name="update-register-task"),

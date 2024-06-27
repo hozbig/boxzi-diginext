@@ -15,7 +15,7 @@
     <div class="col-12">
         <div class="card mb-4">
             <div class="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
-                <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto"> <img src={% static "assets-vuexy/img/avatars/1.png" %} alt="تصویر کاربر" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img"/></div>
+                <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto"> <img src={% static "profile-male2.avif" %} alt="تصویر کاربر" class="d-block h-auto ms-0 ms-sm-4 rounded user-profile-img" width="100" height="100"></div>
                     <div class="flex-grow-1 mt-3 mt-sm-5">
                         <div class="d-flex align-items-md-end align-items-sm-start align-items-center justify-content-md-between justify-content-start mx-4 flex-md-row flex-column gap-4">
                             <div class="user-profile-info">
@@ -56,7 +56,7 @@
                         <li class="d-flex align-items-center mb-2"> <i class="ti ti-user text-heading"></i><span class="fw-medium mx-2 text-heading">نام کامل:</span> <span>{{object.get_full_name}}</span>
                         <li class="d-flex align-items-center mb-2"> <i class="ti ti-crown text-heading"></i><span class="fw-medium mx-2 text-heading">نقش:</span> <span>{{object.get_type_display}}</span></li>
                         <!-- TODO: add gender field -->
-                        <li class="d-flex align-items-center mb-2"> <i class="ti ti-gender-bigender text-heading"></i><span class="fw-medium mx-2 text-heading">جنسیت:</span> <span>{{object.get_type_display}}</span></li>
+                        <li class="d-flex align-items-center mb-2"> <i class="ti ti-gender-bigender text-heading"></i><span class="fw-medium mx-2 text-heading">جنسیت:</span> <span>{{object.get_gender_display|default_if_none:"ثبت نشده"}}</span></li>
                         <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-event text-heading"></i><span class="fw-medium mx-2 text-heading">تاریخ تولد:</span> <span>{{object.birthday|to_jalali}}</span></li>
                         <li class="d-flex align-items-center mb-2"> <i class="ti ti-map-pin text-heading"></i><span class="fw-medium mx-2 text-heading">ساکن:</span> <span>{{object.province}} / {{object.city}}</span></li>
                     </ul>
@@ -104,6 +104,14 @@
                     <ul class="list-unstyled mb-4 mt-2">
                         <li class="d-flex align-items-center mb-2"> <i class="ti ti-trending-up"></i><span class="fw-medium mx-2 text-heading">تجربه شرکت در برنامه شتابدهی:</span> <span>{{object.get_is_accelerator_experience_display}}</span></li>
                         <li class="d-flex align-items-center mb-2"> <i class="ti ti-briefcase"></i><span class="fw-medium mx-2 text-heading">تجربه‌کار یا بنیان‌گذاری استارتاپ:</span> <span>{{object.get_is_startup_experience_display}}</span></li>
+
+                        {% if object.why_us %}
+                        <li class="d-flex align-items-center mb-2"> <i class="ti ti-question-mark"></i><span class="fw-medium mx-2 text-heading">علت شرکت:</span> <span>{{object.why_us}}</span></li>
+                        {% endif %}
+
+                        {% if object.why_us_video %}
+                        <li class="d-flex align-items-center mb-2"> <i class="ti ti-question-mark"></i><span class="fw-medium mx-2 text-heading">علت شرکت:</span> <span><a href="{{object.resume_file.url}}" target="blank" class="badge bg-label-info">مشاهده</a></span></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -113,7 +121,7 @@
         <div class="col-lg-8 col-md-7 col-md-7">
             <div class="row">
 
-                <div class="col-12">
+                <div class="col-12 mb-4">
                     <div class="row">
                         <div class="col-xxl-4 col-6 mb-4 mb-xxl-0">
                             <div class="card card-border-shadow-info h-100">
@@ -124,11 +132,7 @@
                                     <h5 class="card-title mb-1 pt-1">چالش مهارت نرم</h5>
                                     <small class="text-muted"><i class="ti ti-medal-2"></i> 0 امتیاز دریافتی</small>
                                     <p class="mb-2 mt-1">
-                                        {% if object.user_of_personal_test %}
-                                        <a href={% url "quiz:personal-tests-result" object.user_of_personal_test.first.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> مشاهده چالش</a>
-                                        {% else %}
-                                        <a class="badge bg-label-dark"><i class="fa fa-eye"></i> مشاهده چالش</a>
-                                        {% endif %}
+                                        <a href={% url "quiz:personal-tests-result" object.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> مشاهده چالش</a>
                                     </p>
                                 </div>
                             </div>
@@ -143,17 +147,14 @@
                                     <h5 class="card-title mb-1 pt-1">چالش تخصصی</h5>
                                     <small class="text-muted"><i class="ti ti-medal-2"></i> 0 امتیاز دریافتی</small>
                                     <p class="mb-2 mt-1">
-                                        {% if object.user_of_pre_register_task_response.exists %}
-                                        <a href={% url "quiz:task-response-detail" object.user_of_pre_register_task_response.first.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> مشاهده چالش</a>
-                                        {% else %}
-                                        <a class="badge bg-label-dark"><i class="fa fa-eye"></i> مشاهده چالش</a>
-                                        {% endif %}
+                                        <a href={% url "quiz:task-response-detail" object.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> مشاهده چالش</a>
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-xxl-4 col-md-12">
+                        {% comment %} <!-- TODO: Enable this later --> {% endcomment %}
+                        {% comment %} <div class="col-xxl-4 col-md-12">
                             <div class="card card-border-shadow-success h-100">
                                 <div class="card-body d-flex justify-content-between">
                                     <div class="d-flex flex-column">
@@ -172,14 +173,14 @@
                                     <div id="average-exams-point"></div>
                                 </div>
                             </div>
-                        </div>
+                        </div> {% endcomment %}
 
                     </div>
                 </div>
 
                 {% if object.user_of_team_member.exists %}
                 <!-- Teams -->
-                <div class="col-12 mt-3">
+                <div class="col-12">
                     <div class="card card-action mb-4">
                         <div class="card-header align-items-center">
                             <h5 class="card-action-title mb-0">اطلاعات تیم</h5>
@@ -217,11 +218,19 @@
                     </div>
                 </div>
                 <!--/ Teams -->
+                {% else %}
+                <!-- Teams not found -->
+                <div class="col-12">
+                    <div class="card text-center mb-4">
+                        <h5 class="card-header mb-0 text-danger">این کاربر عضو هیچ تیمی نمی‌باشد</h5>
+                    </div>
+                </div>
+                <!--/ Teams not found -->
                 {% endif %}
 
                 {% if object.user_of_plan.exists %}
                 <!-- Products -->
-                <div class="col-12 mt-3">
+                <div class="col-12">
                     <div class="card card-action mb-4">
                         <div class="card-header align-items-center">
                             <h5 class="card-action-title mb-0">اطلاعات ایده یا محصول</h5>
@@ -261,6 +270,14 @@
                     </div>
                 </div>
                 <!--/ Products -->
+                {% else %}
+                <!-- Products not found -->
+                <div class="col-12">
+                    <div class="card text-center mb-4">
+                        <h5 class="card-header mb-0 text-danger">ایده‌ای توسط این کاربر ثبت نشده است</h5>
+                    </div>
+                </div>
+                <!--/ Products not found -->
                 {% endif %}
             </div>
         </div>

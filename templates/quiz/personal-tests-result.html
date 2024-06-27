@@ -18,33 +18,41 @@
 
     {% include "elements/messages-section.html" %}
 
-    <div class="col-md-8">
+    {% if object.final_user_result_url %}
+    <div class="col-md-12">
         <div class="card">
             <div class="card-body">
-                <div class="card-content">
-                    <div class="card-body">
-                        <h3 class="">هیچ دیتایی وجود ندارد!</h3>
-                    </div>
-                </div>
+                {% for item in object_list %}
+                <h3 class="">{{forloop.counter}}. {{item.question.title}}</h3>
+                <p class="mb-0 lh-2 mx-sm-3 px-md-5">{{item.text|safe}}</p>
+                <hr>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
+    {% comment %} <div class="col-md-4">
         <div class="card">
-            <div class="card-header">
-                <h4 class="card-title">در یک نگاه</h4>
+            <h5 class="card-header">در یک نگاه</h5>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">ارسال کننده: <span class="font-weight-bold">{{object.user.get_full_name}}</span></li>
+                    <li class="list-group-item">تاریخ ارسال: <span class="font-weight-bold">{{object.created_time|to_jalali}}</span></li>
+                    <li class="list-group-item">فایل ارسالی: {% if object.file %}<a href="{{object.file.url}}" class="badge badge-success text-white">برای مشاهده کلیک کنید</a>{% else %}<span class="badge badge-danger">دارد</span>{% endif %} </li>
+                </ul>
             </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">ارسال کننده: <span class="font-weight-bold">{{object.user.get_full_name}}</span></li>
-                        <li class="list-group-item">تاریخ ارسال: <span class="font-weight-bold">{{object.created_time|to_jalali}}</span></li>
-                    </ul>
-                </div>
+        </div>
+    </div> {% endcomment %}
+    {% else %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="">نتیجه‌ای یافت نشد!</h3>
+                <p class="mb-0 lh-2 mx-sm-3 px-md-5 fw-bold text-danger">این کاربر آزمون مهارت نرم خودرا کامل نکرده است</p>
             </div>
         </div>
     </div>
+    {% endif %}
 
 </div>
 {% endblock main %}

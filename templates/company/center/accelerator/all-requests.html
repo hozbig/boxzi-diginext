@@ -57,7 +57,7 @@
 						</span>
 						<div class="content-right">
 							<p class="mb-0">کل درخواست موجود</p>
-							<h4 class="text-info mb-0">{{all_requests.count}}
+							<h4 class="text-info mb-0">{{object_list.count}}
 								<small class="text-muted">درخواست</small>
 							</h4>
 						</div>
@@ -67,48 +67,6 @@
 		</div>
 	</div>
 	<!-- Hour chart End  -->
-
-    <div class="col-12 mt-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title"><i class="fa fa-hashtag text-black-50"></i> لیست درخواست های تکمیل شده ارسالی برای <span class="font-weight-bold">"{{acc_object.accelerator_of_road.first.name}}"</span></h5>
-            </div>
-            <div class="card-content">
-                <div class="card-body card-dashboard">
-                    <div class="table-responsive">
-                        <table class="table zero-configuration">
-                            <thead>
-                                <tr class="table-primary">
-									<th>نام و نام خانوادگی</th>
-                                    <th>تیم</th>
-                                    <th>تاریخ ثبت</th>
-                                    <th>وضعیت</th>
-                                    <th>امتیاز</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-								{% for item in valid_requests %}
-									<tr>
-										<td>{{item.user.get_full_name}}</td>
-										<td>{% if item.team_or_individual in "ta" %}{{item.team.name}}{% else %}<span class="badge bg-label-warning">شخص</span>{% endif %}</td>
-										<td>{{item.client_last_response_date|to_jalali}}</td>
-										
-										<td class="{% if item.status == "w" %}table-info{% elif item.status == "p" %}table-primary{% elif item.status == "a" %}table-success{% elif item.status == "r" %}table-danger{% elif item.status == "c" %}table-warning{% endif %}">{{item.get_status_display}}</td>
-										
-										<td>0 امتیاز</td>
-										<td>
-											<a href={% url "team:registration-detail" item.uuid %} class="badge bg-label-info">مشاهده <i class="fa fa-eye"></i></a>
-										</td>
-									</tr>
-								{% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
 	<div class="col-12 mt-4">
         <div class="card">
@@ -131,7 +89,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-								{% for item in last_10_requests %}
+								{% for item in object_list %}
 									<tr>
 										<td>{{forloop.counter|stringformat:"02d"}}</td>
 										<td>{{item.user.get_full_name}}</td>
@@ -200,12 +158,6 @@
 								{% endfor %}
                             </tbody>
                         </table>
-
-						{% if all_requests.count > 10 %}
-						<div class="text-center my-3">
-							<a href={% url "company:all-requests" %} class="btn bg-label-primary btn-md waves-effect waves-light">لیست کامل</a>
-						</div>
-						{% endif %}
                     </div>
                 </div>
             </div>

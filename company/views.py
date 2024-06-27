@@ -42,9 +42,10 @@ from subject.models import Topic, Subject
 from subject.forms import TopicSubjectCreationForm
 from account.models import User
 from account.forms import AddRefereeForm
+from team.models import RoadRegistration
 
 from .models import Company, Center
-from .mixins import CompanyAdminMixin
+from .mixins import CompanyAdminMixin, AcceleratorAdminMixin
 
 
 # ====== Company Views ======
@@ -107,7 +108,7 @@ class CenterProfile(LoginRequiredMixin, DetailView):
         return context
 
 
-class AcceleratorDashboard(LoginRequiredMixin, View):
+class AcceleratorDashboard(LoginRequiredMixin, AcceleratorAdminMixin, View):
     model = Center
     template_name = "company/center/dashboard.html"
     context = {
@@ -131,7 +132,7 @@ class AcceleratorDashboard(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
 
-class CreateRoad(LoginRequiredMixin, View):
+class CreateRoad(LoginRequiredMixin, AcceleratorAdminMixin, View):
     model = Road
     form_class = RoadCreateForm
     template_name = "company/center/accelerator/new-road.html"
@@ -166,7 +167,7 @@ class CreateRoad(LoginRequiredMixin, View):
         return redirect(reverse('company:new-road'))
 
     
-class UpdateRoad(LoginRequiredMixin, View):
+class UpdateRoad(LoginRequiredMixin, AcceleratorAdminMixin, View):
     model = Road
     form_class = RoadUpdateForm
     template_name = "company/center/accelerator/update-road.html"
@@ -204,7 +205,7 @@ class UpdateRoad(LoginRequiredMixin, View):
         return redirect(reverse('company:update-road', kwargs={'uuid': uuid}))
     
 
-class DeleteRoad(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteRoad(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, DeleteView):
     model = Road
     template_name = "company/center/accelerator/confirm-delete.html"
     success_message = "عملیات با موفقیت انجام شد"
@@ -247,7 +248,7 @@ def delete_collection_order(request, pk):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
     
 
-class CreateCollection(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class CreateCollection(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, CreateView):
     model = Collection
     form_class = CollectionCreateForm
     template_name = "company/center/accelerator/new-collection.html"
@@ -261,7 +262,7 @@ class CreateCollection(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
 
-class UpdateCollection(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateCollection(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, UpdateView):
     model = Collection
     form_class = CollectionUpdateForm
     template_name = "company/center/accelerator/update-collection.html"
@@ -280,7 +281,7 @@ class UpdateCollection(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy('company:update-collection', args = (self.object.uuid,))
     
 
-class DeleteCollection(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteCollection(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, DeleteView):
     model = Collection
     template_name = "company/center/accelerator/confirm-delete.html"
     success_message = "عملیات با موفقیت انجام شد"
@@ -323,7 +324,7 @@ def delete_content_order(request, pk):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-class CreateContent(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class CreateContent(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, CreateView):
     model = Content
     form_class = ContentCreateForm
     template_name = "company/center/accelerator/new-content.html"
@@ -337,7 +338,7 @@ class CreateContent(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
 
-class UpdateContent(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateContent(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, UpdateView):
     model = Content
     form_class = ContentUpdateForm
     template_name = "company/center/accelerator/update-content.html"
@@ -354,7 +355,7 @@ class UpdateContent(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy('company:update-content', args = (self.object.uuid,))
     
 
-class DeleteContent(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteContent(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, DeleteView):
     model = Content
     template_name = "company/center/accelerator/confirm-delete.html"
     success_message = "عملیات با موفقیت انجام شد"
@@ -367,7 +368,7 @@ class DeleteContent(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
         return context
     
 
-class CreateExam(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class CreateExam(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, CreateView):
     model = Exam
     form_class = ExamCreateForm
     template_name = "company/center/accelerator/new-exam.html"
@@ -382,7 +383,7 @@ class CreateExam(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
 
-class UpdateExam(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateExam(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, UpdateView):
     model = Exam
     form_class = ExamUpdateForm
     template_name = "company/center/accelerator/update-exam.html"
@@ -401,7 +402,7 @@ class UpdateExam(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy('company:update-exam', args = (self.object.uuid,))
     
 
-class DeleteExam(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteExam(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, DeleteView):
     model = Exam
     template_name = "company/center/accelerator/confirm-delete.html"
     success_message = "عملیات با موفقیت انجام شد"
@@ -433,7 +434,7 @@ def new_question(request, exam_uuid):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-class UpdateQuestion(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateQuestion(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, UpdateView):
     model = Question
     form_class = QuestionCreateForm
     template_name = "company/center/accelerator/update-question.html"
@@ -537,7 +538,7 @@ def new_task(request):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class UpdateTask(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, UpdateView):
     model = Task
     form_class = TaskUpdateForm
     template_name = "company/center/accelerator/update-task.html"
@@ -554,7 +555,7 @@ class UpdateTask(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse_lazy('company:update-task', args = (self.object.uuid,))
     
 
-class DeleteTask(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeleteTask(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, DeleteView):
     model = Task
     template_name = "company/center/accelerator/confirm-delete.html"
     success_message = "عملیات با موفقیت انجام شد"
@@ -631,7 +632,7 @@ class NewSubject(LoginRequiredMixin, View):
         return redirect(reverse('company:new-subject'))
 
 
-class TeamManagement(LoginRequiredMixin, View):
+class TeamManagement(LoginRequiredMixin, AcceleratorAdminMixin, View):
     template_name = "company/center/accelerator/team-management.html"
     context = {"title": "مدیریت تیم ها"}
 
@@ -660,9 +661,39 @@ class TeamManagement(LoginRequiredMixin, View):
         self.context["valid_requests"] = combined_results
         self.context["valid_requests_count"] = len(combined_results)
         return render(request, self.template_name, self.context)
+    
+
+class AllRequests(LoginRequiredMixin, AcceleratorAdminMixin, View):
+    template_name = "company/center/accelerator/all-requests.html"
+    context = {"title": "لیست کامل درخواست ها"}
+
+    def get(self, request):
+        acc_object = self.request.user.access_to_center
+
+        object_list = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
+            (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
+        
+        self.context["object_list"] = object_list.order_by("-id")
+        self.context["approved_requests"] = object_list.filter(status="a")
+        self.context["rejected_requests"] = object_list.filter(status="r")
+
+        filtered_objects = object_list.exclude(status="n")
+        individual_objects = object_list.exclude(status="n").filter(team_or_individual="i")
+        unique_teams = set()
+        unique_objects = []
+
+        for obj in filtered_objects:
+            if obj.team not in unique_teams:
+                unique_teams.add(obj.team)
+                if obj.team_or_individual == "t":
+                    unique_objects.append(obj)
+        combined_results = unique_objects + list(individual_objects)
+        self.context["valid_requests"] = combined_results
+        self.context["valid_requests_count"] = len(combined_results)
+        return render(request, self.template_name, self.context)
 
 
-class InvestManagement(LoginRequiredMixin, View):
+class InvestManagement(LoginRequiredMixin, AcceleratorAdminMixin, View):
     form_class = TopicSubjectCreationForm
     template_name = "company/center/accelerator/invest-management.html"
     context = {"title": "مدیریت سرمایه گذاری"}
@@ -672,7 +703,7 @@ class InvestManagement(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
 
-class CreatePreRegisterTask(LoginRequiredMixin, View):
+class CreatePreRegisterTask(LoginRequiredMixin, AcceleratorAdminMixin, View):
     model = PreRegisterTask
     form_class = PreRegisterTaskCreateForm
     template_name = "company/center/accelerator/new-register-task.html"
@@ -699,7 +730,7 @@ class CreatePreRegisterTask(LoginRequiredMixin, View):
         return redirect(reverse('company:new-register-task'))
 
 
-class UpdatePreRegisterTask(LoginRequiredMixin, View):
+class UpdatePreRegisterTask(LoginRequiredMixin, AcceleratorAdminMixin, View):
     model = PreRegisterTask
     form_class = PreRegisterTaskUpdateForm
     template_name = "company/center/accelerator/update-register-task.html"
@@ -760,7 +791,7 @@ def delete_pre_register_task_question(request, uuid):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-class DeletePreRegisterTask(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class DeletePreRegisterTask(LoginRequiredMixin, AcceleratorAdminMixin, SuccessMessageMixin, DeleteView):
     model = PreRegisterTask
     template_name = "company/center/accelerator/confirm-delete.html"
     success_message = "عملیات با موفقیت انجام شد"
@@ -773,7 +804,7 @@ class DeletePreRegisterTask(LoginRequiredMixin, SuccessMessageMixin, DeleteView)
         return context
     
     
-class RefereeManagement(LoginRequiredMixin, View):
+class RefereeManagement(LoginRequiredMixin, AcceleratorAdminMixin, View):
     model = User
     form_class = AddRefereeForm
     template_name = "company/center/accelerator/referee-management.html"

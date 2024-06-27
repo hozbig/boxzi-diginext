@@ -50,7 +50,7 @@
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="card-title mb-0">
                             <h5 class="mb-0 me-2">{{object.complete_registration_date|to_jalali}}</h5>
-                            <small>تاریخ تکمیل و ارسال</small>
+                            <small>تاریخ تکمیل ثبت نام</small>
                         </div>
                         <div class="card-icon">
                             <span class="badge bg-label-primary rounded-pill p-2">
@@ -79,6 +79,14 @@
 
 		</div>
 	</div>
+
+    {% if not object.client_last_response_date %}
+        <div class="col-lg-12 col-md-8 mb-3">
+            <div class="card p-3 alert-warning text-center">
+                <h5 class="alert-heading mb-2">این کاربر هنوز درخواست خودرا تکمیل و ارسال نکرده است</h5>
+            </div>
+        </div>
+    {% endif %}
 
     {% if object.team_or_individual in "ta" %}
     <div class="col-lg-12">
@@ -135,7 +143,15 @@
                             {% comment %} <td class="">{{object.user.province}}</td>
                             <td class="">{{object.user.city}}</td> {% endcomment %}
                             <td class="">{{object.user.get_type_display}}</td>
-                            <td><a class="badge bg-label-dark"><i class="fa fa-eye"></i> تکمیل نشده</i></a></td>
+                            {% if object.user.user_of_personal_test.exists %}
+                                {% if object.user.user_of_personal_test.final_user_result_url %}
+                                <td><a href={% url "quiz:personal-tests-result" object.user.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده</i></a></td>
+                                {% else %}
+                                <td><a href={% url "quiz:personal-tests-result" object.user.uuid %} class="badge bg-label-dark"><i class="fa fa-eye"></i> تکمیل نشده</i></a></td>
+                                {% endif %}
+                                {% else %}
+                                <td><a class="badge bg-label-danger"><i class="fa fa-eye"></i> انجام نشده</i></a></td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>
@@ -190,7 +206,7 @@
                             <td>{{object.complete_registration_date|to_jalali}}</td>
                             <td>در {{object.days_to_complete_registration}} روز</td>
                             {% if object.user.user_of_pre_register_task_response.exists %}
-                            <td><a href={% url "quiz:task-response-detail" object.user.user_of_pre_register_task_response.first.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
+                            <td><a href={% url "quiz:task-response-detail" object.user.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
                             {% else %}
                             <td><a class="badge bg-label-dark"><i class="fa fa-eye"></i> انجام نشده</i></a></td>
                             {% endif %}
@@ -269,11 +285,29 @@
         </div>
     </div>
     {% endif %}
-
-    <div class="col-12 mt-4">
-        {% if not object.status in "a" %}<a href={% url "team:approve_registration" object.uuid %} class="btn btn-success">تایید درخواست <i class="feather icon-check"></i></a>{% endif %}
-        {% if not object.status in "r" %}<a href={% url "team:reject_registration" object.uuid %} class="btn btn-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
-    </div>
+    
+    {% if object.team_or_individual == "t" %}
+        {% if object.is_complete_registration_for_coordinator %}
+        <div class="col-12 mt-4">
+            {% if not object.status in "a" %}<a href={% url "team:approve_registration" object.uuid %} class="btn btn-success">تایید درخواست <i class="feather icon-check"></i></a>{% endif %}
+            {% if not object.status in "r" %}<a href={% url "team:reject_registration" object.uuid %} class="btn btn-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
+        </div>
+        {% endif %}
+    {% elif object.team_or_individual == "a" %}
+        {% if object.is_complete_registration_for_team_member %}
+        <div class="col-12 mt-4">
+            {% if not object.status in "a" %}<a href={% url "team:approve_registration" object.uuid %} class="btn btn-success">تایید درخواست <i class="feather icon-check"></i></a>{% endif %}
+            {% if not object.status in "r" %}<a href={% url "team:reject_registration" object.uuid %} class="btn btn-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
+        </div>
+        {% endif %}
+    {% elif object.team_or_individual == "i" %}
+        {% if object.is_complete_registration_for_individual %}
+        <div class="col-12 mt-4">
+            {% if not object.status in "a" %}<a href={% url "team:approve_registration" object.uuid %} class="btn btn-success">تایید درخواست <i class="feather icon-check"></i></a>{% endif %}
+            {% if not object.status in "r" %}<a href={% url "team:reject_registration" object.uuid %} class="btn btn-danger">رد درخواست <i class="feather icon-trash-2"></i></a>{% endif %}
+        </div>
+        {% endif %}
+    {% endif %}
 
 </div>
 {% endblock main %}

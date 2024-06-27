@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
@@ -279,9 +280,15 @@ class PersonalTestsResult(LoginRequiredMixin, View):
     template_name = "quiz/personal-tests-result.html"
     context = {}
     
-    def get(self, request, test_uuid):
+    def get(self, request, user_uuid):
         self.context["title"] = "آزمون ورودی شخصیت"
-        self.context["object"] = PersonalTest.objects.get(uuid=test_uuid)
+
+        try:
+            user = User.objects.get(uuid=user_uuid)
+        except User.DoesNotExist:
+            raise Http404("Given query not found....")
+
+        self.context["object"] = PersonalTest.objects.filter(user=user)
         return render(request, self.template_name, self.context)
 
 
@@ -373,11 +380,13 @@ class PreRegisterTaskResponseDetail(LoginRequiredMixin, View):
     template_name = "quiz/task-response-detail.html"
     context = {}
 
-    def get(self, request, uuid):
+    def get(self, request, user_uuid):
         self.context["title"] = "مشاهده پاسخ به چالش" 
-        self.context["object"] = PreRegisterTaskResponse.objects.get(uuid=uuid)
-        return render(request, self.template_name, self.context)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        try:
+            user = User.objects.get(uuid=user_uuid)
+        except User.DoesNotExist:
+            raise Http404("Given query not found....")
+
+        self.context["object_list"] = PreRegisterTaskResponse.objects.filter(user=user)
+        return render(request, self.template_name, self.context)

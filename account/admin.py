@@ -49,6 +49,7 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     "birthday",
+                    "gender",
                     "number_id",
                     "interests",
                     "abilities",
