@@ -291,4 +291,4 @@ class PersonalTest(models.Model):
         verbose_name_plural = "آزمون های شخصیت"
 
     def __str__(self) -> str:
-        return f"{self.user} - {self.road.name}"
+        return f"{self.user.get_full_name()} - {self.road.name}"

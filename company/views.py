@@ -639,11 +639,13 @@ class TeamManagement(LoginRequiredMixin, AcceleratorAdminMixin, View):
     def get(self, request):
         acc_object = self.request.user.access_to_center
         self.context["acc_object"] = acc_object
-        all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
-            (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
+        # all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
+        #     (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
+
+        all_requests = acc_object.accelerator_of_road.first().road_of_road_registration.all()
         
         self.context["all_requests"] = all_requests
-        self.context["last_10_requests"] = all_requests[:10]
+        self.context["last_10_requests"] = all_requests.order_by("-id")[:10]
         self.context["approved_requests"] = all_requests.filter(status="a")
         self.context["rejected_requests"] = all_requests.filter(status="r")
         
@@ -669,9 +671,11 @@ class AllRequests(LoginRequiredMixin, AcceleratorAdminMixin, View):
 
     def get(self, request):
         acc_object = self.request.user.access_to_center
-
-        object_list = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
-            (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
+        self.context["acc_object"] = acc_object
+        # object_list = acc_object.accelerator_of_road.first().road_of_road_registration.all().filter(
+        #     (Q(team_or_individual="t") | Q(team_or_individual="i")) & Q(complete_registration_date__isnull=False))
+        
+        object_list = acc_object.accelerator_of_road.first().road_of_road_registration.all()
         
         self.context["object_list"] = object_list.order_by("-id")
         self.context["approved_requests"] = object_list.filter(status="a")

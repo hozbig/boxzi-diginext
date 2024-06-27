@@ -19,17 +19,30 @@
     {% include "elements/messages-section.html" %}
 
     {% if object_list %}
-    <div class="col-md-12">
+    {% for item in object_list %}
+    <div class="col-md-12 mb-4">
         <div class="card">
             <div class="card-body">
-                {% for item in object_list %}
-                <h3 class="">{{forloop.counter}}. {{item.question.title}}</h3>
-                <p class="mb-0 lh-2 mx-sm-3 px-md-5">{{item.text|safe}}</p>
-                <hr>
-                {% endfor %}
+                <div class="accordion mb-3" id="accordionPayment">
+                    <div class="card accordion-item">
+                        <h2 class="accordion-header">
+                            <button aria-controls="accordionPayment-{{forloop.counter}}" class="accordion-button collapsed" data-bs-target="#accordionPayment-{{forloop.counter}}" data-bs-toggle="collapse" type="button">{{forloop.counter}}. {{item.question.title}}</button>
+                        </h2>
+                        <div class="accordion-collapse collapse" id="accordionPayment-{{forloop.counter}}">
+                            <div class="accordion-body">
+                                {{item.question.text.html|safe}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="mb-0 mt-4 mx-3 p-3 border rounded">
+                    {{item.text|safe}}
+                </p>
             </div>
         </div>
     </div>
+    {% endfor %}
 
     {% comment %} <div class="col-md-4">
         <div class="card">

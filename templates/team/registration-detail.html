@@ -208,7 +208,7 @@
                             {% if object.user.user_of_pre_register_task_response.exists %}
                             <td><a href={% url "quiz:task-response-detail" object.user.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
                             {% else %}
-                            <td><a class="badge bg-label-dark"><i class="fa fa-eye"></i> انجام نشده</i></a></td>
+                            <td><a class="badge bg-label-danger"><i class="fa fa-eye"></i> انجام نشده</i></a></td>
                             {% endif %}
                         </tr>
                     </tbody>
@@ -229,6 +229,8 @@
                             <th>نام ایده</th>
                             <th>دسته بندی</th>
                             <th>دارای کمینه</th>
+                            <th>دارای pitch deck</th>
+                            <th>دارای ویدیو</th>
                             <th>سطح محصول</th>
                             <th>عملیات</th>
                         </tr>
@@ -240,6 +242,8 @@
                                     <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
                                     <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{% if idea.pitch_deck %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{% if idea.video %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{{idea.get_progress_status_display}}</td>
                                     <td><a href={% url "team:plan-team-profile" object.user.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
                                 </tr>
@@ -250,6 +254,8 @@
                                     <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
                                     <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{% if idea.pitch_deck %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                    <td>{% if idea.video %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{{idea.get_progress_status_display}}</td>
                                     <td><a href={% url "team:plan-team-profile" object.user.uuid %} class="badge bg-label-primary"><i class="fa fa-eye"></i> اطلاعات کامل</a></td>
                                 </tr>
@@ -261,7 +267,7 @@
         </div>
     </div>
 
-    {% if object.is_valid_registration_period < 2 %}
+    {% if object.is_valid_registration_period < 2 and object.complete_registration_date %}
     <div class="col-md-6 mt-4">
         <div class="card">
             <div class="card-header">
