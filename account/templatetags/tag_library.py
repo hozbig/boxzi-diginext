@@ -3,6 +3,7 @@ import random
 
 from django import template
 from utils import jalali
+from utils import city_province
 from collections import Counter
 from account.models import User
 from content.models import Collection, WatchedContent, ContentOrder
@@ -12,6 +13,25 @@ from subject.models import Subject, Topic
 from quiz.models import PreRegisterTaskResponse
 
 register = template.Library()
+
+@register.filter()
+def get_state_name(state_code):
+    try:
+        state_code = str(state_code)
+        res = city_province.all_state[state_code]
+        return res
+    except:
+        return "404"
+    
+
+@register.filter()
+def get_city_name(city_code):
+    try:
+        city_code = str(city_code)
+        res = city_province.city_list[city_code]
+        return res
+    except:
+        return "404"
 
 
 @register.filter()
