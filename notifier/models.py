@@ -1,5 +1,8 @@
 from django.db import models
+from datetime import timedelta
+from django.utils import timezone
 from utils.uuid_generator import random_uuid4
+from account.models import User
 
 
 class NotifyLog(models.Model):
@@ -22,3 +25,13 @@ class NotifyLog(models.Model):
     
     def __str__(self):
         return self.uuid
+
+
+class OTP(models.Model):
+    otp_code = models.CharField(max_length=6)
+    phone_number = models.CharField(verbose_name="شماره تماس", max_length=11)
+
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
+
+    def is_valid(self):
+        return self.created_time >= timezone.now() - timedelta(minutes=3)

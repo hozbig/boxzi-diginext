@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic import View
+from django.core.validators import RegexValidator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.urls import reverse
@@ -10,7 +11,8 @@ from utils import date_db_convertor
 from django.contrib import messages
 from content.models import Road
 from utils.check_status_user_state_level import add_one_level
-from notifier.sms import send_messages
+from notifier.models import OTP
+from notifier.sms import send_messages, send_otp, generate_otp
 from notifier.email import send_email
 from assessment.models import Question, Response
 from plan.models import Plan
@@ -100,6 +102,43 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
         else:
             self.context["is_road"] = False
 
+        # Check if not phone_number parameter in url redirect use to login-or-register page
+        phone_number = request.GET.get('phone_number', None)
+        if not phone_number:
+            return redirect("account:login-or-register")
+
+        try:
+            # Check if the phone_number is not exist in database, if exist the user redirect to login page
+            try:
+                User.objects.get(phone_number=phone_number)
+                return redirect("account:login")
+            except:
+                pass
+
+            has_any_otp = OTP.objects.filter(phone_number=phone_number).exists()
+            print("======================= 1 =======================")
+            if has_any_otp:
+                print("======================= 2 =======================")
+                otp_object = OTP.objects.filter(phone_number=phone_number).last()
+                print(f"======================= {otp_object.is_valid()} =======================")
+                if not otp_object.is_valid():
+                    print(f"======================= {otp_object.is_valid()} =======================")
+                    generated_otp = generate_otp()
+                    OTP.objects.create(otp_code=generated_otp, phone_number=phone_number)
+                    print("======================= 3 =======================")
+                    send_otp(phone_number, generated_otp)
+                    messages.info(request, f"کد یک بارمصرف برای شماره '{phone_number}' پیامک شد")
+                    print("======================= 4 =======================")
+            else:
+                print("======================= 5 =======================")
+                generated_otp = generate_otp()
+                OTP.objects.create(otp_code=generated_otp, phone_number=phone_number)
+                send_otp(phone_number, generated_otp)
+                print("======================= 6 =======================")
+                messages.info(request, f"کد یک بارمصرف برای شماره '{phone_number}' پیامک شد")
+        except:
+            pass
+
         self.context["form"] = UserRegisterFormLevel1
         return render(request, self.template_name, self.context)
 
@@ -118,6 +157,21 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
 
         form = UserRegisterFormLevel1(request.POST)
         if form.is_valid():
+            user_otp_code = request.POST.get("otp_code", None)
+            if not user_otp_code:
+                messages.error(request, "کد یکبار مصرف وارد شده، صحیح نمیباشد!")
+                return self.get(request)
+
+            phone_number = request.POST.get("phone_number")
+            otp_code = OTP.objects.filter(phone_number=phone_number).last()
+            if not otp_code.is_valid():
+                messages.error(request, "کد وارد شده منقضی شده است!")
+                return self.get(request)
+            
+            if not user_otp_code == otp_code.otp_code:
+                messages.error(request, "کد وارد شده اشتباه می‌باشد! دوباره تلاش کنید")
+                return self.get(request)
+
             user = form.save(commit=False)
             user.is_team_member = True
             user.save()
@@ -391,8 +445,6 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
         pre_register_challenge = PreRegisterTaskResponse.objects.filter(uuid=pre_register_challenge_uuid).first()
         
         for item in form_copy:
-            print("--------------------- form_copy")
-            print(form_copy)
             question = Question.objects.get(uuid=item)
             point = int(form_copy[item].split('.')[0])
             try:

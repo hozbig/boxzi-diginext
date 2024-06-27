@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms import ModelForm, ModelMultipleChoiceField
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 from django import forms
 from config.settings import DEBUG
@@ -135,6 +135,18 @@ class UserRegisterFormLevel1(UserCreationForm):
     # Its prevent that user use persian number, its only accept latin number
     phone_number.widget.attrs["class"] = "phoneInput"
 
+    otp_code = forms.CharField(
+        max_length=6,
+        required=True,
+        label="کد ۶ رقمی پیامک شده را وارد کنید",
+        validators=[
+            RegexValidator(
+                regex=r'^\d{6}$',
+                message='کد تایید باید دقیقا ۶ رقم باشد.'
+            )
+        ]
+    )
+
     if not DEBUG:
         hcaptcha = hCaptchaField()
 
@@ -151,6 +163,7 @@ class UserRegisterFormLevel1(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Change placeholders
+        self.fields['otp_code'].widget.attrs['placeholder'] = "123456"
         self.fields['email'].widget.attrs['placeholder'] = "* " + self.fields["email"].label
         # self.fields['phone_number'].widget.attrs['placeholder'] = "* " + self.fields["phone_number"].label
         self.fields['password1'].widget.attrs['placeholder'] = "* " + self.fields["password1"].label

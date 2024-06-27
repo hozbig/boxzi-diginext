@@ -23,6 +23,10 @@
                 </ul>
             </div>
         {% endif %}
+
+        <div class="form-group">
+            {{ form.otp_code|as_crispy_field }}
+        </div>
         
         <div class="form-group" style="text-align: right">
             <div id="div_id_team_or_individual" class="form-group">
@@ -39,7 +43,7 @@
 
         {% for field in form %}
             <div class="form-group">
-                {% if not field.name in "phone_number accept_nda" %}
+                {% if not field.name in "phone_number accept_nda otp_code" %}
                 {{ field|as_crispy_field }}
                 {% endif %}
             </div>
