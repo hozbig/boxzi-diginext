@@ -15,9 +15,34 @@ class Roads(LoginRequiredMixin, View):
     context = {"title":"مسیرآموزشی"}
 
     def get(self, request):
-        registration_obj = request.user.user_of_road_registration.first().status_user_state
-        if not registration_obj == "5":
+        user = request.user
+        registration_obj = user.user_of_road_registration.first()
+        if not registration_obj.status_user_state == "5":
             return redirect("router")
+        
+        try:
+            road = registration_obj.road
+        except:
+            road = Road.objects.first()
+
+        task = road.pre_register_task
+        task_business_side = road.pre_register_task_for_business_side
+
+        count_of_t_question = task.pre_register_of_pre_register_task_question.count()
+        count_of_b_question = task_business_side.pre_register_of_pre_register_task_question.count()
+        user_response_count = user.user_of_pre_register_task_response.count()
+
+        if user.user_of_road_registration.first().team_or_individual == "i":
+            if user.type == "t":
+                if (count_of_t_question - user_response_count) < 1:
+                    self.context["challenge_response"] = True
+                else:
+                    self.context["challenge_response"] = False
+            elif user.type == "b":
+                if (count_of_b_question - user_response_count) < 1:
+                    self.context["challenge_response"] = True
+                else:
+                    self.context["challenge_response"] = False
 
         self.context["object"] = Road.objects.first()
         self.context["registration_obj"] = request.user.user_of_road_registration.first()

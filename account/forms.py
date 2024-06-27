@@ -3,6 +3,7 @@ from django.forms import ModelForm, ModelMultipleChoiceField
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from django import forms
+from config.settings import DEBUG
 from hcaptcha.fields import hCaptchaField
 
 from .models import User, Meeting, LeanCanvas, WorkExperience
@@ -20,7 +21,8 @@ class LoginForm(forms.Form):
         ]
     )
     password = forms.CharField(widget=forms.PasswordInput)
-    hcaptcha = hCaptchaField()
+    if not DEBUG:
+        hcaptcha = hCaptchaField()
     
     phone_number.widget.attrs["placeholder"] = "جهت ورود شماره موبایل خودرا وارد کنید"
     # 'phoneInput' class name related to a js script that exist under the pages that have a html input for phone number
@@ -133,7 +135,8 @@ class UserRegisterFormLevel1(UserCreationForm):
     # Its prevent that user use persian number, its only accept latin number
     phone_number.widget.attrs["class"] = "phoneInput"
 
-    hcaptcha = hCaptchaField()
+    if not DEBUG:
+        hcaptcha = hCaptchaField()
 
     class Meta(UserCreationForm):
         model = User
@@ -162,11 +165,18 @@ class UserRegisterFormLevel1(UserCreationForm):
         self.fields['password1'].help_text = 'گذرواژه شما باید حداقل ۸ حرف داشته باشد، نباید مشابه اطلاعات شخصی، یک رمز عبور معمول یا فقط عدد باشد'
         self.fields['password2'].help_text = ''
 
+    def clean_accept_nda(self):
+        accept_nda = self.cleaned_data.get('accept_nda')
+        if not accept_nda:
+            raise forms.ValidationError("برای ثبت نام، تیک قبول قوانین سایت را فعال کنید.")
+        return accept_nda
+
 
 class UserRegisterFormLevel2(forms.ModelForm):
     class Meta:
         model = User
         fields = (
+            "gender",
             "birthday",
             "degree",
             "college_name",
@@ -208,6 +218,7 @@ class UserRegisterFormLevel3(forms.ModelForm):
             self.fields[field].widget.attrs['style'] = 'text-align:right'
         self.fields["other_specialties"].required = False
         self.fields["resume_file"].widget.attrs['accept'] = 'application/pdf'  # Restrict file input to PDF files
+        self.fields["resume_file"].widget.attrs['class'] = "form-control"
 
     def clean_resume_file(self):
         resume_file = self.cleaned_data.get('resume_file')

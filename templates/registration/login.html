@@ -66,7 +66,7 @@
                     </a>
                 </div>
                 <!-- /Logo -->
-                <h3 class="mb-1">با باکس‌زی خوش آمدید! 👋</h3>
+                <h3 class="mb-1">به باکس‌زی خوش آمدید! 👋</h3>
                 <p class="mb-4">لطفا به حساب کاربری خود وارد شوید تا از امکانات پلتفرم استفاده کنید.</p>
                 <form class="mb-3" method="POST">
                     {% csrf_token %}
@@ -81,10 +81,17 @@
                             </span>
                         </div>
                     </div>
+                    {% if not DEBUG %}
                     {{form.hcaptcha|as_crispy_field}}
+                    {% endif %}
                     <button class="btn btn-primary d-grid w-100">ورود</button>
                     <div class="py-2">
                         <a href="{% url "account:login-or-register" %}" class="small">حساب کاربری ندارید؟ ثبت نام کنید</a>
+                    </div>
+
+                    <div class="py-2 text-center">
+                        <a href="https://diginext.ir" target="_blank"><img src={% static "dg-logo.png" %} alt="" class="img-fluid" width="100"></a>
+                        <a href="https://boxzi.ir" target="_blank"><img src={% static "register-template/images/boxzi-logo.png" %} alt="Logo" width="60"></a>
                     </div>
                 </form>
             </div>

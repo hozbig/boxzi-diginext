@@ -16,6 +16,7 @@ from assessment.models import Question, Response
 from plan.models import Plan
 from team.models import RoadRegistration, StartUpTeam
 from quiz.models import PreRegisterTaskResponse, PersonalTest
+from config.settings import DEBUG
 
 from .models import User
 from .forms import (
@@ -66,7 +67,7 @@ class UserLoginView(AnonymousRequiredMixin, View):
 
     def get(self, request):
         form = LoginForm()
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, "DEBUG": DEBUG})
 
     def post(self, request):        
         form = LoginForm(request.POST)
@@ -80,7 +81,7 @@ class UserLoginView(AnonymousRequiredMixin, View):
                 messages.success(request, "با موفقیت وارد شدید")
                 return redirect("router")
             else:
-                messages.error(request, "شما یک کاربرمجاز نمیباشید!")
+                messages.error(request, "نام کاربری یا رمزعبور واردشده اشتباه می‌باشد!")
         else:
             messages.error(request, "اطلاعات وارد شده صحیح نمیباشد!")
             return render(request, self.template_name, {'form': form})

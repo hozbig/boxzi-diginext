@@ -36,10 +36,11 @@
                             <div class="col-12 my-4"><hr></div>
                             <div class="col-12">
                                 <ul class="list-unstyled">
-                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع ثبت نام:</span> <span><bdi>{{object.start_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">مهلت ثبت نام:</span> <span><bdi>از ۵ تیر تا ۲۰ تیر</bdi></span></li>
+                                {% comment %} <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-stats"></i><span class="fw-medium mx-2 text-heading">شروع ثبت نام:</span> <span><bdi>{{object.start_date|to_jalali}}</bdi></span></li>
                                 <li class="d-flex align-items-center mb-2"> <i class="ti ti-clock-2"></i><span class="fw-medium mx-2 text-heading">پایان ثبت نام:</span> <span><bdi>{{object.publish_date|to_jalali}}</bdi></span></li>
                                 <li class="d-flex align-items-center mb-2"> <i class="ti ti-calendar-plus"></i><span class="fw-medium mx-2 text-heading">شروع کمپ:</span> <span><bdi>{{object.registration_deadline|to_jalali}}</bdi></span></li>
-                                <li class="d-flex align-items-center"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان دوره:</span> <span><bdi>{{object.expiration_date|to_jalali}}</bdi></span></li>
+                                <li class="d-flex align-items-center"> <i class="ti ti-calendar-off"></i><span class="fw-medium mx-2 text-heading">پایان دوره:</span> <span><bdi>{{object.expiration_date|to_jalali}}</bdi></span></li> {% endcomment %}
                             </ul>
                             </div>
                         </div>
@@ -104,7 +105,7 @@
                             <!-- تکمیل بودن پروفایل -->
                             <td class="border ">{% if request.user.is_profile_complete %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                             <!-- انجام چالش مهارت نرم -->
-                            <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            <td class="border ">{% if request.user.user_of_personal_test.exists %}<span class="badge bg-label-warning"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
 
                             {% if registration_obj.team_or_individual != "i" %}
                             <!-- تیم؟ -->
@@ -113,7 +114,7 @@
                             <td class="border ">{% if request.user.user_of_team_member.first.team.team_member_count > 1 %}<span class="badge bg-label-success">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger">{{ request.user.user_of_team_member.first.team.team_member_count }} <i class="fa fa-times"></i></span>{% endif %}</td>
                             {% else %}
                             <!-- چالش ورودی -->
-                            <td class="border ">{% if request.user.user_of_pre_register_task_response.first %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                            <td class="border ">{% if challenge_response %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                             {% endif %}
 
                             <!-- ایده یا محصول -->

@@ -57,6 +57,13 @@ class User(AbstractUser):
     number_id = models.CharField(unique=True, null=True, blank=True, max_length=10, validators=[validate_numeric], verbose_name="کدملی")
     birthday = models.DateField(verbose_name="تاریخ تولد", auto_now=False, auto_now_add=False, null=True, blank=True)
 
+    GENDER = (
+        ("m", "مرد"), # Male
+        ("f", "زن"), # Female
+        ("o", "سایر"), # others
+    )
+    gender = models.CharField(verbose_name="جنسیت", max_length=1, choices=GENDER, null=True)
+
     is_mentor = models.BooleanField(verbose_name="مربی", default=False)
     is_team_member = models.BooleanField(verbose_name="عضو تیم", default=False)
     is_investor = models.BooleanField(verbose_name="سرمایه گذار", default=False)
@@ -75,7 +82,7 @@ class User(AbstractUser):
         ("f", "کارشناسی ارشد"), # Fogh lisans
         ("o", "دکترا"), # dOctora
     )
-    degree = models.CharField(verbose_name="مقطع تحصیلی", max_length=1, choices=DEGREE, default="d")
+    degree = models.CharField(verbose_name="مقطع تحصیلی", max_length=1, choices=DEGREE, null=True)
     college_name = models.CharField(verbose_name="محل تحصیل", max_length=50, null=True, blank=True)
     province = models.CharField(verbose_name="استان محل سکونت", max_length=50, null=True, blank=True)
     city = models.CharField(verbose_name="شهر محل سکونت", max_length=50, null=True, blank=True)

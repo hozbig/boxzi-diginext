@@ -79,6 +79,11 @@
                             {% endif %}
 
                             {% block content %}{% endblock content %}
+
+                            <div class="py-2 text-center">
+                                <a href="https://diginext.ir" target="_blank"><img src={% static "dg-logo.png" %} alt="" class="img-fluid" width="100"></a>
+                                <a href="https://boxzi.ir" target="_blank"><img src={% static "register-template/images/boxzi-logo.png" %} alt="Logo" width="60"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,5 +108,17 @@
     </script>
 
     {% block extra_js %}{% endblock extra_js %}
+
+    <!-- Start FlowChat Widget -->
+    <script>
+        window.flowchatSettings = {
+            chatbot_id: '6660b4ff9780da920cae4c34', //Your chatbot ID
+            direction: 'bottom-right', //Direction of chat widget [bottom-right | bottom-left]
+            alwaysOpen: false, //Chatbot is always open
+            debug: false, //Active some features
+        };
+    </script>
+    <script src="https://widget.flowchat.tech/assets/script.js"></script>
+    <!-- End FlowChat Widget -->
 
 </body></html>

@@ -135,7 +135,7 @@
                             {% comment %} <td class="">{{object.user.province}}</td>
                             <td class="">{{object.user.city}}</td> {% endcomment %}
                             <td class="">{{object.user.get_type_display}}</td>
-                            <td><a href="" class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده</i></a></td>
+                            <td><a class="badge bg-label-dark"><i class="fa fa-eye"></i> تکمیل نشده</i></a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -189,7 +189,11 @@
                         <tr>
                             <td>{{object.complete_registration_date|to_jalali}}</td>
                             <td>در {{object.days_to_complete_registration}} روز</td>
+                            {% if object.user.user_of_pre_register_task_response.exists %}
                             <td><a href={% url "quiz:task-response-detail" object.user.user_of_pre_register_task_response.first.uuid %} class="badge bg-label-info"><i class="fa fa-eye"></i> مشاهده پاسخ کاربر</i></a></td>
+                            {% else %}
+                            <td><a class="badge bg-label-dark"><i class="fa fa-eye"></i> انجام نشده</i></a></td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>
