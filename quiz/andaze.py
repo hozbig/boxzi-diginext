@@ -127,3 +127,82 @@ def send_user_information(user_obj:User, road):
             # raise Exception(f"Query failed with status code {response.status_code}")
     except:
         pass
+
+
+def get_user_data(user_obj:User):
+    personal_test_object = PersonalTest.objects.filter(user=user_obj, first_response_of_sending_information_is_accepted=True).last()
+
+    if not personal_test_object.final_user_result_url == None:
+        return personal_test_object.final_user_result_url
+
+    try:
+        url = "https://api.andaze.io/graphql"  # Replace with your GraphQL endpoint
+        headers = {
+            'Content-Type': 'application/json',
+            "Authorization": f"Bearer {ANDAZE_TOKEN}"
+        }
+        query = """
+        query evaluationsForPartner(
+            $limit: Float!
+            $skip: Float!
+            $campaign: String!
+            $type: EvaluationTypeEnum!
+            $reference: String!
+        ) {
+            evaluationsForPartner(
+            limit: $limit
+            skip: $skip
+            campaign: $campaign
+            type: $type
+            reference: $reference
+        ) {
+        id
+        assessment
+        type
+        assessmentObj {
+        id
+        name
+        title
+        summary
+        questionsCount
+        }
+        company {
+        id
+        name
+        }
+        party {
+        id
+        firstName
+        lastName
+        phone
+        }
+        }
+        }
+        """
+        
+        variables = {
+            "limit": 100,
+            "skip": 0,
+            "type": "DONE",
+            # "type": "DONE",
+            "campaign": "6678271fa09ce71ba13d8cb3",
+            "reference": personal_test_object.reference_id
+        }
+
+        response = requests.post(url, json={'query': query, 'variables': variables}, headers=headers)
+
+
+        if response.status_code == 401:
+            update_validate_token()
+            get_user_data(user_obj)
+        if response.status_code == 400:
+            get_user_data(user_obj)
+        
+        if response.status_code == 200:
+            json_response = response.json()
+            
+            evaluationId = json_response["data"]["evaluationsForPartner"][0]["id"]
+            url_result = f"http://azmoon.andaze.io/exames/result/forPartner?exameId={evaluationId}&exameType=neopir"
+            return url_result
+    except:
+        pass

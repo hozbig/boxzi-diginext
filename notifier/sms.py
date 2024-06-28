@@ -2,16 +2,8 @@ import logging
 import random
 # import json
 
-from kavenegar import KavenegarAPI, APIException, HTTPException
+from kavenegar import KavenegarAPI
 from .models import NotifyLog, OTP
-
-# from django.shortcuts import render, redirect
-# from django.utils import timezone
-# from django.contrib.auth.models import User
-# from .models import OTP
-# from .forms import PhoneForm, OTPForm
-# import requests
-# from django.conf import settings
 
 
 API_KEY = '5942524C707361635633774F54767244524A314C5856564A3367416464446F33'
@@ -82,8 +74,8 @@ def send_otp(phone_number, otp_code):
     api = KavenegarAPI(API_KEY)
 
     message = f"""کد یکبار مصرف برای ورود به باکس‌زی
-    CODE: {otp_code}
-    """
+CODE: {otp_code}
+"""
 
     params = {
         'sender': SENDER_NUMBER,
@@ -98,35 +90,3 @@ def send_otp(phone_number, otp_code):
 
 def generate_otp():
     return str(random.randint(100000, 999999))
-
-
-
-# def register(request):
-#     if request.method == 'POST':
-#         form = PhoneForm(request.POST)
-#         if form.is_valid():
-#             phone_number = form.cleaned_data['phone_number']
-#             otp_code = generate_otp()
-#             OTP.objects.create(phone_number=phone_number, otp_code=otp_code)
-#             send_otp(phone_number, otp_code)
-#             return redirect('verify_otp', phone_number=phone_number)
-#     else:
-#         form = PhoneForm()
-#     return render(request, 'register.html', {'form': form})
-
-# def verify_otp(request, phone_number):
-#     if request.method == 'POST':
-#         form = OTPForm(request.POST)
-#         if form.is_valid():
-#             otp_code = form.cleaned_data['otp_code']
-#             otp = OTP.objects.filter(phone_number=phone_number, otp_code=otp_code).first()
-#             if otp and otp.is_valid():
-#                 # Proceed with registration or login
-#                 user = User.objects.create(username=phone_number)
-#                 # Perform additional steps as needed
-#                 return redirect('success')
-#             else:
-#                 form.add_error('otp_code', 'Invalid or expired OTP')
-#     else:
-#         form = OTPForm()
-#     return render(request, 'verify_otp.html', {'form': form, 'phone_number': phone_number})

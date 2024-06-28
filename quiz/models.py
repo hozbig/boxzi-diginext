@@ -280,8 +280,8 @@ class PersonalTest(models.Model):
     assessment_obj_id = models.CharField(max_length=50, null=True, blank=True) # Andaze return this code to us for tracking the user exam response: (evaluationsForPartner) (value: data.evaluationsForPartner.id)
     assessment_obj_name = models.CharField(max_length=50, null=True, blank=True) # Andaze return this type to us for tracking the user exam response: (evaluationsForPartner) (value: data.evaluationsForPartner.assessmentObj.name)
     
-    first_response_of_sending_information_is_accepted = models.BooleanField(default=True)
-    final_user_result_url = models.URLField(max_length=500, null=True, blank=True)
+    first_response_of_sending_information_is_accepted = models.BooleanField(default=True, verbose_name="accepted")
+    final_user_result_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="result")
 
     created_time = models.DateTimeField(auto_now_add=True, null=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, null=True, verbose_name="زمان بروزرسانی")

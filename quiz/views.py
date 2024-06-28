@@ -9,9 +9,9 @@ from content.models import Collection, Road
 from team.models import RoadRegistration
 from django.http import HttpResponseRedirect
 from account.models import User
-import uuid
 
-from .andaze import send_user_information
+
+from .andaze import send_user_information, get_user_data
 from notifier.sms import send_messages
 from .models import Exam, UserExamAnsewrHistory, Answer, PreRegisterTask, PreRegisterTaskResponse, PersonalTest, PreRegisterTaskQuestion
 from .forms import PreRegisterTaskResponseCreateForm, PreRegisterTaskResponseUpdateForm
@@ -287,8 +287,14 @@ class PersonalTestsResult(LoginRequiredMixin, View):
             user = User.objects.get(uuid=user_uuid)
         except User.DoesNotExist:
             raise Http404("Given query not found....")
+        
+        obj = PersonalTest.objects.filter(user=user, first_response_of_sending_information_is_accepted=True).last()
+        
+        res = get_user_data(user)
+        obj.final_user_result_url = res
+        obj.save()
 
-        self.context["object"] = PersonalTest.objects.filter(user=user)
+        self.context["object"] = obj
         return render(request, self.template_name, self.context)
 
 
