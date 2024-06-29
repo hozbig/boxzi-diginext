@@ -221,7 +221,9 @@ class PreRegisterTaskQuestion(models.Model):
     pre_register = models.ForeignKey(PreRegisterTask, verbose_name="آزمون", on_delete=models.CASCADE, related_name="pre_register_of_pre_register_task_question",)
 
     title = models.CharField(max_length=255, verbose_name="عنوان")
-    text = QuillField(verbose_name="عنوان")
+    text = QuillField(verbose_name="متن سوال")
+
+    aparat_embed_code = models.CharField(verbose_name="لینک embed آپارات", max_length=255, null=True, blank=True)
 
     accelerator = models.ForeignKey("company.Center", related_name="accelerator_of_pre_register_task_question", verbose_name="برگزارکننده", null=True, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True, null=True, verbose_name="زمان ساخت")

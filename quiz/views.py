@@ -298,16 +298,34 @@ class PersonalTestsResult(LoginRequiredMixin, View):
         return render(request, self.template_name, self.context)
 
 
+def find_the_current_question(questions, user):
+    for question in questions:
+        print("------ question")
+        print(question.title)
+        is_response_exists = PreRegisterTaskResponse.objects.filter(question=question, user=user).exists()
+        if not is_response_exists:
+            return question
+
 class PreRegisterChallenges(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-challenge.html"
     form_class = PreRegisterTaskResponseCreateForm
     context = {}
     
-    def get(self, request, task_uuid, road_uuid):
+    def get(self, request, road_uuid):
         road = Road.objects.get(uuid=road_uuid)
         self.context["title"] = "تست ورودی"
         self.context["exam_form"] = self.form_class
         self.context["road"] = road
+        if request.user.type == "b":
+            questions = road.pre_register_task_for_business_side.pre_register_of_pre_register_task_question.all()
+            self.context["questions"] = questions
+            self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+            self.context["questions_type"] = "Business"
+        elif request.user.type == "t":
+            questions = road.pre_register_task.pre_register_of_pre_register_task_question.all()
+            self.context["questions"] = questions
+            self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+            self.context["questions_type"] = "Tech"
         return render(request, self.template_name, self.context)
     
 def save_task_question_response(request, task_uuid, road_uuid):
@@ -337,7 +355,6 @@ def save_task_question_response(request, task_uuid, road_uuid):
     else:
         form = PreRegisterTaskResponseCreateForm(form_copy)
 
-    print(form)
     if form.is_valid():
         form.save()
         messages.success(request, "پاسخ شما به چالش با موفقیت ثبت شد")

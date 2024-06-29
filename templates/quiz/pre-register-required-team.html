@@ -152,11 +152,7 @@
                                         <h3 class="card-title font-weight-bold">چالش ورودی</h3>
                                     </div>
                                     <div class="col-12">
-                                        {% if registration.user.type == "b" %}
-                                        <a href="{% url "quiz:pre-register-challenge" task_business_side.uuid road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
-                                        {% else %}
-                                        <a href="{% url "quiz:pre-register-challenge" task.uuid road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
-                                        {% endif %}
+                                        <a href="{% url "quiz:pre-register-challenge" road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
                                     </div>
                                 </div>
                             </div>

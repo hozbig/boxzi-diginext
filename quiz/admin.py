@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.utils.safestring import mark_safe
 
 from .andaze import get_user_data
 
@@ -14,9 +15,6 @@ from .models import (
     PersonalTest
 )
 
-admin.site.register(PreRegisterTask)
-admin.site.register(PreRegisterTaskQuestion)
-admin.site.register(PreRegisterTaskResponse)
 admin.site.register(ExamOrder)
 class ExamAdmin(admin.ModelAdmin):
     list_display = ["name", "medals", "uuid"]
@@ -56,7 +54,7 @@ admin.site.register(UserExamAnsewrHistory, UserExamAnsewrHistoryAdmin)
 
 
 class PersonalTestAdmin(admin.ModelAdmin):
-    list_display = ["user", "reference_id", "first_response_of_sending_information_is_accepted", "final_user_result_url"]
+    list_display = ["user", "reference_id", "first_response_of_sending_information_is_accepted", "final_user_result_url_as_link"]
     actions = ("get_user_test_result", "null_result")
 
     @admin.action(description='دریافت نتیجه آزمون کاربر')
@@ -74,5 +72,20 @@ class PersonalTestAdmin(admin.ModelAdmin):
             obj.save()
         messages.success(request, "دستور با موفقیت اجرا شد!")
 
+    def final_user_result_url_as_link(self, obj):
+        if obj.final_user_result_url:
+            return mark_safe(f'<a href="{obj.final_user_result_url}" target="_blank">لینک مشاهده آزمون </a>')
+        return obj.final_user_result_url
+
 
 admin.site.register(PersonalTest, PersonalTestAdmin)
+
+
+class PreRegisterTaskQuestionAdmin(admin.ModelAdmin):
+    list_display = ["title", "pre_register",]
+
+
+admin.site.register(PreRegisterTaskQuestion, PreRegisterTaskQuestionAdmin)
+
+admin.site.register(PreRegisterTask)
+admin.site.register(PreRegisterTaskResponse)

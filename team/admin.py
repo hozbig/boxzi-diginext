@@ -25,7 +25,17 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(RoadRegistration)
 class RoadRegistrationAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        "user_phone_number",
+        "user",
+        "team",
+        "team_or_individual",
+        "complete_registration_date",
+    ]
+    list_filter = ["status_user_state", "team", "status",]
+
+    def user_phone_number(self, obj):
+        return obj.user.phone_number
 
 
 @admin.register(TeamMember)
