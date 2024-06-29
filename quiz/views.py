@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -107,24 +107,6 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         self.context["task"] = task
         self.context["task_business_side"] = task_business_side
         self.context["road"] = road
-
-        count_of_t_question = task.pre_register_of_pre_register_task_question.count()
-        count_of_b_question = task_business_side.pre_register_of_pre_register_task_question.count()
-        user_response_count = user.user_of_pre_register_task_response.count()
-
-        if user.user_of_road_registration.first().team_or_individual == "i":
-            if user.type == "t":
-                if (count_of_t_question - user_response_count) < 1:
-                    self.context["challenge_response"] = True
-                else:
-                    self.context["challenge_response"] = False
-            elif user.type == "b":
-                if (count_of_b_question - user_response_count) < 1:
-                    self.context["challenge_response"] = True
-                else:
-                    self.context["challenge_response"] = False
-
-                    
         return render(request, self.template_name, self.context)
     
     def post(self, request, task_uuid, road_uuid):
@@ -320,34 +302,46 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
     context = {}
     
     def get(self, request, road_uuid):
-        road = Road.objects.get(uuid=road_uuid)
-        self.context["title"] = "تست ورودی"
-        self.context["next_url"] = request.GET.get('next')
-        self.context["exam_form"] = self.form_class
-        self.context["road"] = road
-        if request.user.type == "b":
-            questions = road.pre_register_task_for_business_side.pre_register_of_pre_register_task_question.all()
-            self.context["questions"] = questions
-            question_uuid = request.GET.get('quid', None)
+            road_registration_obj = request.user.user_of_road_registration.first()
+            next_url = request.GET.get('next')
+            if not road_registration_obj.is_valid_registration_period_for_challenge() and not road_registration_obj.is_challenge_complete():
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect("router")
+        
+            road = get_object_or_404(Road, uuid=road_uuid)
+
+            self.context = {
+                "title": "تست ورودی",
+                "next_url": next_url,
+                "exam_form": self.form_class,
+                "road": road,
+            }
+
+            if request.user.type == "b":
+                questions = road.pre_register_task_for_business_side.pre_register_of_pre_register_task_question.all()
+                self.context.update({
+                    "questions": questions,
+                    "questions_type": "Business",
+                })
+            elif request.user.type == "t":
+                questions = road.pre_register_task.pre_register_of_pre_register_task_question.all()
+                self.context.update({
+                    "questions": questions,
+                    "questions_type": "Tech",
+                })
+
+            question_uuid = request.GET.get('quid')
             if question_uuid:
                 try:
                     self.context["current_question"] = PreRegisterTaskQuestion.objects.get(uuid=question_uuid)
-                except:
+                except PreRegisterTaskQuestion.DoesNotExist:
                     self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+
             self.context["count_of_responses"] = count_of_user_question_response(questions=questions, user=request.user)
-            self.context["questions_type"] = "Business"
-        elif request.user.type == "t":
-            questions = road.pre_register_task.pre_register_of_pre_register_task_question.all()
-            self.context["questions"] = questions
-            question_uuid = request.GET.get('quid', None)
-            if question_uuid:
-                try:
-                    self.context["current_question"] = PreRegisterTaskQuestion.objects.get(uuid=question_uuid)
-                except:
-                    self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
-            self.context["count_of_responses"] = count_of_user_question_response(questions=questions, user=request.user)
-            self.context["questions_type"] = "Tech"
-        return render(request, self.template_name, self.context)
+
+            return render(request, self.template_name, self.context)
     
 def save_task_question_response(request, task_uuid, road_uuid):
     task = PreRegisterTask.objects.get(uuid=task_uuid)

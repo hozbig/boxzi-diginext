@@ -142,17 +142,32 @@
             {% comment %} ================ INDIVIDUAL ================ {% endcomment %}
             {% if registration.team_or_individual == "i" %}
                 {% comment %} Intro challenge {% endcomment %}
-                {% if not challenge_response %}
+                {% if not registration.is_challenge_complete %}
                 <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
-                    <div class="card text-white bg-transparent border border-info text-center">
+                    <div class="card text-white bg-transparent border border-{% if registration.is_valid_registration_period_for_challenge < 1 %}danger{% else %}info{% endif %} text-center">
                         <div class="card-content d-flex ">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 mb-50">
-                                        <h3 class="card-title font-weight-bold">چالش ورودی</h3>
+                                        <h3 class="card-title font-weight-bold">چالش ورودی
+                                            <button class="btn text-nowrap d-inline-block" type="button">
+                                                <span class="tf-icons ti-sm ti ti-clock"></span>
+                                                {% if registration.is_valid_registration_period_for_challenge > 2 %}
+                                                <span class="badge rounded-pill bg-label-success badge-notifications">{{registration.is_valid_registration_period_for_challenge}}</span>
+                                                {% elif registration.is_valid_registration_period_for_challenge < 2 and registration.is_valid_registration_period_for_challenge > 0 %}
+                                                <span class="badge rounded-pill bg-label-warning badge-notifications">{{registration.is_valid_registration_period_for_challenge}}</span>
+                                                {% else %}
+                                                <span class="badge rounded-pill bg-label-danger badge-notifications">{{registration.is_valid_registration_period_for_challenge}}</span>
+                                                {% endif %}
+                                            </button>
+                                        </h3>
                                     </div>
                                     <div class="col-12">
+                                        {% if registration.is_valid_registration_period_for_challenge < 1 %}
+                                        <a class="btn btn-label-danger text-danger btn-darken-3 waves-effect waves-light">اتمام مهلت انجام</a>
+                                        {% else %}
                                         <a href="{% url "quiz:pre-register-challenge" road.uuid %}?next={{request.path}}" class="btn btn-label-info btn-darken-3 waves-effect waves-light">شروع چالش</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

@@ -194,7 +194,11 @@ class RoadRegistration(models.Model):
     )
     status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
 
+    # validity_pride_days = validity_period_days
+    # for all process in user request
     validity_pride_days = models.PositiveIntegerField(verbose_name="مهلت تکمیل درخواست (به روز)", default=10)
+    # for complete the challenge
+    validity_pride_days_for_challenge = models.PositiveIntegerField(verbose_name="مهلت تکمیل درخواست (به روز)", default=3)
     complete_registration_date = models.DateField("تاریخ تکمیل اطلاعات توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
@@ -239,11 +243,29 @@ class RoadRegistration(models.Model):
             days_passed = (date.today() - self.complete_registration_date).days
             return self.validity_pride_days - days_passed
         
+    def is_valid_registration_period_for_challenge(self):
+        """_summary_
+
+        Returns:
+            False (boolean): It will be returned if the user registration is not complete.
+            'True' (string): It mean user complete the registration.
+            __int__ : It show the days passed from the registration date. This is obtained by subtracting the user's registration completion date from today's date.
+        """
+        
+        if self.client_last_response_date:
+            return "True"
+        
+        if self.complete_registration_date is None:
+            return False  # or True depending on your requirement when there's no start date
+
+        days_passed = (date.today() - self.complete_registration_date).days
+        return self.validity_pride_days_for_challenge - days_passed
+
     def days_to_complete_registration(self):
         try: # If registration for a team
             team_owner = self.team.team_of_team_member.filter(is_owner=True).first().user
             team_owner_complete_registration_date = team_owner.user_of_road_registration.first().complete_registration_date
-            team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
+            # team_owner_validity_pride_days = team_owner.user_of_road_registration.first().validity_pride_days
 
             if team_owner_complete_registration_date is None:
                 return False 
@@ -325,3 +347,19 @@ class RoadRegistration(models.Model):
             return is_profile_complete and has_personal_test and has_challenge_response
             
         return None
+
+    def is_challenge_complete(self):
+        user = self.user
+        road = self.road
+        task = road.pre_register_task
+        task_business_side = road.pre_register_task_for_business_side
+
+        count_of_questions = 0
+        if user.type == "t":
+            count_of_questions = task.pre_register_of_pre_register_task_question.count()
+        elif user.type == "b":
+            count_of_questions = task_business_side.pre_register_of_pre_register_task_question.count()
+
+        user_response_count = user.user_of_pre_register_task_response.count()
+
+        return (count_of_questions - user_response_count) < 1

@@ -88,7 +88,7 @@
                                     <a href="{{request.path}}?{% if next_url %}next={{next_url}}&{% endif %}quid={{question.uuid}}" class="form-check d-flex align-items-center form-check-success mb-3">
                                         <input class="form-check-input" id="defaultCheck{{forloop.counter}}" type="checkbox" disabled {% if question|is_user_answer_to_question:request.user %}checked{% endif %}>
                                         <div class="ms-3">
-                                            <span class="mb-0 h6 text-primary">{{forloop.counter}}. {{question.title}}</span>
+                                            <span class="mb-0 h6 text-primary {% if question.uuid == current_question.uuid %}mark{% endif %}">{{forloop.counter}}. {{question.title}}</span>
                                         </div>
                                     </a>
                                     {% if not forloop.last %}
