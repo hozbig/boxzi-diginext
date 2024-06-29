@@ -49,7 +49,7 @@
                         {% csrf_token %}
                         <input name="pre_register" value="{{acc_object.id}}" hidden>
                         {% for field in question_form %}
-                            {% if not field.name in "pre_register accelerator" %}
+                            {% if not field.name in "pre_register accelerator aparat_embed_code" %}
                             <div class="col-md-12 mt-2">
                                 {{ field|as_crispy_field }}
                             </div>

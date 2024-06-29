@@ -300,8 +300,6 @@ class PersonalTestsResult(LoginRequiredMixin, View):
 
 def find_the_current_question(questions, user):
     for question in questions:
-        print("------ question")
-        print(question.title)
         is_response_exists = PreRegisterTaskResponse.objects.filter(question=question, user=user).exists()
         if not is_response_exists:
             return question
@@ -383,7 +381,6 @@ class PreRegisterChallengesUpdate(LoginRequiredMixin, View):
         road = Road.objects.get(uuid=road_uuid)
 
         form = self.form_class(request.POST, request.FILES, instance=task)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "پاسخ شما به چالش با موفقیت ویرایش شد")

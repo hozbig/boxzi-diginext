@@ -393,7 +393,6 @@ class ProductManagements(LoginRequiredMixin, View):
         form_copy.update({"user": request.user,})
 
         form = self.form_class(form_copy, request.FILES)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "محصول شما موفقیت ثبت شد")
@@ -452,7 +451,6 @@ def save_product(request):
     form_copy.update({"user": request.user,})
 
     form = PlanCreateForm(form_copy, request.FILES)
-    print(form)
     if form.is_valid():
         form.save()
         messages.success(request, "محصول شما با موفقیت ثبت شد")

@@ -116,25 +116,17 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
                 pass
 
             has_any_otp = OTP.objects.filter(phone_number=phone_number).exists()
-            print("======================= 1 =======================")
             if has_any_otp:
-                print("======================= 2 =======================")
                 otp_object = OTP.objects.filter(phone_number=phone_number).last()
-                print(f"======================= {otp_object.is_valid()} =======================")
                 if not otp_object.is_valid():
-                    print(f"======================= {otp_object.is_valid()} =======================")
                     generated_otp = generate_otp()
                     OTP.objects.create(otp_code=generated_otp, phone_number=phone_number)
-                    print("======================= 3 =======================")
                     send_otp(phone_number, generated_otp)
                     messages.info(request, f"کد یک بارمصرف برای شماره '{phone_number}' پیامک شد")
-                    print("======================= 4 =======================")
             else:
-                print("======================= 5 =======================")
                 generated_otp = generate_otp()
                 OTP.objects.create(otp_code=generated_otp, phone_number=phone_number)
                 send_otp(phone_number, generated_otp)
-                print("======================= 6 =======================")
                 messages.info(request, f"کد یک بارمصرف برای شماره '{phone_number}' پیامک شد")
         except:
             pass
@@ -459,7 +451,6 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
                         pre_register_change=pre_register_challenge,
                     )
             except Exception as e:
-                print(f"Error saving response: {e}")
 
         messages.success(request, "عملیات با موفقیت انجام شد")
         return redirect(reverse('account:judgment-page', kwargs={'user_uuid': user_uuid}))
