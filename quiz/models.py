@@ -263,7 +263,10 @@ class PreRegisterTaskResponse(models.Model):
         verbose_name_plural = "پاسخ های کاربر به سوال های آزمون"
 
     def __str__(self) -> str:
-        return f'پاسخ "{self.user.get_full_name()}"  به سوال  "{self.question.title}"  از آزمون  "{self.question.pre_register.title}"'
+        try:
+            return f'پاسخ "{self.user.get_full_name()}"  به سوال  "{self.question.title}"  از آزمون  "{self.question.pre_register.title}"'
+        except:
+            return f'پاسخ "{self.user.get_full_name()}"'
 
 
 class PersonalTest(models.Model):

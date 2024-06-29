@@ -303,6 +303,16 @@ def find_the_current_question(questions, user):
         is_response_exists = PreRegisterTaskResponse.objects.filter(question=question, user=user).exists()
         if not is_response_exists:
             return question
+        
+
+def count_of_user_question_response(questions, user):
+    for question in questions:
+        counter = 0
+        is_response_exists = PreRegisterTaskResponse.objects.filter(question=question, user=user).exists()
+        if is_response_exists:
+            counter += 1
+    return counter
+
 
 class PreRegisterChallenges(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-challenge.html"
@@ -312,17 +322,30 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
     def get(self, request, road_uuid):
         road = Road.objects.get(uuid=road_uuid)
         self.context["title"] = "تست ورودی"
+        self.context["next_url"] = request.GET.get('next')
         self.context["exam_form"] = self.form_class
         self.context["road"] = road
         if request.user.type == "b":
             questions = road.pre_register_task_for_business_side.pre_register_of_pre_register_task_question.all()
             self.context["questions"] = questions
-            self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+            question_uuid = request.GET.get('quid', None)
+            if question_uuid:
+                try:
+                    self.context["current_question"] = PreRegisterTaskQuestion.objects.get(uuid=question_uuid)
+                except:
+                    self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+            self.context["count_of_responses"] = count_of_user_question_response(questions=questions, user=request.user)
             self.context["questions_type"] = "Business"
         elif request.user.type == "t":
             questions = road.pre_register_task.pre_register_of_pre_register_task_question.all()
             self.context["questions"] = questions
-            self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+            question_uuid = request.GET.get('quid', None)
+            if question_uuid:
+                try:
+                    self.context["current_question"] = PreRegisterTaskQuestion.objects.get(uuid=question_uuid)
+                except:
+                    self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+            self.context["count_of_responses"] = count_of_user_question_response(questions=questions, user=request.user)
             self.context["questions_type"] = "Tech"
         return render(request, self.template_name, self.context)
     

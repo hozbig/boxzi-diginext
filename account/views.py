@@ -451,6 +451,7 @@ class JudgmentPage(LoginRequiredMixin, RefereeAccessMixin, View):
                         pre_register_change=pre_register_challenge,
                     )
             except Exception as e:
+                print(f"Error saving response: {e}")
 
         messages.success(request, "عملیات با موفقیت انجام شد")
         return redirect(reverse('account:judgment-page', kwargs={'user_uuid': user_uuid}))

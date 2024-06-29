@@ -20,42 +20,53 @@
         <div class="card-body row g-3">
             <div class="col-lg-8">
                 {% if current_question %}
-                <div class="d-flex justify-content-between align-items-center flex-wrap mb-2 gap-1">
-                    <div class="me-1">
-                        <h5 class="mb-1">{{current_question.title}}</h5>
-                        <p class="mb-1">در دسته بندی:
-                            <span class="fw-medium"> {{current_question.pre_register.title}}</span>
-                        </p>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-2 gap-1">
+                        <div class="me-1">
+                            <h5 class="mb-1">{{current_question.title}}</h5>
+                            <p class="mb-1">در دسته بندی:
+                                <span class="fw-medium"> {{current_question.pre_register.title}}</span>
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-label-danger">{{questions_type}}</span>
+                        </div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-label-danger">{{questions_type}}</span>
-                        {% comment %} <span class="badge bg-label-danger">{% if questions_type == "Tech" %}<i class="ti ti-keyboard"></i>{% else %}<i class="ti ti-report-money"></i>{% endif %}</span> {% endcomment %}
+                    <div class="card academy-content shadow-none border">
+                        {% if current_question.aparat_embed_code %}
+                        <div class="p-2">
+                            <div class="cursor-pointer">
+                                {{current_question.aparat_embed_code|safe}}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="mb-2">توضیحات سوال</h5>
+                            <p class="mb-0 pt-1">{{current_question.text.html|safe}}</p>
+                            <hr class="my-4">
+                            <h5>{% if current_question|is_user_answer_to_question:request.user %}<i class="ti ti-circle-check text-success"></i> ویرایش پاسخ{% else %}ثبت پاسخ{% endif %}</h5>
+                            <form method="POST" action={% url "quiz:save_task_question_response" road.pre_register_task.uuid road.uuid %}>
+                                {% csrf_token %}
+                                <input name="question" value="{{current_question.id}}" hidden>
+                                <textarea name="text" class="form-control mb-3" rows="10" placeholder="پاسخ خود را اینجا بنویسید...">{{current_question|is_user_answer_to_question:request.user}}</textarea>
+                                {% comment %} <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question.task_of_pre_register_task_response.first.text}}</textarea> {% endcomment %}
+
+                                {% if current_question|is_user_answer_to_question:request.user %}
+                                <button class="btn btn-label-danger btn-block" type="submit">ویرایش پاسخ</button>
+                                {% else %}
+                                <button class="btn btn-label-success btn-block" type="submit">تایید و ارسال</button>
+                                {% endif %}
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <div class="card academy-content shadow-none border">
-                    {% if current_question.aparat_embed_code %}
-                    <div class="p-2">
-                        <div class="cursor-pointer">
-                            {{current_question.aparat_embed_code|safe}}
+                {% else %}
+                    {% if questions.count == count_of_responses %}
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <h1 class="text-warning"><i class="ti ti-xl ti-star"></i> <i class="ti ti-xl ti-star"></i> <i class="ti ti-xl ti-star"></i></h1>
+                            <h4 class="text-warning">عالی، شما تمام سوال هارو پاسخ داده اید</h4>
                         </div>
                     </div>
                     {% endif %}
-                    <div class="card-body">
-                        <h5 class="mb-2">توضیحات سوال</h5>
-                        <p class="mb-0 pt-1">{{current_question.text.html|safe}}</p>
-                        <hr class="my-4">
-                        <h5>ثبت پاسخ</h5>
-                        <form method="POST" action={% url "quiz:save_task_question_response" road.pre_register_task.uuid road.uuid %}>
-                            {% csrf_token %}
-                            <input name="question" value="{{current_question.id}}" hidden>
-                            <textarea name="text" class="form-control mb-3" rows="10" placeholder="پاسخ خود را اینجا بنویسید...">{{current_question|is_user_answer_to_question:request.user}}</textarea>
-                            {% comment %} <textarea name="text" class="form-control mb-3" rows="10" cols="50" placeholder="پاسخ خود را اینجا بنویسید...">{{question.task_of_pre_register_task_response.first.text}}</textarea> {% endcomment %}
-                            <button class="btn btn-label-success btn-block" type="submit">تایید و ارسال</button>
-                        </form>
-                    </div>
-                </div>
-                {% else %}
-                <!-- TODO: add soothing here -->
                 {% endif %}
             </div>
             <div class="col-lg-4">
@@ -74,21 +85,12 @@
                         <div class="accordion-collapse collapse show" data-bs-parent="#courseContent" id="chapterOne">
                             <div class="accordion-body py-3 border-top">
                                 {% for question in questions %}
-                                    {% if question|is_user_answer_to_question:request.user %}
-                                    <div class="form-check d-flex align-items-center form-check-success mb-3">
-                                        <input class="form-check-input" id="defaultCheck{{forloop.counter}}" type="checkbox" disabled checked>
-                                        <div class="form-check-label ms-3" for="defaultCheck{{forloop.counter}}">
-                                            <span class="mb-0 h6">{{forloop.counter}}. {{question.title}}</span>
-                                        </div>
-                                    </div>
-                                    {% else %}
-                                    <div class="form-check d-flex align-items-center mb-3">
-                                        <input class="form-check-input" id="defaultCheck{{forloop.counter}}" type="checkbox" disabled>
+                                    <a href="{{request.path}}?{% if next_url %}next={{next_url}}&{% endif %}quid={{question.uuid}}" class="form-check d-flex align-items-center form-check-success mb-3">
+                                        <input class="form-check-input" id="defaultCheck{{forloop.counter}}" type="checkbox" disabled {% if question|is_user_answer_to_question:request.user %}checked{% endif %}>
                                         <div class="ms-3">
-                                            <span class="mb-0 h6">{{forloop.counter}}. {{question.title}}</span>
+                                            <span class="mb-0 h6 text-primary">{{forloop.counter}}. {{question.title}}</span>
                                         </div>
-                                    </div>
-                                    {% endif %}
+                                    </a>
                                     {% if not forloop.last %}
                                     <hr class="my-2">
                                     {% endif %}

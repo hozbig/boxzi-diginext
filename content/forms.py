@@ -13,6 +13,7 @@ class RoadCreateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
+            self.fields[field_name].required = True
             if isinstance(field, ModelMultipleChoiceField):
                 field.widget.attrs['class'] = 'select2'
         self.fields["poster"].widget.attrs['class'] = "form-control"
@@ -30,6 +31,7 @@ class RoadUpdateForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
+            self.fields[field_name].required = True
             if isinstance(field, ModelMultipleChoiceField):
                 field.widget.attrs['class'] = 'select2'
         self.fields["poster"].widget.attrs['class'] = "form-control"
