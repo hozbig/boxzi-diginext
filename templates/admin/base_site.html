@@ -6,6 +6,11 @@
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin-overrided/css/custom.css" %}" />{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">Django admin panel</a></h1>{% endblock %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Django admin panel</a></h1>
+{% endblock %}
 
-{% block nav-global %}{% endblock %}
+{% block nav-global %}
+    {% if request.user.is_center_staff %}
+    <br><a href="{% url 'company:acc-dashboard' %}" target="_blank">ورود به داشبورد شتابدهنده</a>
+    {% endif %}
+{% endblock %}

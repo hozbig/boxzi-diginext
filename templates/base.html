@@ -58,6 +58,15 @@
             </div>
             <div class="menu-inner-shadow"></div>
             <ul class="menu-inner py-1">
+                {% if request.user.is_superuser %}
+                    <li class="menu-item {% if request.path == "/content/roads/" %}active{% endif %}">
+                        <a class="menu-link text-danger" href={% url "admin:index" %}>
+                            <i class="menu-icon tf-icons ti ti-fingerprint"></i>
+                            <div>ادمین پنل</div>
+                        </a>
+                    </li>
+                {% endif %}
+
                 {% comment %} ================== wich DASHBOARD ================== {% endcomment %}
                 {% if request.user.is_team_member %}
                 <li class="menu-item">
@@ -85,7 +94,6 @@
                 {% comment %} ================== TEAM MEMBER access ================== {% endcomment %}
                 {% if request.user.is_team_member %}
                     {% comment %} <li class="navigation-header"><span>برای شما</span></li> {% endcomment %}
-                    
                     <li class="menu-item {% if request.path == "/content/roads/" %}active{% endif %}">
                         <a class="menu-link text-success" href={% url "content:roads" %}>
                             <i class="menu-icon tf-icons ti ti-school"></i>
@@ -165,7 +173,6 @@
                         </li>
                     </ul>
                 </li>
-
                 {% endif %}
 
                 {% comment %} ================== INVESTOR access ================== {% endcomment %}
@@ -210,12 +217,9 @@
                     <!-- Search -->
                     <!-- /Search -->
                     <ul class="navbar-nav flex-row align-items-center ms-auto">
-                        <!-- Style Switcher -->
-                        <!-- / Style Switcher-->
-                        <!-- Quick links  -->
-                        <!-- Quick links -->
-                        <!-- Notification -->
-                        <!--/ Notification -->
+                        <!-- Style Switcher --><!-- / Style Switcher-->
+                        <!-- Quick links  --><!-- Quick links -->
+                        <!-- Notification --><!--/ Notification -->
                         <!-- User -->
                         <li class="nav-item navbar-dropdown dropdown-user dropdown">
                             <a class="nav-link dropdown-toggle hide-arrow" data-bs-toggle="dropdown" href="javascript:void(0);">
@@ -264,11 +268,6 @@
                         <!--/ User -->
                     </ul>
                 </div>
-                <!-- Search Small Screens -->
-                <div class="navbar-search-wrapper search-input-wrapper d-none">
-                    <input aria-label="جستجو..." class="form-control search-input container-xxl border-0" placeholder="جستجو..." type="text"/>
-                    <i class="ti ti-x ti-sm search-toggler cursor-pointer"></i>
-                </div>
             </nav>
             <!-- / Navbar -->
             <!-- Content wrapper -->
@@ -276,14 +275,9 @@
 
                 <!-- Content -->
                 <div class="container-xxl flex-grow-1 container-p-y">
-                    {% comment %} <h4 class="py-3 mb-4">
-                        <span class="text-muted fw-light">امکانات /</span>
-                        کارت‌های پایه
-                    </h4> {% endcomment %}
                     {% include "elements/breadcrumb.html" %}
 
                     {% block main %}{% endblock main %}
-
                 </div>
                 <!-- / Content -->
 
@@ -310,7 +304,6 @@
                             </div>
                         </div>
                     </div>
-                    
                 </footer>
                 <!-- / Footer -->
                 <div class="content-backdrop fade"></div>

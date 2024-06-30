@@ -135,7 +135,10 @@
 								{% for item in last_10_requests %}
 									<tr>
 										<td>{{forloop.counter|stringformat:"02d"}}</td>
-										<td class=""><a href="{% url "account:profile" item.user.uuid %}" class="">{{item.user.get_full_name}}</a></td>
+										<td class="">
+											<a href="{% url "account:profile" item.user.uuid %}" class="">{{item.user.get_full_name}}</a>
+											{% if request.user.is_superuser %}<a href={% url "admin:account_user_change" item.user.phone_number %} class="badge bg-label-dark small"><i class="ti ti-sm ti-eye"></i></a>{% endif %}
+										</td>
 										<td>
 											{% if item.team_or_individual in "t" %}
 												{% if item.team %}

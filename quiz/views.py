@@ -332,12 +332,11 @@ class PreRegisterChallenges(LoginRequiredMixin, View):
                     "questions_type": "Tech",
                 })
 
-            question_uuid = request.GET.get('quid')
+            question_uuid = request.GET.get('quid', None)
             if question_uuid:
-                try:
-                    self.context["current_question"] = PreRegisterTaskQuestion.objects.get(uuid=question_uuid)
-                except PreRegisterTaskQuestion.DoesNotExist:
-                    self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
+                self.context["current_question"] = PreRegisterTaskQuestion.objects.filter(uuid=question_uuid).first()
+            # else:
+            #     self.context["current_question"] = find_the_current_question(questions=questions, user=request.user)
 
             self.context["count_of_responses"] = count_of_user_question_response(questions=questions, user=request.user)
 

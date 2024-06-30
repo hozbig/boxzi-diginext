@@ -198,7 +198,7 @@ class RoadRegistration(models.Model):
     # for all process in user request
     validity_pride_days = models.PositiveIntegerField(verbose_name="مهلت تکمیل درخواست (به روز)", default=10)
     # for complete the challenge
-    validity_pride_days_for_challenge = models.PositiveIntegerField(verbose_name="مهلت تکمیل درخواست (به روز)", default=3)
+    validity_pride_days_for_challenge = models.PositiveIntegerField(verbose_name="مهلت تکمیل چالش (به روز)", default=3)
     complete_registration_date = models.DateField("تاریخ تکمیل اطلاعات توسط کاربر", auto_now=False, auto_now_add=False, null=True, blank=True)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="زمان ساخت")
     last_update_time = models.DateTimeField(auto_now=True, verbose_name="زمان آخرین بروزرسانی")
