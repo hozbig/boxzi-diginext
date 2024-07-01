@@ -3,9 +3,7 @@
 {% load static %}
 {% load tag_library %}
 
-{% block page_css %}
-<link rel="stylesheet" type="text/css" href={% static "admin-theme/app-assets/vendors/css/tables/datatable/datatables.min.css" %}>
-{% endblock page_css %}
+{% block page_css %}{% endblock page_css %}
 
 {% block main %}
 <div class="row">
@@ -76,15 +74,22 @@
             <div class="card-content">
                 <div class="card-body card-dashboard">
                     <div class="table-responsive">
-                        <table class="table zero-configuration">
+
+						<div class="mb-4">
+							<input type="text" class="form-control tablesearch-input" data-tablesearch-table="#data-table"  placeholder="عبارت خودرا جهت جستجو وارد کنید">
+						</div>
+
+                        <table class="table zero-configuration tablesearch-table" id="data-table">
                             <thead>
-                                <tr class="table-primary">
-									<th>#</th>
-									<th>نام و نام خانوادگی</th>
-                                    <th>تیم</th>
-                                    <th>ایده</th>
-                                    <th class="text-center">تکمیل و ارسال</th>
-                                    <th class="text-center">مهلت باقی مانده</th>
+                                <tr class="table-primary cursor-pointer user-select-none">
+									<th># <i class="ti ti-switch-vertical"></i></th>
+									<th>نام و نام خانوادگی <i class="ti ti-switch-vertical"></i></th>
+                                    <th class="text-center">تیم <i class="ti ti-switch-vertical"></i></th>
+                                    <th class="text-center">ایده <i class="ti ti-switch-vertical"></i></th>
+                                    <th class="text-center">آزمون <i class="ti ti-switch-vertical"></i></th>
+                                    <th class="text-center">چالش <i class="ti ti-switch-vertical"></i></th>
+                                    <th class="text-center">تکمیل و ارسال <i class="ti ti-switch-vertical"></i></th>
+                                    <th class="text-center">مهلت باقی مانده <i class="ti ti-switch-vertical"></i></th>
                                     <th class="text-center">عملیات</th>
                                 </tr>
                             </thead>
@@ -92,12 +97,19 @@
 								{% comment %} NOTICE: this file use this <table> template too (./team-management.html) {% endcomment %}
 								{% for item in object_list %}
 									<tr>
-										<td>{{forloop.counter|stringformat:"02d"}}</td>
-										<td class=""><a href="{% url "account:profile" item.user.uuid %}" class="">{{item.user.get_full_name}}</a></td>
-										<td>
+										<td class="user-select-none">{{forloop.counter|stringformat:"02d"}}</td>
+
+										<!-- Full name of the request sender -->
+										<td class="user-select-all">
+											<a href="{% url "account:profile" item.user.uuid %}" class="">{{item.user.get_full_name}}</a>
+										</td>
+										<!-- Full name of the request sender -->
+
+										<!-- team or person -->
+										<td class="text-center user-select-none">
 											{% if item.team_or_individual in "t" %}
 												{% if item.team %}
-												{{item.team.name}}
+												<span hidden>team</span>{{item.team.name|truncatewords:3}}
 												{% else %}
 												<span class="text-muted">تیم ساخته نشده!</span>
 												{% endif %}	
@@ -105,64 +117,179 @@
 												<span class="badge bg-label-warning">شخص</span>
 											{% endif %}
 										</td>
-										<td>
+										<!-- team or person -->
+
+										<!-- Is the idea or product registered? -->
+										<td class="text-center user-select-none">
 											{% if item.team_or_individual in "t" %}
 												{% if item.team and item.team.team_of_plan.exists %}
-												<span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
+												<span hidden>1</span><span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
 												{% else %}
-												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}	
 											{% else %}
 												{% if item.user.user_of_plan.exists %}
-												<span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
+												<span hidden>1</span><span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
 												{% else %}
-												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% endif %}
 										</td>
-										<td class="text-center">
+										<!-- Is the idea or product registered? -->
+
+										<!-- Is personal-test? -->
+										<td class="text-center user-select-none">
+											{% if item.user.user_of_personal_test.first.final_user_result_url %}
+												<span hidden>1</span><span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
+											{% else %}
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+											{% endif %}
+										</td>
+										<!-- Is personal-test? -->
+
+										<!-- Is challenge done? -->
+										<td class="text-center user-select-none">
+											{% if item.is_challenge_complete  %}
+												<span hidden>1</span><span class="badge bg-label-success"><i class="ti ti-xs ti-checkbox"></i></span>
+											{% else %}
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+											{% endif %}
+										</td>
+										<!-- Is challenge done? -->
+
+										<!-- Is register request complete? -->
+										<td class="text-center user-select-none">
 											{% comment %} NOTICE: this file use this <table> template too (./team-management.html) {% endcomment %}
 											{% if item.team_or_individual == "t" %}
 												{% if item.is_complete_registration_for_coordinator %}
-												<span class="badge bg-label-success">{% if item.client_last_response_date %}{{item.client_last_response_date|to_jalali}}{% else %}<span class="text-secondary small">ارسال نشده</span>{% endif %}</span>
+												<span hidden>1</span><span class="badge bg-label-success">{% if item.client_last_response_date %}{{item.client_last_response_date|to_jalali}}{% else %}<span class="text-secondary small">ارسال نشده</span>{% endif %}</span>
 												{% else %}
-												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% elif item.team_or_individual == "a" %}
 												{% if item.is_complete_registration_for_team_member %}
-												<span class="badge bg-label-success">{% if item.client_last_response_date %}{{item.client_last_response_date|to_jalali}}{% else %}<span class="text-secondary small">ارسال نشده</span>{% endif %}</span>
+												<span hidden>1</span><span class="badge bg-label-success">{% if item.client_last_response_date %}{{item.client_last_response_date|to_jalali}}{% else %}<span class="text-secondary small">ارسال نشده</span>{% endif %}</span>
 												{% else %}
-												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% elif item.team_or_individual == "i" %}
 												{% if item.is_complete_registration_for_individual %}
-												<span class="badge bg-label-success">{% if item.client_last_response_date %}{{item.client_last_response_date|to_jalali}}{% else %}<span class="text-secondary small">ارسال نشده</span>{% endif %}</span>
+												<span hidden>1</span><span class="badge bg-label-success">{% if item.client_last_response_date %}{{item.client_last_response_date|to_jalali}}{% else %}<span class="text-secondary small">ارسال نشده</span>{% endif %}</span>
 												{% else %}
-												<span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
+												<span hidden>0</span><span class="badge bg-label-danger"><i class="ti ti-xs ti-xbox-x"></i></span>
 												{% endif %}
 											{% endif %}
 										</td>
-										<td class="text-center">
+										<!-- Is register complete? -->
+
+										<!-- Show the remaining deadline -->
+										<td class="text-center user-select-none">
 											{% comment %} NOTICE: this file use this <table> template too (./team-management.html) {% endcomment %}
 											{% if not item.complete_registration_date %}
-											<span class="badge bg-label-danger">ثبت نام ناقص</span>
+											<span hidden>0</span><span class="badge bg-label-danger">{{item.get_status_user_state_display}}</span>
 											{% elif item.is_valid_registration_period == "True" %}
-											<span class="badge bg-label-success">تکمیل</span>
+											<span hidden>1</span><span class="badge bg-label-success">تکمیل</span>
 											{% elif item.is_valid_registration_period > 3 %}
-											<span class="badge bg-label-success">{{item.is_valid_registration_period}} روز</span>
+											<span hidden>1</span><span class="badge bg-label-success">{{item.is_valid_registration_period}} روز</span>
 											{% elif item.is_valid_registration_period < 3 and item.is_valid_registration_period > 0 %}
 											<span class="badge bg-label-warning">{{item.is_valid_registration_period}} روز</span>
 											{% else %}
-											<span class="badge bg-label-danger">{{item.is_valid_registration_period}} روز</span>
+											<span hidden>0</span><span class="badge bg-label-danger">{{item.is_valid_registration_period}} روز</span>
 											{% endif %}
 										</td>
-										<td class="text-center">
+										<!-- Show the remaining deadline -->
+
+										<!-- Operations button -->
+										<td class="text-center user-select-none">
 											<a href={% url "team:registration-detail" item.uuid %} class="badge bg-label-info">مشاهده <i class="fa fa-eye"></i></a>
+											
+											{% if request.user.is_superuser %}
+											<small>
+												<a href={% url "admin:account_user_change" item.user.phone_number %} target="_blank" class="badge bg-label-dark">فرد <i class="ti ti-spy"></i></a>
+												<a href={% url "admin:team_roadregistration_change" item.id %} target="_blank" class="badge bg-label-dark">درخواست <i class="ti ti-spy"></i></a>
+											</small>
+											{% endif %}
 										</td>
+										<!-- Operations button -->
 									</tr>
 								{% endfor %}
                             </tbody>
                         </table>
+
+						<div class="border rounded p-2 p-md-4 mt-3">
+							<h5 class="mb-2 text-warning"> <i class="ti ti-question-mark"></i> راهنمای مراحل</h5>
+							<div class="accordion" id="accordionWithIcon">
+								<div class="card accordion-item">
+									<h2 class="accordion-header d-flex align-items-center">
+										<button aria-expanded="false" class="accordion-button collapsed text-secondary" data-bs-target="#accordionWithIcon-1" data-bs-toggle="collapse" type="button">
+											<i class="ti ti-number-2 ti-xs me-2 text-dark"></i>
+											مرحله دوم تکمیل ثبت نام <span class="fw-bold text-dark mx-2">(اطلاعات فردی شما)</span>
+										</button>
+									</h2>
+									<div class="accordion-collapse collapse" id="accordionWithIcon-1">
+										<div class="accordion-body">
+											<h6 class="mt-3">اولین مرحله تکمیل اطلاعات میباشد. قبل این مرحله کاربر فیلدهای زیررا برای ثبت شدن در پلتفرم باکس‌زی وارد کرده است:</h6>
+											<ul class="list-group list-group-timeline">
+												<li class="list-group-item list-group-timeline-danger">کد یکبارمصرف ارسال شده به موبایل</li>
+												<li class="list-group-item list-group-timeline-danger">تیم هستید یا فرد؟</li>
+												<li class="list-group-item list-group-timeline-danger">نام</li>
+												<li class="list-group-item list-group-timeline-danger">نام خانوادگی</li>
+												<li class="list-group-item list-group-timeline-danger">آدرس ایمیل</li>
+												<li class="list-group-item list-group-timeline-danger">گذرواژه</li>
+											</ul>
+
+											<h6 class="mt-3">و در خود مرحله کاربر باید اطلاعات زیررا وارد کند:</h6>
+											<ul class="list-group list-group-timeline">
+												<li class="list-group-item list-group-timeline-success">جنستی</li>
+												<li class="list-group-item list-group-timeline-success">تاریخ تولد</li>
+												<li class="list-group-item list-group-timeline-success">مقطع تحصیلی</li>
+												<li class="list-group-item list-group-timeline-success">محل تحصیل</li>
+												<li class="list-group-item list-group-timeline-success">استان محل سکونت</li>
+												<li class="list-group-item list-group-timeline-success">شهر محل سکونت</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="accordion-item card">
+									<h2 class="accordion-header d-flex align-items-center">
+										<button aria-expanded="false" class="accordion-button collapsed text-secondary" data-bs-target="#accordionWithIcon-2" data-bs-toggle="collapse" type="button">
+											<i class="me-2 ti ti-number-3 ti-xs text-dark"></i>
+											مرحله سوم تکمیل ثبت نام <span class="fw-bold text-dark mx-2">(تجربه‌ها و تخصص‌های)</span>
+										</button>
+									</h2>
+									<div class="accordion-collapse collapse" id="accordionWithIcon-2">
+										<div class="accordion-body">
+											<h6 class="mt-3">در این مرحله سوال های زیر از کاربر پرسیده میشود:</h6>
+											<ul class="list-group list-group-timeline">
+												<li class="list-group-item list-group-timeline-info">نقش شما (توسعه دهنده تکنولوژی / توسعه دهنده کسب و کار)</li>
+												<li class="list-group-item list-group-timeline-info">آیا به زبان برنامه نویسی مسلط هستید؟</li>
+												<li class="list-group-item list-group-timeline-info">زمینه تخصصی شما چیست؟</li>
+												<li class="list-group-item list-group-timeline-info">آیا تخصص دیگری دارید؟</li>
+												<li class="list-group-item list-group-timeline-info">فایل pdf رزومه</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="accordion-item card">
+									<h2 class="accordion-header d-flex align-items-center">
+										<button aria-expanded="false" class="accordion-button collapsed text-secondary" data-bs-target="#accordionWithIcon-3" data-bs-toggle="collapse" type="button">
+											<i class="me-2 ti ti-number-4 ti-xs text-dark"></i>
+											مرحله چهارم تکمیل ثبت نام <span class="fw-bold text-dark mx-2">(داستان استارتاپی)</span>
+										</button>
+									</h2>
+									<div class="accordion-collapse collapse" id="accordionWithIcon-3">
+										<div class="accordion-body">
+											<h6 class="mt-3">مرحله آخر تکمیل اطلاعات کاربر میباشد و بعد از انجام این مرحله کاربر برنامه داشبورد خود دسترسی خواهد داشت:</h6>
+											<ul class="list-group list-group-timeline">
+												<li class="list-group-item list-group-timeline-primary">تجربه شرکت در برنامه شتابدهی داشته اید؟</li>
+												<li class="list-group-item list-group-timeline-primary">عضو یا بنیانگذار یک استارتاپ بوده اید؟</li>
+												<li class="list-group-item list-group-timeline-primary">علت درخواست شرکت در این برنامه (به صورت متن یا ویدیو کوتاه)</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
                     </div>
                 </div>
             </div>
@@ -199,7 +326,19 @@
 {% endblock main %}
 
 {% block page_js %}
-<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/vendors/js/tables/datatable/datatables.bootstrap4.min.js" %}></script>
-<script src={% static "admin-theme/app-assets/js/scripts/datatables/datatable.js" %}></script>
+<script src={% static "assets-vuexy/js/auto-tables.js" %}></script>
+
+<script>
+	$(document).ready(function() {
+
+	  var headers = $('#data-table thead th');
+
+	  $(headers[5]).attr('data-tablesort-type', 'date');
+
+
+	  $('table').not(".tablesort").addClass('tablesort');
+	  // $('')
+
+	});
+</script>
 {% endblock page_js %}

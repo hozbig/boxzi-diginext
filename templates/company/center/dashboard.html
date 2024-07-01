@@ -45,29 +45,151 @@
 						</div>
 					</div>
 					<div class="d-flex align-items-center gap-3">
-						<span class="bg-label-danger p-2 rounded">
+						<span class="bg-label-primary p-2 rounded">
 							<i class="ti ti-box-padding ti-xl"></i>
 						</span>
 						<div class="content-right">
 							<p class="mb-0">تعداد کل درخواست ها</p>
-							<h4 class="text-danger mb-0">{{requests_count}}
+							<h4 class="text-primary mb-0">{{requests_count}}
 								<small class="text-muted">درخواست</small>
 							</h4>
 						</div>
 					</div>
 					<div class="d-flex align-items-center gap-3">
-						<span class="bg-label-info p-2 rounded">
+						<span class="bg-label-primary p-2 rounded">
 							<i class="ti ti-percentage ti-xl"></i>
 						</span>
 						<div class="content-right">
 							<p class="mb-0">درصد قبولی درخواست ها</p>
-							<h4 class="text-info mb-0">{{approve_percentage}}
+							<h4 class="text-primary mb-0">{{approve_percentage}}
 								<small class="text-muted">درصد</small>
 							</h4>
 						</div>
 					</div>
 				</div>
+
+				<h3 class="mt-4">آمار مربوط به درخواست ها</h3>
+				<div class="d-flex justify-content-between flex-wrap gap-3 me-5">
+					<div class="d-flex align-items-center gap-3 me-4 me-sm-0">
+						<span class="bg-label-primary p-2 rounded">
+							<i class="ti ti-user ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">ثبت نام های شخصی</p>
+							<h4 class="text-primary mb-0">{{personal_requests_count}}
+								<small class="text-muted">درخواست</small>
+							</h4>
+						</div>
+					</div>
+					<div class="d-flex align-items-center gap-3">
+						<span class="bg-label-primary p-2 rounded">
+							<i class="ti ti-users ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">ثبت نام های تیمی</p>
+							<h4 class="text-primary mb-0">{{team_requests_count}}
+								<small class="text-muted">درخواست</small>
+							</h4>
+						</div>
+					</div>
+					<div class="d-flex align-items-center gap-3">
+						<span class="bg-label-success p-2 rounded">
+							<i class="ti ti-heart ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">تکمیل ثبت نام</p>
+							<h4 class="text-success mb-0">{{complete_requests}}
+								<small class="text-muted">درخواست</small>
+							</h4>
+						</div>
+					</div>
+					<div class="d-flex align-items-center gap-3">
+						<span class="bg-label-danger p-2 rounded">
+							<i class="ti ti-heart-broken ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">ثبت نام ناقص</p>
+							<h4 class="text-danger mb-0">{{incomplete_requests}}
+								<small class="text-muted">درخواست</small>
+							</h4>
+						</div>
+					</div>
+				</div>
+
+				<div class="d-flex flex-wrap gap-3 me-5 mt-4">
+					<div class="d-flex align-items-center gap-3 me-4 me-sm-0">
+						<span class="bg-label-primary p-2 rounded">
+							<i class="ti ti-user ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">چالش های انجام شده</p>
+							<h4 class="text-primary mb-0">{{all_challenge}}
+								<small class="text-muted">درخواست</small>
+							</h4>
+						</div>
+					</div>
+					<div class="d-flex align-items-center gap-3 mx-5">
+						<span class="bg-label-primary p-2 rounded">
+							<i class="ti ti-users ti-xl"></i>
+						</span>
+						<div class="content-right">
+							<p class="mb-0">آزمون های شخصیت انجام شده</p>
+							<h4 class="text-primary mb-0">{{all_personal_test}}
+								<small class="text-muted">از {{personal_requests_count}} درخواست شخصی</small>
+							</h4>
+						</div>
+					</div>
+				</div>
 			</div>
+
+			<div class="d-flex flex-wrap gap-3 me-5 justify-content-center mt-5">
+				<!-- team_vs_individual_polar -->
+				<div class="d-flex align-items-center gap-3">
+					<div class="card bg-transparent shadow-none">
+						<h5 class="card-header">نسبت ثبت نام های تیمی به شخصی</h5>
+						<div class="card-body">
+							<canvas class="chartjs mb-4" data-height="350" id="team_vs_individual_polar"></canvas>
+							<ul class="doughnut-legend d-flex justify-content-around ps-0 mb-2 pt-1">
+								<li class="ct-series-0 d-flex flex-column">
+									<h5 class="mb-0">شخصی</h5>
+									<span class="badge badge-dot my-2 cursor-pointer rounded-pill" style="background-color: #FDAC34; width: 35px; height: 6px"></span>
+									{% comment %} <div class="text-muted">80 %</div> {% endcomment %}
+								</li>
+								<li class="ct-series-1 d-flex flex-column">
+									<h5 class="mb-0">تیمی</h5>
+									<span class="badge badge-dot my-2 cursor-pointer rounded-pill" style="background-color: #84D0FF; width: 35px; height: 6px"></span>
+									{% comment %} <div class="text-muted">10 %</div> {% endcomment %}
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /team_vs_individual_polar -->
+	
+				<!-- complete_vs_incomplete_polar -->
+				<div class="d-flex align-items-center gap-3">
+					<div class="card bg-transparent shadow-none">
+						<h5 class="card-header">نسبت ثبت نام های کامل به ناقص</h5>
+						<div class="card-body">
+							<canvas class="chartjs mb-4" data-height="350" id="complete_vs_incomplete_polar"></canvas>
+							<ul class="doughnut-legend d-flex justify-content-around ps-0 mb-2 pt-1">
+								<li class="ct-series-0 d-flex flex-column">
+									<h5 class="mb-0">کامل</h5>
+									<span class="badge badge-dot my-2 cursor-pointer rounded-pill bg-success" style="width: 35px; height: 6px"></span>
+									{% comment %} <div class="text-muted">80 %</div> {% endcomment %}
+								</li>
+								<li class="ct-series-1 d-flex flex-column">
+									<h5 class="mb-0">ناقص</h5>
+									<span class="badge badge-dot my-2 cursor-pointer rounded-pill bg-danger" style="width: 35px; height: 6px"></span>
+									{% comment %} <div class="text-muted">10 %</div> {% endcomment %}
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- /complete_vs_incomplete_polar -->
+			</div>
+
 		</div>
 	</div>
 	{% else %}
@@ -100,4 +222,120 @@
 </div>
 {% endblock main %}
 
-{% block page_js %}{% endblock page_js %}
+{% block page_js %}
+<script src={% static "assets-vuexy/vendor/libs/chartjs/chartjs.js" %}></script>
+
+<script>
+	  // Color Variables
+	  const purpleColor = '#836AF9',
+	  yellowColor = '#ffe800',
+	  cyanColor = '#28dac6',
+	  orangeColor = '#FF8132',
+	  orangeLightColor = '#FDAC34',
+	  oceanBlueColor = '#299AFF',
+	  greyColor = '#4F5D70',
+	  greyLightColor = '#EDF1F4',
+	  blueColor = '#2B9AFF',
+	  blueLightColor = '#84D0FF';
+  
+	let cardColor, headingColor, labelColor, borderColor, legendColor;
+</script>
+
+<script>
+	const team_vs_individual_polar = document.getElementById('team_vs_individual_polar');
+	if (team_vs_individual_polar) {
+	  const doughnutChartVar = new Chart(team_vs_individual_polar, {
+		type: 'doughnut',
+		data: {
+		  labels: ['شخصی', 'تیمی',],
+		  datasets: [
+			{
+			  data: [{{personal_requests_count}}, {{team_requests_count}}],
+			  backgroundColor: [orangeLightColor, blueLightColor],
+			  borderWidth: 0,
+			  pointStyle: 'rectRounded'
+			}
+		  ]
+		},
+		options: {
+		  responsive: true,
+		  animation: {
+			duration: 500
+		  },
+		  cutout: '0%',
+		  plugins: {
+			legend: {
+			  display: false
+			},
+			tooltip: {
+			  callbacks: {
+				label: function (context) {
+				  const label = context.labels || '',
+					value = context.parsed;
+				  const output = ' ' + label + ' : ' + value + ' درخواست';
+				  return output;
+				}
+			  },
+			  // Updated default tooltip UI
+			  rtl: isRtl,
+			  backgroundColor: cardColor,
+			  titleColor: headingColor,
+			  bodyColor: legendColor,
+			  borderWidth: 1,
+			  borderColor: borderColor
+			}
+		  }
+		}
+	  });
+	}
+</script>
+
+<script>
+	const complete_vs_incomplete_polar = document.getElementById('complete_vs_incomplete_polar');
+	if (complete_vs_incomplete_polar) {
+	  const doughnutChartVar = new Chart(complete_vs_incomplete_polar, {
+		type: 'doughnut',
+		data: {
+		  labels: ['ناقص', 'تکمیل شده',],
+		  datasets: [
+			{
+			  data: [{{incomplete_requests}}, {{complete_requests}}],
+			  backgroundColor: [config.colors.danger, config.colors.success],
+			  borderWidth: 0,
+			  pointStyle: 'rectRounded'
+			}
+		  ]
+		},
+		options: {
+		  responsive: true,
+		  animation: {
+			duration: 500
+		  },
+		  cutout: '0%',
+		  plugins: {
+			legend: {
+			  display: false
+			},
+			tooltip: {
+			  callbacks: {
+				label: function (context) {
+				  const label = context.labels || '',
+					value = context.parsed;
+				  const output = ' ' + label + ' : ' + value + ' درخواست';
+				  return output;
+				}
+			  },
+			  // Updated default tooltip UI
+			  rtl: isRtl,
+			  backgroundColor: cardColor,
+			  titleColor: headingColor,
+			  bodyColor: legendColor,
+			  borderWidth: 1,
+			  borderColor: borderColor
+			}
+		  }
+		}
+	  });
+	}
+</script>
+{% endblock page_js %}

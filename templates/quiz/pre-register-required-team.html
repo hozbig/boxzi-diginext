@@ -103,7 +103,24 @@
             {% endif %}
             
             {% comment %} personal test {% endcomment %}
-            {% if request.user.user_of_personal_test.exists %}
+            {% if request.user.user_of_personal_test.exists and request.user.user_of_personal_test.first.final_user_result_url %}
+            <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
+                <div class="card text-white bg-transparent border border-success text-center">
+                    <div class="card-content d-flex ">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 mb-50">
+                                    <h3 class="card-title font-weight-bold">چالش مهارت نرم</h3>
+                                </div>
+                                <div class="col-12">
+                                    <a class="btn btn-label-success btn-darken-3 waves-success waves-light disabled">انجام شد <i class="fa fa-check"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif request.user.user_of_personal_test.exists %}
             <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mt-sm-1">
                 <div class="card text-white bg-transparent border border-warning text-center">
                     <div class="card-content d-flex ">
@@ -276,7 +293,7 @@
                                 <form method="post" action={% url "team:road-registration" road.uuid %}>
                                     {% csrf_token %}
                                     <h5 class="alert-heading mb-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</h5>
-                                    <button type="submit" class="btn btn-success mt-2">برای ارسال درخواست خود کلیک کنید</button>
+                                    <button type="submit" class="btn btn-primary mt-2">برای ارسال درخواست خود کلیک کنید</button>
                                 </form>
                             </div>
                         </div>
@@ -304,11 +321,11 @@
             {% if registration.team_or_individual == "i" and registration.is_complete_registration_for_individual %}
                 {% if registration.status == "n" %}
                 <div class="col-lg-6 col-md-8 pt-3 mt-5">
-                    <div class="card p-3 alert-success text-center">
+                    <div class="card p-3 alert-danger text-center">
                         <form method="post" action={% url "team:road-registration" road.uuid %}>
                             {% csrf_token %}
                             <h5 class="alert-heading mb-2">تبریک! شما و تمام اعضای تیمتان تمام نیازمندی های ثبت نام برای این مسیر آموزشی را انجام داده اید.</h5>
-                            <button type="submit" class="btn btn-success mt-2">برای ارسال درخواست خود کلیک کنید</button>
+                            <button type="submit" class="btn btn-danger mt-2">برای ارسال درخواست خود کلیک کنید</button>
                         </form>
                     </div>
                 </div>

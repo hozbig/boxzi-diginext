@@ -192,7 +192,7 @@ class RoadRegistration(models.Model):
         ("4", "مرحله چهارم تکمیل ثبت نام"),
         ("5", "ثبت نام کامل"),
     )
-    status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="۱", choices=STATUS_USER_STATE)
+    status_user_state = models.CharField(verbose_name="وضعیت ثبت نام کاربر", max_length=2, default="2", choices=STATUS_USER_STATE)
 
     # validity_pride_days = validity_period_days
     # for all process in user request
@@ -242,7 +242,7 @@ class RoadRegistration(models.Model):
 
             days_passed = (date.today() - self.complete_registration_date).days
             return self.validity_pride_days - days_passed
-        
+
     def is_valid_registration_period_for_challenge(self):
         """_summary_
 
@@ -314,7 +314,7 @@ class RoadRegistration(models.Model):
             return is_profile_complete and has_personal_test
             
         return None
-    
+
     def is_complete_registration_for_individual(self) -> Union[bool, None]:
         if self.team_or_individual == "i":
             user = self.user

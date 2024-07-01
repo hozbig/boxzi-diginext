@@ -108,13 +108,7 @@ class PreRegisterRequired(LoginRequiredMixin, View):
         self.context["task_business_side"] = task_business_side
         self.context["road"] = road
         return render(request, self.template_name, self.context)
-    
-    def post(self, request, task_uuid, road_uuid):
-        task = PreRegisterTask.objects.get(uuid=task_uuid)
-        road = Road.objects.get(uuid=road_uuid)
-        
-        messages.success(request, "درخواست شما با موفقیت ثبت شد")
-        return redirect(reverse('quiz:pre-register-required-team', args=[task_uuid, road_uuid]))
+
 
 class PreRegisterRequiredTeam(LoginRequiredMixin, View):
     template_name = "quiz/pre-register-required-team.html"

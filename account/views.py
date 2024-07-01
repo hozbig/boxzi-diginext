@@ -183,11 +183,11 @@ class RegisterLevel1(AnonymousRequiredMixin, View):
 
             login(request, user)
             
-            send_messages(
-                action="initial_registration_success",
-                destination_phone_number=user.phone_number,
-                user=request.user.first_name,
-            )
+            # send_messages(
+            #     action="initial_registration_success",
+            #     destination_phone_number=user.phone_number,
+            #     user=request.user.first_name,
+            # )
             
             messages.success(request, "اکنون اطلاعات خودرا تکمیل کنید")
             return redirect("account:register2")
@@ -300,7 +300,7 @@ class RegisterLevel4(LoginRequiredMixin, View):
                 user=request.user.first_name,
             )
             send_email(template="welcome", user=request.user)
-            messages.success(request, "ثبت نام شما در باکس زی کامل شد. جهت ثبت درخواست برای مسیر آموزشی مورد نظر فرایند هارو از طریق راهنمای داخل داشبورد خود ادامه بدید.")
+            messages.success(request, "ثبت نام شما در باکس زی کامل شد. جهت ثبت درخواست برای مسیر رشد مورد نظر فرایند هارو از طریق راهنمای داخل داشبورد خود ادامه دهید.")
             return redirect("account:user-dashboard")
         
         messages.error(request, "اطلاعات وارد شده صحیح نمی‌باشد!")

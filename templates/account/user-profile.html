@@ -237,20 +237,18 @@
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>نام:</th>
-                                            <th>موضوع:</th>
-                                            <th>وضعیت:</th>
-                                            <th>سطح محصول:</th>
+                                            <th>نام ایده/محصول</th>
+                                            <th>دارای pitch deck</th>
+                                            <th>دارای ویدیو</th>
+                                            <th>سطح محصول</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-border-bottom-0">
                                         <tr>
-                                            <td>{{plan.name}}</td>
-                                            <td>{{plan.industry|default_if_none:"ثبت نشده"}}</td>
-                                            <td>{% if plan.status == "i" %}<span class="badge bg-label-success">ایده</span>{% else %}<span class="badge bg-label-success">محصول</span>{% endif %}</td>
-                                            {% if plan.status == "m" %}
+                                            <td class="font-weight-bold">{{plan.name|truncatechars:25}}</td>
+                                            <td>{% if plan.pitch_deck %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
+                                            <td>{% if plan.video %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                             <td>{{plan.get_progress_status_display}}</td>
-                                            {% endif %}
                                         </tr>
                                     </tbody>
                                 </table>

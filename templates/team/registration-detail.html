@@ -223,13 +223,12 @@
 
     <div class="col-lg-12 mt-4">
         <div class="card">
-            <h5 class="card-header pb-1">اطلاعات کلی ایده</h5>
+            <h5 class="card-header pb-1">اطلاعات کلی ایده/محصول</h5>
             <div class="table-responsive text-nowrap">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>نام ایده</th>
-                            <th>دسته بندی</th>
+                            <th>نام ایده/محصول</th>
                             <th>دارای کمینه</th>
                             <th>دارای pitch deck</th>
                             <th>دارای ویدیو</th>
@@ -242,7 +241,6 @@
                             {% for idea in object.team.team_of_plan.all %}
                                 <tr>
                                     <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
-                                    <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{% if idea.pitch_deck %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{% if idea.video %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
@@ -254,7 +252,6 @@
                             {% for idea in object.user.user_of_plan.all %}
                                 <tr>
                                     <td class="font-weight-bold">{{idea.name|truncatechars:25}}</td>
-                                    <td>{{idea.industry|default_if_none:"**"}}</td>
                                     <td>{% if idea.status == "m" %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{% if idea.pitch_deck %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>
                                     <td>{% if idea.video %}<span class="badge bg-label-success"><i class="fa fa-check"></i></span>{% else %}<span class="badge bg-label-danger"><i class="fa fa-times"></i></span>{% endif %}</td>

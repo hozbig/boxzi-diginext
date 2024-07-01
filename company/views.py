@@ -24,7 +24,7 @@ from content.forms import (
     CollectionOrderCreateForm,
     ContentOrderCreateForm,
 )
-from quiz.models import Exam, Question, Answer, ExamOrder, Task, TaskOrder, PreRegisterTask, PreRegisterTaskQuestion
+from quiz.models import Exam, Question, Answer, ExamOrder, Task, TaskOrder, PreRegisterTask, PreRegisterTaskQuestion, PersonalTest
 from quiz.forms import (
     ExamCreateForm,
     ExamUpdateForm,
@@ -120,12 +120,21 @@ class AcceleratorDashboard(LoginRequiredMixin, AcceleratorAdminMixin, View):
         object = user.access_to_center
         self.context["object"] = object
         self.context["roads_count"] = object.accelerator_of_road.count()
-        self.context["active_roads_count"] = 1
+        self.context["active_roads_count"] = object.accelerator_of_road.count()
         try:
-            self.context["requests_count"] = object.accelerator_of_road.first().road_of_road_registration.count()
-            requests_count = object.accelerator_of_road.first().road_of_road_registration.count()
-            approved_requests_count = object.accelerator_of_road.first().road_of_road_registration.filter(status="a").count()
-            self.context["approve_percentage"] = round(100 * float(approved_requests_count)/float(requests_count))
+            all_requests = object.accelerator_of_road.first().road_of_road_registration.all()
+            approved_requests_count = all_requests.filter(status="a").count()
+            
+            self.context["requests_count"] = all_requests.count()
+            self.context["approve_percentage"] = round(100 * float(approved_requests_count)/float(all_requests.count()))
+            
+            self.context["personal_requests_count"] = all_requests.filter(team_or_individual="i").count()
+            self.context["team_requests_count"] = all_requests.filter(team_or_individual__in=["t", "a"]).count()
+            self.context["complete_requests"] = all_requests.filter(status_user_state="5").count()
+            self.context["incomplete_requests"] = all_requests.exclude(status_user_state="5").count()
+            
+            self.context["all_challenge"] = PreRegisterTask.objects.count()
+            self.context["all_personal_test"] = PersonalTest.objects.count()
         except:
             pass
 

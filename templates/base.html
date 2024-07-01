@@ -60,7 +60,7 @@
             <ul class="menu-inner py-1">
                 {% if request.user.is_superuser %}
                     <li class="menu-item {% if request.path == "/content/roads/" %}active{% endif %}">
-                        <a class="menu-link text-danger" href={% url "admin:index" %}>
+                        <a class="menu-link text-danger" href={% url "admin:index" %} target="_blank">
                             <i class="menu-icon tf-icons ti ti-fingerprint"></i>
                             <div>ادمین پنل</div>
                         </a>
