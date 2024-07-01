@@ -33,8 +33,9 @@
               <label for="id_team_or_individual" class="requiredField">تیم هستید یا فرد؟</label>
           
               <div>
-                <select name="team_or_individual" style="text-align: right" class="select form-control" id="id_team_or_individual">
-                  <option value="t" selected="">تیم</option>
+                <select name="team_or_individual" style="text-align: right" class="select form-control" id="id_team_or_individual" required="">
+                  <option value="" selected="">---------</option>
+                  <option value="t">تیم</option>
                   <option value="i">فرد</option>
                 </select>
               </div>
